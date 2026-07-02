@@ -25,6 +25,17 @@ pub fn is_criware_lib(filename: &str) -> bool {
 pub fn on_hooking_finished(hachimi: &Hachimi) {
     wnd_hook::init();
 
+    // 一次性 il2cpp dump（偵測分析用）：資料目錄放空檔 `dump_il2cpp` 就會觸發。
+    if hachimi.get_data_path("dump_il2cpp").exists() {
+        std::thread::spawn(|| {
+            let out = Hachimi::instance().get_data_path("il2cpp_dump.txt");
+            match crate::il2cpp::dump::dump_all(&out) {
+                Ok((c, m)) => info!("il2cpp dump done: {} classes, {} methods -> {}", c, m, out.display()),
+                Err(e) => error!("il2cpp dump failed: {}", e)
+            }
+        });
+    }
+
     // Kill unity crash handler (just to be safe)
     unsafe {
         if let Err(e) = utils::kill_process_by_name(c"UnityCrashHandler64.exe") {

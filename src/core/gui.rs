@@ -211,6 +211,7 @@ impl Gui {
     }
 
     const ICON_IMAGE: egui::ImageSource<'static> = egui::include_image!("../../assets/icon.png");
+    const BANNER_IMAGE: egui::ImageSource<'static> = egui::include_image!("../../assets/ASKRNB_ver2.png");
     fn icon<'a>() -> egui::Image<'a> {
         egui::Image::new(Self::ICON_IMAGE)
         .fit_to_exact_size(egui::Vec2::new(24.0, 24.0))
@@ -258,6 +259,11 @@ impl Gui {
         let mut show_window: Option<BoxedWindow> = None;
         egui::SidePanel::left("hachimi_menu").show_animated(ctx, self.show_menu, |ui| {
             ui.with_layout(egui::Layout::top_down_justified(egui::Align::TOP), |ui| {
+                // ASKR 牛逼！banner
+                ui.vertical_centered(|ui| {
+                    ui.add(egui::Image::new(Self::BANNER_IMAGE).fit_to_exact_size(egui::Vec2::splat(96.0)));
+                });
+                ui.add_space(4.0);
                 ui.horizontal(|ui| {
                     ui.add(Self::icon());
                     ui.heading(t!("hachimi"));
@@ -265,7 +271,7 @@ impl Gui {
                         show_window = Some(Box::new(AboutWindow::new()));
                     }
                 });
-                ui.label(env!("HACHIMI_DISPLAY_VERSION"));
+                ui.label("ASKR牛逼");
                 if ui.button(t!("menu.close_menu")).clicked() {
                     self.show_menu = false;
                     self.menu_anim_time = None;
