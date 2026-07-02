@@ -636,8 +636,11 @@ pub fn init() {
             w!("UmamusumePrettyDerby_Jpn")
         }
         else if game.region == Region::Taiwan {
-            w!("賽馬娘Pretty Derby")
-        } else {
+            // 繁中服 Komoe：遊戲本體視窗 class=UnityWndClass、title=komoeumamusume（= exe stem）。
+            // 啟動器是另一個 class(CGameLauncherWnd)，不會誤抓。
+            w!("komoeumamusume")
+        }
+        else {
             // global technically has "Umamusume" as its title but this api
             // is case insensitive so it works. why am i surprised
             w!("umamusume")
