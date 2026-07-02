@@ -6,7 +6,7 @@ use rust_i18n::t;
 
 use crate::il2cpp::{
     hook::{
-        umamusume::{CySpringController::SpringUpdateMode, GameSystem, GraphicSettings::GraphicsQuality, Localize},
+        umamusume::{CySpringController::SpringUpdateMode, GameSystem, GraphicSettings::GraphicsQuality},
         UnityEngine_CoreModule::Application
     },
     symbols::Thread
@@ -18,7 +18,7 @@ use crate::il2cpp::hook::umamusume::WebViewManager;
 #[cfg(target_os = "windows")]
 use crate::il2cpp::hook::UnityEngine_CoreModule::QualitySettings;
 
-use super::{hachimi::{self, Language}, http::AsyncRequest, tl_repo::{self, RepoInfo}, utils, Hachimi};
+use super::{hachimi::{self, Language}, http::AsyncRequest, tl_repo::{self, RepoInfo}, Hachimi};
 
 macro_rules! add_font {
     ($fonts:expr, $family_fonts:expr, $filename:literal) => {
@@ -253,9 +253,6 @@ impl Gui {
     fn run_menu(&mut self) {
         let ctx = &self.context;
         let hachimi = Hachimi::instance();
-        let localized_data = hachimi.localized_data.load();
-        let localize_dict_count = localized_data.localize_dict.len().to_string();
-        let hashed_dict_count = localized_data.hashed_dict.len().to_string();
 
         let mut show_notification: Option<Cow<'_, str>> = None;
         let mut show_window: Option<BoxedWindow> = None;
@@ -278,8 +275,6 @@ impl Gui {
                 egui::ScrollArea::vertical().show(ui, |ui| {
                     ui.heading(t!("menu.stats_heading"));
                     ui.label(&self.fps_text);
-                    ui.label(t!("menu.localize_dict_entries", count = localize_dict_count));
-                    ui.label(t!("menu.hashed_dict_entries", count = hashed_dict_count));
                     ui.separator();
 
                     ui.heading(t!("menu.config_heading"));
@@ -289,9 +284,6 @@ impl Gui {
                     if ui.button(t!("menu.reload_config")).clicked() {
                         hachimi.reload_config();
                         show_notification = Some(t!("notification.config_reloaded"));
-                    }
-                    if ui.button(t!("menu.open_first_time_setup")).clicked() {
-                        show_window = Some(Box::new(FirstTimeSetupWindow::new()));
                     }
                     ui.separator();
 
@@ -336,34 +328,6 @@ impl Gui {
                                 });
                             }
                         });
-                    }
-                    ui.separator();
-
-                    ui.heading(t!("menu.translation_heading"));
-                    if ui.button(t!("menu.reload_localized_data")).clicked() {
-                        hachimi.load_localized_data();
-                        show_notification = Some(t!("notification.localized_data_reloaded"));
-                    }
-                    if ui.button(t!("menu.check_for_updates")).clicked() {
-                        hachimi.tl_updater.clone().check_for_updates(false);
-                    }
-                    if ui.button(t!("menu.check_for_updates_pedantic")).clicked() {
-                        hachimi.tl_updater.clone().check_for_updates(true);
-                    }
-                    if hachimi.config.load().translator_mode {
-                        if ui.button(t!("menu.dump_localize_dict")).clicked() {
-                            Thread::main_thread().schedule(|| {
-                                let data = Localize::dump_strings();
-                                let dict_path = Hachimi::instance().get_data_path("localize_dump.json");
-                                let mut gui = Gui::instance().unwrap().lock().unwrap();
-                                if let Err(e) = utils::write_json_file(&data, dict_path) {
-                                    gui.show_notification(&e.to_string())
-                                }
-                                else {
-                                    gui.show_notification(&t!("notification.saved_localize_dump"))
-                                }
-                            })
-                        }
                     }
                     ui.separator();
 
@@ -941,38 +905,6 @@ impl ConfigEditor {
                 ui.label(t!("config_editor.debug_mode"));
                 ui.checkbox(&mut config.debug_mode, "");
                 ui.end_row();
-
-                ui.label(t!("config_editor.translator_mode"));
-                ui.checkbox(&mut config.translator_mode, "");
-                ui.end_row();
-
-                ui.label(t!("config_editor.skip_first_time_setup"));
-                ui.checkbox(&mut config.skip_first_time_setup, "");
-                ui.end_row();
-
-                ui.label(t!("config_editor.disable_auto_update_check"));
-                ui.checkbox(&mut config.disable_auto_update_check, "");
-                ui.end_row();
-
-                ui.label(t!("config_editor.disable_translations"));
-                ui.checkbox(&mut config.disable_translations, "");
-                ui.end_row();
-
-                ui.label(t!("config_editor.enable_ipc"));
-                ui.checkbox(&mut config.enable_ipc, "");
-                ui.end_row();
-
-                ui.label(t!("config_editor.ipc_listen_all"));
-                ui.checkbox(&mut config.ipc_listen_all, "");
-                ui.end_row();
-
-                ui.label(t!("config_editor.auto_translate_stories"));
-                ui.checkbox(&mut config.auto_translate_stories, "");
-                ui.end_row();
-
-                ui.label(t!("config_editor.auto_translate_ui"));
-                ui.checkbox(&mut config.auto_translate_localize, "");
-                ui.end_row();
             },
 
             ConfigEditorTab::Graphics => {
@@ -1063,10 +995,6 @@ impl ConfigEditor {
 
                 ui.label(t!("config_editor.live_theater_allow_same_chara"));
                 ui.checkbox(&mut config.live_theater_allow_same_chara, "");
-                ui.end_row();
-
-                ui.label(t!("config_editor.disable_skill_name_translation"));
-                ui.checkbox(&mut config.disable_skill_name_translation, "");
                 ui.end_row();
             }
         }

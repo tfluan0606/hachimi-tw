@@ -351,10 +351,10 @@ impl<T> OsOption<T> {
 #[allow(non_camel_case_types)]
 pub enum Language {
     #[serde(rename = "en")]
-    #[default] English,
+    English,
 
     #[serde(rename = "zh-tw")]
-    TChinese,
+    #[default] TChinese,
 
     #[serde(rename = "zh-cn")]
     SChinese,
