@@ -162,7 +162,7 @@ pub mod Cute_Cri_Assembly;
 pub mod CriMw_CriWare_Runtime;
 mod DOTween;
 
-#[cfg(target_os = "android")]
+#[cfg(any(target_os = "android", target_os = "windows"))]
 mod Cute_Core_Assembly;
 
 pub fn init() {
@@ -197,7 +197,7 @@ pub fn init() {
     CriMw_CriWare_Runtime::init();
     DOTween::init();
 
-    #[cfg(target_os = "android")]
+    #[cfg(any(target_os = "android", target_os = "windows"))]
     Cute_Core_Assembly::init();
 
     info!("Hooking finished");
