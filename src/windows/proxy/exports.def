@@ -6,3 +6,22 @@ EXPORTS
     criVvp9_GetAlphaInterface
     criVvp9_GetInterface
     criVvp9_SetUserAllocator
+
+    ; version.dll
+    GetFileVersionInfoA
+    GetFileVersionInfoByHandle
+    GetFileVersionInfoExA
+    GetFileVersionInfoExW
+    GetFileVersionInfoSizeA
+    GetFileVersionInfoSizeExA
+    GetFileVersionInfoSizeExW
+    GetFileVersionInfoSizeW
+    GetFileVersionInfoW
+    VerFindFileA
+    VerFindFileW
+    VerInstallFileA
+    VerInstallFileW
+    VerLanguageNameA
+    VerLanguageNameW
+    VerQueryValueA
+    VerQueryValueW

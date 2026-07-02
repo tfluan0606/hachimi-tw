@@ -60,10 +60,9 @@ fn init_internal() -> Result<(), Error> {
         hachimi.on_hooking_finished();   
     }
     else {
-        info!("Init UnityPlayer.dll proxy");
-        proxy::unityplayer::init();
-
-        info!("Hooking LoadLibraryW");
+        // 早期注入（version.dll 劫持）：轉發已在 DllMain 的 proxy::version::init() 裝好，
+        // 這裡只需 hook LoadLibraryW，等 cri_ware_unity.dll 載入時觸發 il2cpp hook 安裝。
+        info!("Early load via version.dll proxy; hooking LoadLibraryW");
         hachimi.interceptor.hook(ffi::LoadLibraryW as usize, LoadLibraryW as usize)?;
     }
 

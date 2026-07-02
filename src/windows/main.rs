@@ -5,7 +5,7 @@ use windows::{core::PCWSTR, Win32::{Foundation::{BOOL, HMODULE, TRUE}, System::L
 
 use crate::{core::{plugin_api::Plugin, Hachimi}, windows::utils};
 
-use super::{hook, wnd_hook};
+use super::{hook, proxy, wnd_hook};
 
 const DLL_PROCESS_ATTACH: c_ulong = 1;
 const DLL_PROCESS_DETACH: c_ulong = 0;
@@ -48,6 +48,8 @@ pub static mut DLL_HMODULE: HMODULE = HMODULE(0 as _);
 pub extern "C" fn DllMain(hmodule: HMODULE, call_reason: c_ulong, _reserved: *mut c_void) -> BOOL {
     if call_reason == DLL_PROCESS_ATTACH {
         unsafe { DLL_HMODULE = hmodule; }
+        // 先無條件裝好 version.dll 轉發（即使 Hachimi::init 失敗也要，否則遊戲解不到 version 函式會崩）。
+        proxy::version::init();
         if !Hachimi::init() {
             return TRUE;
         }
