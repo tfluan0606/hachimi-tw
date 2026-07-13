@@ -1,4 +1,4 @@
-use std::{os::raw::c_uint, sync::atomic::{self, AtomicIsize}};
+use std::{os::raw::c_uint, sync::atomic::{self, AtomicBool, AtomicIsize}};
 
 use egui::mutex::Mutex;
 use once_cell::sync::Lazy;
@@ -11,7 +11,7 @@ use windows::{core::w, Win32::{
     }
 }};
 
-use crate::{core::{game::Region, Gui, Hachimi}, il2cpp::{hook::{umamusume::SceneManager, UnityEngine_CoreModule}, symbols::Thread}, windows::utils};
+use crate::{core::{game::Region, Gui, Hachimi}, il2cpp::{hook::UnityEngine_CoreModule, symbols::Thread}, windows::utils};
 
 use super::gui_impl::input;
 
@@ -20,6 +20,21 @@ struct WndProcCall {
     umsg: c_uint,
     wparam: WPARAM,
     lparam: LPARAM
+}
+
+// WM_SIZE 放行閘門。啟動極早期（第一次 Present 前）先緩衝 WM_SIZE，避免早期 init 出問題；
+// 一旦開始 Present 就永久放行並補送緩衝內容。
+//
+// 原設計靠 SceneManager::ChangeView hook 偵測 splash 畫面來放行，但 TW(Komoe) client 的
+// ChangeView 簽名不同、hook 失敗(log: "ChangeView_addr is null") → SPLASH_SHOWN 永遠 false
+// → 每個 WM_SIZE 都被吞掉、Unity 收不到視窗縮放通知 → 輸入座標用舊尺寸映射 → 視窗縮放後點擊偏移。
+// 改用「第一次 Present」當放行訊號，不再依賴那個會掛失敗的 hook。
+static SIZE_READY: AtomicBool = AtomicBool::new(false);
+pub fn mark_size_ready() {
+    if SIZE_READY.swap(true, atomic::Ordering::AcqRel) {
+        return;
+    }
+    drain_wm_size_buffer();
 }
 
 static WM_SIZE_BUFFER: Lazy<Mutex<Vec<WndProcCall>>> = Lazy::new(|| Mutex::default());
@@ -70,14 +85,14 @@ extern "system" fn wnd_proc(hwnd: HWND, umsg: c_uint, wparam: WPARAM, lparam: LP
             return LRESULT(0);
         },
         WM_SIZE => {
-            if !SceneManager::is_splash_shown() {
+            if SIZE_READY.load(atomic::Ordering::Acquire) {
+                return unsafe { orig_fn(hwnd, umsg, wparam, lparam) };
+            }
+            else {
                 WM_SIZE_BUFFER.lock().push(WndProcCall {
                     hwnd, umsg, wparam, lparam
                 });
                 return LRESULT(0);
-            }
-            else {
-                return unsafe { orig_fn(hwnd, umsg, wparam, lparam) };
             }
         }
         _ => ()

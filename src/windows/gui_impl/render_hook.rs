@@ -86,6 +86,12 @@ extern "C" fn IDXGISwapChain_Present(this: *mut c_void, sync_interval: c_uint, f
     }
     let width = rect.right - rect.left;
     let height = rect.bottom - rect.top;
+
+    // 到這裡代表遊戲已開始 Present（早期 init 已過），放行先前緩衝的 WM_SIZE 並讓後續 WM_SIZE
+    // 正常傳給 Unity。修正 TW client 因 ChangeView hook 失敗導致 WM_SIZE 被永久吞掉、視窗縮放後
+    // 點擊座標偏移的問題。
+    wnd_hook::mark_size_ready();
+
     gui.set_screen_size(width, height);
 
     // Run and render the GUI
