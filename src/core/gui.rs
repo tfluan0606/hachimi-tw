@@ -283,6 +283,69 @@ impl Gui {
                     ui.label(&self.fps_text);
                     ui.separator();
 
+                    // ── 訓練助手（Tier 2）：當前養成牌組 → 可學技能 ──
+                    {
+                        use crate::il2cpp::hook::umamusume::SingleModeDeck;
+                        use crate::core::training_helper;
+
+                        ui.heading("訓練助手");
+                        if ui.button("刷新牌組").clicked() {
+                            SingleModeDeck::refresh();
+                            crate::il2cpp::hook::umamusume::SkillLearningList::refresh();
+                        }
+                        match SingleModeDeck::cached() {
+                            Some(deck) => {
+                                ui.label(format!("育成卡 {}（角色 {}）", deck.chara_card_id, deck.chara_id));
+                                ui.add_space(2.0);
+                                ui.label(format!("支援卡（{}）：", deck.cards.len()));
+                                for c in &deck.cards {
+                                    let text = match training_helper::card_info(c.support_card_id) {
+                                        Some(info) => format!("[{}] {} ({}/{}) +{}", c.position, info.name, info.rarity, info.type_, c.limit_break),
+                                        None => format!("[{}] id={} +{}", c.position, c.support_card_id, c.limit_break),
+                                    };
+                                    ui.label(text);
+                                }
+                                ui.add_space(4.0);
+
+                                // 可學技能＝鏡像遊戲「技能學習頁」的完整清單（開過技能頁後有資料）
+                                let learn = crate::il2cpp::hook::umamusume::SkillLearningList::cached();
+                                let mut rare = Vec::new();
+                                let mut normal = Vec::new();
+                                let mut unique = Vec::new();
+                                for s in &learn {
+                                    let (name, is_unique, rarity) = match training_helper::skill_display(s.skill_id) {
+                                        Some(d) => (d.name.to_string(), d.is_unique, d.rarity),
+                                        None => (format!("skill {}", s.skill_id), false, 1),
+                                    };
+                                    let mark = if s.available { "" } else { "🔒" };
+                                    let line = format!("{}{}", mark, name);
+                                    if is_unique { unique.push(line); }
+                                    else if rarity >= 2 { rare.push(line); }
+                                    else { normal.push(line); }
+                                }
+                                let render = |ui: &mut egui::Ui, title: &str, list: &[String]| {
+                                    egui::CollapsingHeader::new(format!("{}（{}）", title, list.len()))
+                                        .default_open(true)
+                                        .show(ui, |ui| {
+                                            for l in list { ui.label(l); }
+                                        });
+                                };
+                                if learn.is_empty() {
+                                    ui.label("可學技能：請先打開一次遊戲的「技能學習」頁");
+                                } else {
+                                    ui.label(format!("可學技能（{}）", learn.len()));
+                                    render(ui, "稀有", &rare);
+                                    render(ui, "一般", &normal);
+                                    render(ui, "繼承固有", &unique);
+                                }
+                            }
+                            None => {
+                                ui.label("進到養成中，按「刷新牌組」");
+                            }
+                        }
+                        ui.separator();
+                    }
+
                     ui.heading(t!("menu.config_heading"));
                     if ui.button(t!("menu.open_config_editor")).clicked() {
                         show_window = Some(Box::new(ConfigEditor::new()));

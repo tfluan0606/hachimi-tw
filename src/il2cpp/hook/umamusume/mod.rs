@@ -52,6 +52,8 @@ mod ApplicationSettingSaveLoader;
 mod LiveTheaterCharaSelect;
 mod LiveTheaterViewController;
 pub mod CySpringController;
+pub mod SingleModeDeck;
+pub mod SkillLearningList;
 
 #[cfg(target_os = "windows")]
 pub mod SceneManager;
@@ -115,6 +117,8 @@ pub fn init() {
     LiveTheaterCharaSelect::init(image);
     LiveTheaterViewController::init(image);
     CySpringController::init(image);
+    SingleModeDeck::init(image);
+    SkillLearningList::init(image);
 
     #[cfg(target_os = "windows")]
     {

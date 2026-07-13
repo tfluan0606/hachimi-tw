@@ -70,6 +70,28 @@ pub fn dump_all(out_path: &Path) -> std::io::Result<(usize, usize)> {
                     writeln!(w, "{full}::{mname}")?;
                     method_total += 1;
                 }
+
+                // 欄位（含 static）：`#F\t<Class>\t<field>\t<type>\t[static|instance]`
+                // 用 tab 分隔 + #F 前綴，不影響現有 `Class::method` grep。
+                const FIELD_ATTRIBUTE_STATIC: i32 = 0x0010;
+                let mut fiter: *mut c_void = null_mut();
+                loop {
+                    let f = il2cpp_class_get_fields(klass, &mut fiter);
+                    if f.is_null() {
+                        break;
+                    }
+                    let fname = cstr(il2cpp_field_get_name(f));
+                    let fty = il2cpp_field_get_type(f);
+                    let tyname = if fty.is_null() {
+                        String::from("?")
+                    } else {
+                        // il2cpp_type_get_name 回傳 malloc 字串；一次性 dump 不釋放可接受。
+                        cstr(il2cpp_type_get_name(fty))
+                    };
+                    let flags = il2cpp_field_get_flags(f);
+                    let kind = if flags & FIELD_ATTRIBUTE_STATIC != 0 { "static" } else { "instance" };
+                    writeln!(w, "#F\t{full}\t{fname}\t{tyname}\t{kind}")?;
+                }
             }
         }
     }
