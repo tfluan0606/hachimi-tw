@@ -21,6 +21,38 @@ unsafe fn cstr(p: *const c_char) -> String {
     CStr::from_ptr(p).to_string_lossy().into_owned()
 }
 
+/// 讀 il2cpp type 名（如 `System.Byte[]`）。type_get_name 回傳 malloc 字串，讀完要 il2cpp_free。
+unsafe fn type_name(t: *const Il2CppType) -> String {
+    if t.is_null() {
+        return "?".to_string();
+    }
+    let p = il2cpp_type_get_name(t);
+    if p.is_null() {
+        return "?".to_string();
+    }
+    let s = cstr(p);
+    il2cpp_free(p as *mut c_void);
+    s
+}
+
+/// 組出 `(ParamType name, ...) -> ReturnType [static]` 供人閱讀與寫 hook 時對簽章。
+unsafe fn method_signature(m: *const MethodInfo) -> String {
+    let ret = type_name(il2cpp_method_get_return_type(m));
+    let pcount = il2cpp_method_get_param_count(m);
+    let mut params = Vec::with_capacity(pcount as usize);
+    for i in 0..pcount {
+        let pt = type_name(il2cpp_method_get_param(m, i));
+        let pn = cstr(il2cpp_method_get_param_name(m, i));
+        if pn.is_empty() {
+            params.push(pt);
+        } else {
+            params.push(format!("{pt} {pn}"));
+        }
+    }
+    let kind = if il2cpp_method_is_instance(m) { "" } else { " [static]" };
+    format!("({}) -> {ret}{kind}", params.join(", "))
+}
+
 /// 枚舉整個 il2cpp domain，把 `Namespace.Class::Method` 逐行寫出。
 /// 回傳 (class 數, method 數)。
 pub fn dump_all(out_path: &Path) -> std::io::Result<(usize, usize)> {
@@ -67,7 +99,8 @@ pub fn dump_all(out_path: &Path) -> std::io::Result<(usize, usize)> {
                         break;
                     }
                     let mname = cstr(il2cpp_method_get_name(m));
-                    writeln!(w, "{full}::{mname}")?;
+                    let sig = method_signature(m);
+                    writeln!(w, "{full}::{mname}{sig}")?;
                     method_total += 1;
                 }
             }

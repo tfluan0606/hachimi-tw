@@ -713,6 +713,11 @@ pub struct Config {
     pub disable_translations: bool,
     #[serde(default = "Config::default_gui_scale")]
     pub gui_scale: f32,
+    /// 因子卡片用亮色主題（預設暗色）
+    #[serde(default)]
+    pub factor_card_light_theme: bool,
+    /// 因子卡片輸出資料夾（未設定＝`<data>/factor_card`）
+    pub factor_card_output_dir: Option<String>,
     #[serde(default = "Config::default_ui_scale")]
     pub ui_scale: f32,
     #[serde(default = "Config::default_render_scale")]

@@ -159,9 +159,17 @@ pub mod DownloadPathRegister;
 pub mod SceneDefine;
 pub mod GameDefine;
 
+#[cfg(target_os = "windows")]
+pub mod DialogTrainedCharacterDetail;
+
+pub mod HttpHelper;
+
 pub fn init() {
     get_assembly_image_or_return!(image, "umamusume.dll");
 
+    #[cfg(target_os = "windows")]
+    DialogTrainedCharacterDetail::init(image);
+    HttpHelper::init(image);
     Localize::init(image);
     TextId::init(image);
     StoryRaceTextAsset::init(image);

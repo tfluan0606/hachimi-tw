@@ -2170,6 +2170,62 @@ fn tl_repo_list_ui(
     });
 }
 
+/// 設定因子卡片輸出資料夾
+#[cfg(target_os = "windows")]
+struct FactorCardOutputDirWindow {
+    path: String,
+    id: egui::Id
+}
+
+#[cfg(target_os = "windows")]
+impl FactorCardOutputDirWindow {
+    fn new() -> FactorCardOutputDirWindow {
+        FactorCardOutputDirWindow {
+            path: super::factor_card::output_dir().to_string_lossy().into_owned(),
+            id: random_id()
+        }
+    }
+}
+
+#[cfg(target_os = "windows")]
+impl Window for FactorCardOutputDirWindow {
+    fn run(&mut self, ctx: &egui::Context) -> bool {
+        let mut open = true;
+        let mut keep = true;
+        let mut save = false;
+        // 借用檢查：兩個 closure 不能同時碰 self，先把路徑搬出來
+        let mut path = std::mem::take(&mut self.path);
+
+        new_window(ctx, "因子卡片輸出位置")
+        .id(self.id)
+        .open(&mut open)
+        .show(ctx, |ui| {
+            simple_window_layout(ui, self.id,
+                |ui| {
+                    ui.label("卡片存放的資料夾（留空＝預設 hachimi\\factor_card）");
+                    ui.add(egui::TextEdit::singleline(&mut path).desired_width(f32::INFINITY));
+                },
+                |ui| {
+                    if ui.button(t!("cancel")).clicked() {
+                        keep = false;
+                    }
+                    if ui.button(t!("save")).clicked() {
+                        save = true;
+                        keep = false;
+                    }
+                }
+            );
+        });
+
+        if save {
+            super::factor_card::set_output_dir(&path);
+        }
+        self.path = path;
+
+        open && keep
+    }
+}
+
 pub struct SimpleYesNoDialog {
     title: String,
     content: String,
