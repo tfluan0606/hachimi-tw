@@ -1,3 +1,6 @@
+[workspace]
+members = ["crates/*"]
+
 [package]
 name = "hachimi"
 version = "0.14.0"
@@ -39,6 +42,10 @@ unicode-width = "0.1"
 tiny_http = "0.12"
 rust-i18n = "3.1"
 
+# 遊戲 API 封包解碼執行期所需（見 src/core/api_packet.rs）
+lz4_flex = { version = "0.11", features = ["frame"] }
+rmpv = "1.3"
+
 [target.'cfg(target_os = "android")'.dependencies]
 libc = "0.2"
 android_logger = "0.13"
@@ -49,6 +56,8 @@ glow = "0.13"
 dobby-rs = "0.1"
 
 [target.'cfg(target_os = "windows")'.dependencies]
+# 因子卡片繪圖（與離線工具共用，見 crates/factor-card）
+factor-card = { path = "crates/factor-card" }
 windebug_logger = "0.1"
 minhook = "0.5"
 egui-directx11 = "0.4"
@@ -73,6 +82,13 @@ features = [
     "Win32_Storage_FileSystem",
     "Win32_Graphics_Gdi"
 ]
+
+[dev-dependencies]
+# 僅供 api_packet 離線 wire pipeline 測試（不進執行期 DLL）
+base64 = "0.22"
+md-5 = "0.10"
+aes = "0.8"
+cbc = "0.1"
 
 [build-dependencies]
 tauri-winres = "0.1"

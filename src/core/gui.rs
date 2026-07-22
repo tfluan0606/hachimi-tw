@@ -293,6 +293,56 @@ impl Gui {
                     }
                     ui.separator();
 
+                    #[cfg(target_os = "windows")]
+                    {
+                        use crate::core::factor_card;
+
+                        ui.heading("因子卡片");
+                        ui.label(format!("已收集 {} 隻練成角色", factor_card::stored_count()));
+                        ui.label(match factor_card::last_viewed_label() {
+                            Some(label) => format!("目前目標：{label}"),
+                            None => "目前目標：（先點開一隻馬的詳細視窗）".to_owned()
+                        });
+                        ui.horizontal(|ui| {
+                            let mut light = factor_card::light_theme();
+                            ui.label("卡片主題");
+                            if ui.selectable_label(!light, "暗色").clicked() {
+                                light = false;
+                            }
+                            if ui.selectable_label(light, "亮色").clicked() {
+                                light = true;
+                            }
+                            factor_card::set_light_theme(light);
+                        });
+                        ui.horizontal(|ui| {
+                            if ui.button("設定輸出位置").clicked() {
+                                show_window = Some(Box::new(FactorCardOutputDirWindow::new()));
+                            }
+                            if ui.button("開啟輸出資料夾").clicked() {
+                                let dir = factor_card::output_dir();
+                                _ = std::fs::create_dir_all(&dir);
+                                _ = std::process::Command::new("explorer").arg(&dir).spawn();
+                            }
+                        });
+                        if ui.button("擷取目前這隻的因子卡片").clicked() {
+                            // 下載立繪＋繪圖可能要一點時間，丟到背景執行緒
+                            std::thread::spawn(|| {
+                                let msg = match factor_card::capture(None) {
+                                    Ok(path) => format!(
+                                        "因子卡片已存到 {}",
+                                        path.file_name().map(|n| n.to_string_lossy().into_owned())
+                                            .unwrap_or_else(|| path.to_string_lossy().into_owned())
+                                    ),
+                                    Err(e) => format!("因子卡片失敗：{e}")
+                                };
+                                if let Some(mutex) = Gui::instance() {
+                                    mutex.lock().unwrap().show_notification(&msg);
+                                }
+                            });
+                        }
+                        ui.separator();
+                    }
+
                     ui.heading(t!("menu.graphics_heading"));
                     ui.horizontal(|ui| {
                         ui.label(t!("menu.fps_label"));
@@ -720,6 +770,62 @@ fn async_request_ui_content<T: Send + Sync + 'static>(ui: &mut egui::Ui, request
                 }
             });
         }
+    }
+}
+
+/// 設定因子卡片輸出資料夾
+#[cfg(target_os = "windows")]
+struct FactorCardOutputDirWindow {
+    path: String,
+    id: egui::Id
+}
+
+#[cfg(target_os = "windows")]
+impl FactorCardOutputDirWindow {
+    fn new() -> FactorCardOutputDirWindow {
+        FactorCardOutputDirWindow {
+            path: super::factor_card::output_dir().to_string_lossy().into_owned(),
+            id: random_id()
+        }
+    }
+}
+
+#[cfg(target_os = "windows")]
+impl Window for FactorCardOutputDirWindow {
+    fn run(&mut self, ctx: &egui::Context) -> bool {
+        let mut open = true;
+        let mut keep = true;
+        let mut save = false;
+        // 借用檢查：兩個 closure 不能同時碰 self，先把路徑搬出來
+        let mut path = std::mem::take(&mut self.path);
+
+        new_window(ctx, "因子卡片輸出位置")
+        .id(self.id)
+        .open(&mut open)
+        .show(ctx, |ui| {
+            simple_window_layout(ui, self.id,
+                |ui| {
+                    ui.label("卡片存放的資料夾（留空＝預設 hachimi\\factor_card）");
+                    ui.add(egui::TextEdit::singleline(&mut path).desired_width(f32::INFINITY));
+                },
+                |ui| {
+                    if ui.button(t!("cancel")).clicked() {
+                        keep = false;
+                    }
+                    if ui.button(t!("save")).clicked() {
+                        save = true;
+                        keep = false;
+                    }
+                }
+            );
+        });
+
+        if save {
+            super::factor_card::set_output_dir(&path);
+        }
+        self.path = path;
+
+        open && keep
     }
 }
 

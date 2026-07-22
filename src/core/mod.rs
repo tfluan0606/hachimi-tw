@@ -19,6 +19,9 @@ pub use interceptor::Interceptor;
 
 pub mod utils;
 pub mod http;
+pub mod api_packet;
+#[cfg(target_os = "windows")]
+pub mod factor_card;
 pub mod tl_repo;
 pub mod log;
 mod ipc;

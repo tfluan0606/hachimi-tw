@@ -1,0 +1,8289 @@
+{
+  "1": {
+    "name": "速度",
+    "cat": "blue",
+    "type": 1,
+    "cat_label": "藍因子(屬性)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "2": {
+    "name": "持久力",
+    "cat": "blue",
+    "type": 1,
+    "cat_label": "藍因子(屬性)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "3": {
+    "name": "力量",
+    "cat": "blue",
+    "type": 1,
+    "cat_label": "藍因子(屬性)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "4": {
+    "name": "意志力",
+    "cat": "blue",
+    "type": 1,
+    "cat_label": "藍因子(屬性)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "5": {
+    "name": "智力",
+    "cat": "blue",
+    "type": 1,
+    "cat_label": "藍因子(屬性)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "11": {
+    "name": "草地",
+    "cat": "red",
+    "type": 2,
+    "cat_label": "紅因子(適性)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "12": {
+    "name": "沙地",
+    "cat": "red",
+    "type": 2,
+    "cat_label": "紅因子(適性)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21": {
+    "name": "領頭",
+    "cat": "red",
+    "type": 2,
+    "cat_label": "紅因子(適性)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "22": {
+    "name": "前列",
+    "cat": "red",
+    "type": 2,
+    "cat_label": "紅因子(適性)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "23": {
+    "name": "居中",
+    "cat": "red",
+    "type": 2,
+    "cat_label": "紅因子(適性)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "24": {
+    "name": "後追",
+    "cat": "red",
+    "type": 2,
+    "cat_label": "紅因子(適性)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31": {
+    "name": "短距離",
+    "cat": "red",
+    "type": 2,
+    "cat_label": "紅因子(適性)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "32": {
+    "name": "一哩",
+    "cat": "red",
+    "type": 2,
+    "cat_label": "紅因子(適性)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "33": {
+    "name": "中距離",
+    "cat": "red",
+    "type": 2,
+    "cat_label": "紅因子(適性)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "34": {
+    "name": "長距離",
+    "cat": "red",
+    "type": 2,
+    "cat_label": "紅因子(適性)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10001": {
+    "name": "二月S",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10002": {
+    "name": "高松宮紀念",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10003": {
+    "name": "大阪盃",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10004": {
+    "name": "櫻花賞",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10005": {
+    "name": "皋月賞",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10006": {
+    "name": "天皇賞（春）",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10007": {
+    "name": "NHK一哩C",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10008": {
+    "name": "維多利亞一哩賽",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10009": {
+    "name": "奧克斯",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10010": {
+    "name": "日本打比",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10011": {
+    "name": "安田紀念",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10012": {
+    "name": "寶塚紀念",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10013": {
+    "name": "短途跑者S",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10014": {
+    "name": "秋華賞",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10015": {
+    "name": "菊花賞",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10016": {
+    "name": "天皇賞（秋）",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10017": {
+    "name": "伊麗莎白女王盃",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10018": {
+    "name": "一哩CS",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10019": {
+    "name": "日本C",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10020": {
+    "name": "日本冠軍C",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10021": {
+    "name": "阪神JF",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10022": {
+    "name": "朝日盃FS",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10023": {
+    "name": "有馬紀念",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10024": {
+    "name": "希望S",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10025": {
+    "name": "帝王賞",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10026": {
+    "name": "JD打比",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10027": {
+    "name": "JBCL經典賽",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10028": {
+    "name": "JBC短途賽",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10029": {
+    "name": "JBC經典賽",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10030": {
+    "name": "東京大賞典",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10031": {
+    "name": "一哩CS南部盃",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10032": {
+    "name": "柏紀念",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10033": {
+    "name": "全日本新手級優駿",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10034": {
+    "name": "川崎紀念",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "10035": {
+    "name": "凱旋門賞",
+    "cat": "race",
+    "type": 5,
+    "cat_label": "白因子(比賽)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20001": {
+    "name": "順時針○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20002": {
+    "name": "逆時針○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20003": {
+    "name": "東京賽場○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20004": {
+    "name": "中山賽場○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20005": {
+    "name": "阪神賽場○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20006": {
+    "name": "京都賽場○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20007": {
+    "name": "中京賽場○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20008": {
+    "name": "札幌賽場○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20009": {
+    "name": "函館賽場○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20010": {
+    "name": "福島賽場○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20011": {
+    "name": "新潟賽場○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20012": {
+    "name": "小倉賽場○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20013": {
+    "name": "主要距離○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20014": {
+    "name": "非主要距離○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20015": {
+    "name": "良好場地○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20016": {
+    "name": "路況差勁○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20017": {
+    "name": "春賽馬娘○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20018": {
+    "name": "夏賽馬娘○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20019": {
+    "name": "秋賽馬娘○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20020": {
+    "name": "冬賽馬娘○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20021": {
+    "name": "晴天○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20022": {
+    "name": "陰天○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20023": {
+    "name": "下雨天○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20024": {
+    "name": "下雪天○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20025": {
+    "name": "擅長內側閘位○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20026": {
+    "name": "擅長外側閘位○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20027": {
+    "name": "喜歡獨處○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20028": {
+    "name": "對抗意識○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20029": {
+    "name": "徹底鎖定○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20030": {
+    "name": "伏兵○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20033": {
+    "name": "彎道靈巧○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20034": {
+    "name": "彎道加速○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20035": {
+    "name": "彎道回復○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20036": {
+    "name": "直線靈巧",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20037": {
+    "name": "直線加速",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20038": {
+    "name": "直線回復",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20043": {
+    "name": "集中力",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20044": {
+    "name": "隱藏身影",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20045": {
+    "name": "取位天賦",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20046": {
+    "name": "加速步調",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20047": {
+    "name": "維持步調",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20048": {
+    "name": "混戰冷靜",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20049": {
+    "name": "避開力竭賽馬娘",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20050": {
+    "name": "臨機應變",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20051": {
+    "name": "尾段加速",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20053": {
+    "name": "先鋒",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20054": {
+    "name": "疾行",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20055": {
+    "name": "準備強行衝線",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20056": {
+    "name": "維持持久力",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20057": {
+    "name": "好位追趕",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20058": {
+    "name": "準備突圍",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20059": {
+    "name": "前驅取位",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20060": {
+    "name": "居中超前姿勢",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20061": {
+    "name": "準備外側超前",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20062": {
+    "name": "後方待機",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20063": {
+    "name": "進攻時機超群",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20064": {
+    "name": "直線一口氣",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20065": {
+    "name": "短途檔位",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20066": {
+    "name": "靜觀其變",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20067": {
+    "name": "窮追不捨",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20068": {
+    "name": "積極應對",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20069": {
+    "name": "觀察情勢",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20070": {
+    "name": "上昇氣流",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20071": {
+    "name": "前途無量",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20072": {
+    "name": "加快節奏",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20073": {
+    "name": "緊咬不放",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20074": {
+    "name": "深呼吸",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20075": {
+    "name": "內側強者",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20076": {
+    "name": "第二體力條",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20077": {
+    "name": "謀略（前）",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20078": {
+    "name": "謀略（後）",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20079": {
+    "name": "對領頭策略",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20080": {
+    "name": "對前列策略",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20081": {
+    "name": "對居中策略",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20082": {
+    "name": "對後追策略",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20083": {
+    "name": "牽制領頭",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20084": {
+    "name": "使領頭焦躁",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20085": {
+    "name": "使領頭遲疑",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20086": {
+    "name": "牽制前列",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20087": {
+    "name": "使前列焦躁",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20088": {
+    "name": "使前列遲疑",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20089": {
+    "name": "牽制居中",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20090": {
+    "name": "使居中焦躁",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20091": {
+    "name": "使居中遲疑",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20092": {
+    "name": "牽制後追",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20093": {
+    "name": "使後追焦躁",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20094": {
+    "name": "使後追遲疑",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20095": {
+    "name": "大井賽場○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20096": {
+    "name": "短距離直線○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20097": {
+    "name": "短距離彎道○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20098": {
+    "name": "大幅領先",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20099": {
+    "name": "善後策略",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20100": {
+    "name": "準備進攻",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20101": {
+    "name": "緊盯後方",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20102": {
+    "name": "禁止搶先",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20103": {
+    "name": "一哩直線○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20104": {
+    "name": "一哩彎道○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20105": {
+    "name": "變速",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20106": {
+    "name": "加速度",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20107": {
+    "name": "不服輸",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20108": {
+    "name": "速度吞噬者",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20109": {
+    "name": "布局",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20110": {
+    "name": "中距離直線○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20111": {
+    "name": "中距離彎道○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20112": {
+    "name": "鷹眼",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20113": {
+    "name": "閃電步伐",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20114": {
+    "name": "輕快步伐",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20115": {
+    "name": "束縛",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20116": {
+    "name": "細語",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20117": {
+    "name": "長距離直線○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20118": {
+    "name": "長距離彎道○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20119": {
+    "name": "維持領先",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20120": {
+    "name": "熟練超越",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20121": {
+    "name": "後來居上",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20122": {
+    "name": "持久力吞噬者",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20123": {
+    "name": "障眼法",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20124": {
+    "name": "領頭直線○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20125": {
+    "name": "領頭彎道○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20126": {
+    "name": "迴避危險",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20127": {
+    "name": "領先的自尊",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20128": {
+    "name": "隨勢而動",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20129": {
+    "name": "第二對策",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20130": {
+    "name": "重新開始",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20131": {
+    "name": "前列直線○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20132": {
+    "name": "前列彎道○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20133": {
+    "name": "靈巧步伐",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20134": {
+    "name": "直線滑下",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20135": {
+    "name": "補充營養",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20136": {
+    "name": "重整態勢",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20137": {
+    "name": "干擾",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20138": {
+    "name": "居中直線○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20139": {
+    "name": "居中彎道○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20140": {
+    "name": "努力不懈",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20141": {
+    "name": "十萬衝勁",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20142": {
+    "name": "稍微休息",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20143": {
+    "name": "解讀力",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20144": {
+    "name": "銳利眼光",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20145": {
+    "name": "後追直線○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20146": {
+    "name": "後追彎道○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20147": {
+    "name": "看穿",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20148": {
+    "name": "放學的樂趣",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20149": {
+    "name": "冷靜",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20150": {
+    "name": "策士",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20151": {
+    "name": "凝視",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20152": {
+    "name": "領頭的訣竅○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20153": {
+    "name": "前列的訣竅○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20154": {
+    "name": "居中的訣竅○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20155": {
+    "name": "後追的訣竅○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20156": {
+    "name": "幸運7",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20157": {
+    "name": "777",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20158": {
+    "name": "登山家",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20159": {
+    "name": "喜愛賽馬娘",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20160": {
+    "name": "打好基礎",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20161": {
+    "name": "豎起尾巴",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20162": {
+    "name": "使盡全力",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20163": {
+    "name": "同理心",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20164": {
+    "name": "獨行俠",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20165": {
+    "name": "滑流",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20166": {
+    "name": "遊戲到此為止了！",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20167": {
+    "name": "精選推薦",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20168": {
+    "name": "鎖定前排",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20169": {
+    "name": "沉靜的呼吸",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20170": {
+    "name": "傾注一切",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20190": {
+    "name": "正面對決",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20200": {
+    "name": "適應沙塵",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20201": {
+    "name": "暖場好戲",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20202": {
+    "name": "提前進攻",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20203": {
+    "name": "可疑的作戰",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20204": {
+    "name": "腳步輕盈",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20207": {
+    "name": "我行我素",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20208": {
+    "name": "機不可失",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20209": {
+    "name": "鬥爭心",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20210": {
+    "name": "積極前進",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20211": {
+    "name": "氣勢十足",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20212": {
+    "name": "無畏之心",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20213": {
+    "name": "灌注氣魄",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20215": {
+    "name": "氣閥全開",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20216": {
+    "name": "自制之心",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20217": {
+    "name": "下坡靈巧",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20219": {
+    "name": "毫無破綻",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20220": {
+    "name": "川崎賽場○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20221": {
+    "name": "船橋賽場○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20222": {
+    "name": "盛岡賽場○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20223": {
+    "name": "夜間賽○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20224": {
+    "name": "急彎○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20225": {
+    "name": "交流主要競賽○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20226": {
+    "name": "明朗之兆",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20227": {
+    "name": "重振旗鼓",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20228": {
+    "name": "長驅直入",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20229": {
+    "name": "思緒清晰",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20230": {
+    "name": "沙浴○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20231": {
+    "name": "熱情十足",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20232": {
+    "name": "緊急上升",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20233": {
+    "name": "熟練邁步",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20234": {
+    "name": "玩泥巴○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20235": {
+    "name": "塵煙",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20236": {
+    "name": "壓迫感",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20237": {
+    "name": "進攻的姿態",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20238": {
+    "name": "突圍計策",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20239": {
+    "name": "孜孜不倦",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20240": {
+    "name": "一飛衝天",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20241": {
+    "name": "上進心",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20242": {
+    "name": "不顧一切",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20243": {
+    "name": "穩健的步伐",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20244": {
+    "name": "投機取巧",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20245": {
+    "name": "迅猛之腳",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20246": {
+    "name": "堅定不移",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20247": {
+    "name": "咬住不放",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20248": {
+    "name": "發揮本領",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20249": {
+    "name": "衝勁",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20250": {
+    "name": "不顧後果",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20252": {
+    "name": "破格",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20253": {
+    "name": "優雅的步伐",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20254": {
+    "name": "壓力",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20255": {
+    "name": "快速",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20256": {
+    "name": "鎖定",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20258": {
+    "name": "心無旁鶩",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20259": {
+    "name": "匆促",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20260": {
+    "name": "點火",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20261": {
+    "name": "滿溢的熱情",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20262": {
+    "name": "開始推進",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20264": {
+    "name": "始於足下",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20265": {
+    "name": "自信家",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20266": {
+    "name": "湧現熱量",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20267": {
+    "name": "雀躍",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20268": {
+    "name": "心情上升",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20269": {
+    "name": "搶得先機",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20270": {
+    "name": "探求心",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20271": {
+    "name": "自信的一步",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20272": {
+    "name": "堅毅之心  ",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20273": {
+    "name": "隆尚賽場○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20274": {
+    "name": "品行端正",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20275": {
+    "name": "專注前進",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20276": {
+    "name": "邁向勝利",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20277": {
+    "name": "瞄準目標",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20279": {
+    "name": "中期靈巧",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20280": {
+    "name": "初期靈巧",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20281": {
+    "name": "終幕",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20282": {
+    "name": "無所迷惘",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20283": {
+    "name": "未雨綢繆",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20284": {
+    "name": "除去沙塵",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20285": {
+    "name": "脫穎而出",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20286": {
+    "name": "急速起步",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20287": {
+    "name": "全力以赴的步伐",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20288": {
+    "name": "沸騰血潮",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20289": {
+    "name": "不動之心",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20290": {
+    "name": "推力十足",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20291": {
+    "name": "瓦解敵勢",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20292": {
+    "name": "毫無保留",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20293": {
+    "name": "踏影而行",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20294": {
+    "name": "鬼氣逼人",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20295": {
+    "name": "先驅者",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20296": {
+    "name": "激揚的意志",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20297": {
+    "name": "緊抓良機",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20298": {
+    "name": "飛躍的預感",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20299": {
+    "name": "直線賽道○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20300": {
+    "name": "玩弄指掌",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20301": {
+    "name": "瞬間爆發力",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20302": {
+    "name": "破風",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20303": {
+    "name": "率直的一步",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20304": {
+    "name": "激昂的內心",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20305": {
+    "name": "堅定的信念",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20306": {
+    "name": "無二",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20307": {
+    "name": "無三",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20308": {
+    "name": "竭盡全力",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20309": {
+    "name": "沙地直線○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20310": {
+    "name": "沙地彎道○",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20311": {
+    "name": "正面突破",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20312": {
+    "name": "邁向更高的境界",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20313": {
+    "name": "決勝一擊",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20314": {
+    "name": "克己之心",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20315": {
+    "name": "毫無保留的熱情",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20316": {
+    "name": "奮不顧身",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20317": {
+    "name": "擅長切換",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20318": {
+    "name": "矛盾的情感",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20320": {
+    "name": "一閃而過",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20321": {
+    "name": "隨心所欲",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20322": {
+    "name": "果敢進擊",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20323": {
+    "name": "急促的步伐",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20324": {
+    "name": "開端",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20325": {
+    "name": "急襲",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20326": {
+    "name": "下定決心",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20327": {
+    "name": "先鋒隊長",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20330": {
+    "name": "狂熱",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20331": {
+    "name": "朝著光的指引",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20332": {
+    "name": "急降",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20333": {
+    "name": "預先準備",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20334": {
+    "name": "逼近的腳步聲",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20335": {
+    "name": "高速步頻",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20336": {
+    "name": "一步一步向前",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20337": {
+    "name": "回擊",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20338": {
+    "name": "領先到底的姿勢",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20339": {
+    "name": "破天荒",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20340": {
+    "name": "乘順風而行",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20341": {
+    "name": "踏實努力",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20342": {
+    "name": "相信自己",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20343": {
+    "name": "躍動",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20344": {
+    "name": "跨越憧憬",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20345": {
+    "name": "轉折點",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20346": {
+    "name": "絕塵一步",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20347": {
+    "name": "滿腔鬥志",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20348": {
+    "name": "寸步不讓",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20349": {
+    "name": "火花四濺",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20350": {
+    "name": "無與倫比",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20351": {
+    "name": "霸氣十足",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20352": {
+    "name": "一線曙光",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20353": {
+    "name": "登龍門",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20354": {
+    "name": "信步而行",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20355": {
+    "name": "振速",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20356": {
+    "name": "奮鬥",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20357": {
+    "name": "立足點",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20358": {
+    "name": "捕捉",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20359": {
+    "name": "強行突破！",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20360": {
+    "name": "踢沙",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20361": {
+    "name": "精進",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20362": {
+    "name": "筆直奔馳",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20363": {
+    "name": "挑戰夢想",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20364": {
+    "name": "光明",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20365": {
+    "name": "開拓活路！",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20366": {
+    "name": "強健腳力",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20367": {
+    "name": "寂靜的熱度",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20368": {
+    "name": "不停地鍛鍊",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20370": {
+    "name": "用盡全力",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20371": {
+    "name": "充滿勇氣的一步",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20373": {
+    "name": "鼓起幹勁",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20374": {
+    "name": "乘隙而入",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20375": {
+    "name": "逐影",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20376": {
+    "name": "追趕而上",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20377": {
+    "name": "不懼之心",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20378": {
+    "name": "衝動",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20379": {
+    "name": "好鬥",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20380": {
+    "name": "殷切的思緒",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20381": {
+    "name": "堅定意志",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20382": {
+    "name": "內心的野獸",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20383": {
+    "name": "以頂點為目標",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20384": {
+    "name": "模範生",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20385": {
+    "name": "為之傾心",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20386": {
+    "name": "隨興的步伐",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20387": {
+    "name": "輕快的步伐",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20388": {
+    "name": "刻不容緩",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20389": {
+    "name": "熱血激昂",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20390": {
+    "name": "急速降落",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20391": {
+    "name": "心懷榮耀",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20392": {
+    "name": "前奏曲",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20397": {
+    "name": "不擇手段",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "20398": {
+    "name": "生命力",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21001": {
+    "name": "青春點火．速度",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21002": {
+    "name": "青春點火．體能",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21003": {
+    "name": "青春點火．力量",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21004": {
+    "name": "青春點火．意志",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21005": {
+    "name": "青春點火．智慧",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21006": {
+    "name": "璀璨繁星",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21007": {
+    "name": "夢想的途中",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21008": {
+    "name": "競賽的精髓．速度",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21009": {
+    "name": "競賽的精髓．體能",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21010": {
+    "name": "競賽的精髓．力量",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21011": {
+    "name": "競賽的精髓．意志",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21012": {
+    "name": "競賽的精髓．智慧",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21013": {
+    "name": "競賽的精髓．心得",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21014": {
+    "name": "競賽的精髓．速度＋",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21015": {
+    "name": "競賽的精髓．體能＋",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21016": {
+    "name": "競賽的精髓．力量＋",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21017": {
+    "name": "競賽的精髓．意志＋",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21018": {
+    "name": "競賽的精髓．智慧＋",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21019": {
+    "name": "競賽的精髓．心得＋",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21020": {
+    "name": "只注視前方",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21021": {
+    "name": "青春點火．速度＋",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21022": {
+    "name": "青春點火．體能＋",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21023": {
+    "name": "青春點火．力量＋",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21024": {
+    "name": "青春點火．意志＋",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21025": {
+    "name": "青春點火．智慧＋",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21026": {
+    "name": "太陽的庇護",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21027": {
+    "name": "大海的庇護",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21028": {
+    "name": "大地的庇護",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21029": {
+    "name": "背負意志",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21030": {
+    "name": "燃燒靈魂",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21032": {
+    "name": "願永遠健康",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21034": {
+    "name": "重播夢想的方法",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21035": {
+    "name": "改變時代之人",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "21036": {
+    "name": "順從自我",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "30001": {
+    "name": "URA劇本",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "30002": {
+    "name": "青春盃劇本",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "30003": {
+    "name": "巔峰賽劇本",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "30004": {
+    "name": "繁星演唱會劇本",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "30005": {
+    "name": "頂尖大師賽劇本",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "30006": {
+    "name": "L'Arc劇本",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31001": {
+    "name": "L'Arc．國外西方草地資質",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31002": {
+    "name": "L'Arc．隆尚資質",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31003": {
+    "name": "L'Arc．生活作息",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31004": {
+    "name": "L'Arc．營養管理",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31005": {
+    "name": "L'Arc．法語能力",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31006": {
+    "name": "L'Arc．國外遠征",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31007": {
+    "name": "L'Arc．過人膽識",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31008": {
+    "name": "L'Arc．堅定意志",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31009": {
+    "name": "L'Arc的希望",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31010": {
+    "name": "連霸凱旋門賞的夢想",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31011": {
+    "name": "U.A.F.劇本．球類",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31012": {
+    "name": "U.A.F.劇本．搏鬥",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31013": {
+    "name": "U.A.F.劇本．自由",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31014": {
+    "name": "31014",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      3
+    ]
+  },
+  "31015": {
+    "name": "大豐食祭劇本．胡蘿蔔",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31016": {
+    "name": "大豐食祭劇本．大蒜",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31017": {
+    "name": "大豐食祭劇本．馬鈴薯",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31018": {
+    "name": "大豐食祭劇本．辣椒",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31019": {
+    "name": "大豐食祭劇本．草莓",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31020": {
+    "name": "31020",
+    "cat": "white",
+    "type": 4,
+    "cat_label": "白因子(技能)",
+    "stars": [
+      3
+    ]
+  },
+  "31021": {
+    "name": "機械賽馬娘劇本．SPD",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31022": {
+    "name": "機械賽馬娘劇本．STM",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31023": {
+    "name": "機械賽馬娘劇本．POW",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31024": {
+    "name": "機械賽馬娘劇本．GUTS",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31025": {
+    "name": "機械賽馬娘劇本．WIT",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31026": {
+    "name": "Legends劇本",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "31027": {
+    "name": "無人島劇本",
+    "cat": "scenario",
+    "type": 6,
+    "cat_label": "白因子(劇本)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "40001": {
+    "name": "狂歡節加成",
+    "cat": "event",
+    "type": 7,
+    "cat_label": "白因子(活動)",
+    "stars": [
+      1
+    ]
+  },
+  "40002": {
+    "name": "40002",
+    "cat": "event",
+    "type": 7,
+    "cat_label": "白因子(活動)",
+    "stars": [
+      1
+    ]
+  },
+  "40003": {
+    "name": "40003",
+    "cat": "event",
+    "type": 7,
+    "cat_label": "白因子(活動)",
+    "stars": [
+      1
+    ]
+  },
+  "40004": {
+    "name": "40004",
+    "cat": "event",
+    "type": 7,
+    "cat_label": "白因子(活動)",
+    "stars": [
+      1
+    ]
+  },
+  "40005": {
+    "name": "40005",
+    "cat": "event",
+    "type": 7,
+    "cat_label": "白因子(活動)",
+    "stars": [
+      1
+    ]
+  },
+  "40006": {
+    "name": "40006",
+    "cat": "event",
+    "type": 7,
+    "cat_label": "白因子(活動)",
+    "stars": [
+      1
+    ]
+  },
+  "40007": {
+    "name": "40007",
+    "cat": "event",
+    "type": 7,
+    "cat_label": "白因子(活動)",
+    "stars": [
+      1
+    ]
+  },
+  "50001": {
+    "name": "草地的基因",
+    "cat": "gene",
+    "type": 10,
+    "cat_label": "遺傳子(場地)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50002": {
+    "name": "沙地的基因",
+    "cat": "gene",
+    "type": 10,
+    "cat_label": "遺傳子(場地)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50003": {
+    "name": "短距離的基因",
+    "cat": "gene",
+    "type": 8,
+    "cat_label": "遺傳子(距離)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50004": {
+    "name": "一哩的基因",
+    "cat": "gene",
+    "type": 8,
+    "cat_label": "遺傳子(距離)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50005": {
+    "name": "中距離的基因",
+    "cat": "gene",
+    "type": 8,
+    "cat_label": "遺傳子(距離)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50006": {
+    "name": "長距離的基因",
+    "cat": "gene",
+    "type": 8,
+    "cat_label": "遺傳子(距離)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50007": {
+    "name": "領頭的基因",
+    "cat": "gene",
+    "type": 11,
+    "cat_label": "遺傳子(腳質)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50008": {
+    "name": "前列的基因",
+    "cat": "gene",
+    "type": 11,
+    "cat_label": "遺傳子(腳質)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50009": {
+    "name": "居中的基因",
+    "cat": "gene",
+    "type": 11,
+    "cat_label": "遺傳子(腳質)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50010": {
+    "name": "後追的基因",
+    "cat": "gene",
+    "type": 11,
+    "cat_label": "遺傳子(腳質)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50011": {
+    "name": "速度的覺醒",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50012": {
+    "name": "持久力的覺醒",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50013": {
+    "name": "力量的覺醒",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50014": {
+    "name": "意志力的覺醒",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50015": {
+    "name": "智力的覺醒",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50016": {
+    "name": "順時針的覺醒",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50017": {
+    "name": "逆時針的覺醒",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50018": {
+    "name": "春之覺醒",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50019": {
+    "name": "夏之覺醒",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50020": {
+    "name": "秋之覺醒",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50021": {
+    "name": "冬之覺醒",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50022": {
+    "name": "連戰連勝",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50023": {
+    "name": "東方霸主",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50024": {
+    "name": "西方霸主",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50025": {
+    "name": "旅人",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50026": {
+    "name": "稱霸全賽距",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50027": {
+    "name": "完美之冠",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50028": {
+    "name": "完美后冠",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50029": {
+    "name": "送報員",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50030": {
+    "name": "一年之計",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50031": {
+    "name": "SSS",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50032": {
+    "name": "SMS",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50033": {
+    "name": "S2000",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50034": {
+    "name": "向星星許願",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50035": {
+    "name": "珠寶",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50036": {
+    "name": "大小姐",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50037": {
+    "name": "太陽系",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50038": {
+    "name": "煞車失靈",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50039": {
+    "name": "咻咻",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50040": {
+    "name": "閃閃發亮",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50041": {
+    "name": "走一步算一步",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50042": {
+    "name": "山之子",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50043": {
+    "name": "全天候型",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50044": {
+    "name": "策劃高手",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50045": {
+    "name": "策略家",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50046": {
+    "name": "賽馬娘啊，懷抱大志吧",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50047": {
+    "name": "大肺活量",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50048": {
+    "name": "東奔西走",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50049": {
+    "name": "意志的繼承者",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50050": {
+    "name": "靠不住",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50051": {
+    "name": "奮戰",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50052": {
+    "name": "越戰越勇型",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50053": {
+    "name": "二刀流",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50054": {
+    "name": "不放棄的心",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50055": {
+    "name": "信賴的證明",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50056": {
+    "name": "自由自在",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50057": {
+    "name": "SMILE",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50058": {
+    "name": "放鬆身心",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50059": {
+    "name": "注重平衡",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50060": {
+    "name": "叛逆精神",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "50061": {
+    "name": "頭彩",
+    "cat": "title",
+    "type": 9,
+    "cat_label": "稱號因子",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100101": {
+    "name": "逐夢之星",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100102": {
+    "name": "超級可愛♪海洋潛水",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100103": {
+    "name": "威風凜凜，揭夢！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100201": {
+    "name": "不會讓出領先的景色……！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100202": {
+    "name": "邁向水平線的彼端",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100301": {
+    "name": "終極帝皇舞步",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100302": {
+    "name": "絕對是我",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100303": {
+    "name": "歌舞昇平，趣味橫生",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100401": {
+    "name": "紅焰檔位/LP1211-M",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100402": {
+    "name": "一鼓作氣♪Chu",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100403": {
+    "name": "神力顯靈超讚神諭",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100501": {
+    "name": "閃耀歌舞劇",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100502": {
+    "name": "Ravissant",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100601": {
+    "name": "勝利的躍動",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100602": {
+    "name": "聖夜的奇蹟跑者！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100701": {
+    "name": "不沉戰艦起錨！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100702": {
+    "name": "Adventure of 564",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100703": {
+    "name": "Vive la GOLD",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100801": {
+    "name": "CUTTING×DRIVE！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100802": {
+    "name": "Into High Gear!",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100901": {
+    "name": "燦爛．赤色王牌",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "100902": {
+    "name": "Queen's Lumination",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101001": {
+    "name": "VICTORY SHOT！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101002": {
+    "name": "Joyful Voyage!",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101101": {
+    "name": "精誠所至金石為開",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101102": {
+    "name": "卓越治癒術",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101103": {
+    "name": "演舞．撫子大薙刀",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101201": {
+    "name": "一較高下！激烈對決！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101202": {
+    "name": "超大份量！一口定情！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101301": {
+    "name": "必須貫徹高貴的使命",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101302": {
+    "name": "賭上最強之名",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101303": {
+    "name": "波光粼粼的海，燦爛輝煌的你",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101401": {
+    "name": "勝利者☆飛身撲",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101402": {
+    "name": "兀鷹猛擊波",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101501": {
+    "name": "獻給勝利女神的舞蹈",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101502": {
+    "name": "惠福的船歌",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101601": {
+    "name": "Shadow Break",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101602": {
+    "name": "灰色臨界點",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101701": {
+    "name": "讓你見識皇帝的威勢吧",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101702": {
+    "name": "劃破陰霾之響箭",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101801": {
+    "name": "自尊之炎",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101802": {
+    "name": "暖風吹向永恆的瞬間",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101901": {
+    "name": "尊爆☆最後衝—(ﾟ∀ﾟ)—刺！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "101902": {
+    "name": "萌到讓我活過來了！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102001": {
+    "name": "釣魚×計謀",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102002": {
+    "name": "Do Ya Breakin!",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102101": {
+    "name": "見識一下白色閃電吧！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102102": {
+    "name": "火神鳴",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102201": {
+    "name": "Fairy tale",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102202": {
+    "name": "Best day ever",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102301": {
+    "name": "∴win Q.E.D.",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102302": {
+    "name": "Presents from X",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102303": {
+    "name": "邁向勝利的逐步累積",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102401": {
+    "name": "閃耀☆著陸",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102402": {
+    "name": "花樣繽紛☆飛行演習",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102403": {
+    "name": "HOP STEP♪LOCK ON!",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102501": {
+    "name": "緊緊追著妳",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102502": {
+    "name": "由衷的喵情款待",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102601": {
+    "name": "G00 1st.F∞;",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102602": {
+    "name": "巧克力作戰行動",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102701": {
+    "name": "合成代謝開始！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102702": {
+    "name": "獻給你的拉花",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102801": {
+    "name": "I'M☆FULL☆SPEED!!",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102901": {
+    "name": "雪光，追上去吧",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "102902": {
+    "name": "請多多品嚐看看餒！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103001": {
+    "name": "藍薔薇追擊者",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103002": {
+    "name": "Drain for rose",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103003": {
+    "name": "晴空烹飪♪",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103101": {
+    "name": "充能完畢！全速前進！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103102": {
+    "name": "清新☆待客",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103103": {
+    "name": "火力全開！旋風",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103201": {
+    "name": "U=ma2",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103202": {
+    "name": "夏日天空下的光暈",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103203": {
+    "name": "超光速微粒子的可能性",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103301": {
+    "name": "迪奧斯庫洛伊流星",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103302": {
+    "name": "Crystal Mist",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103401": {
+    "name": "要衝嗎！要衝吧！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103402": {
+    "name": "燈穗",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103501": {
+    "name": "將勝利的獎券獻給你！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103502": {
+    "name": "直達夢想的彼端！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103503": {
+    "name": "GO! Full-send",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103601": {
+    "name": "trigger:BEAT",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103602": {
+    "name": "...found you.",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103701": {
+    "name": "Schwarzes Schwert",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103702": {
+    "name": "Guten Appetit♪",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103703": {
+    "name": "乘著海風的Geschenk",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103801": {
+    "name": "#LookatCurren",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103802": {
+    "name": "One True Color",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103901": {
+    "name": "身為公主要親手取勝",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "103902": {
+    "name": "爽快剛勁",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104001": {
+    "name": "KEEP IT REAL.",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104002": {
+    "name": "GET DOWN",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104003": {
+    "name": "Silent Sunset Gold",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104101": {
+    "name": "模範生×驀進＝大獲全勝",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104102": {
+    "name": "CHERRY☆亂擊",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104201": {
+    "name": "「I'm possible」",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104202": {
+    "name": "Oh!bento-magic☆",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104301": {
+    "name": "Ding Dong Boo",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104401": {
+    "name": "我贏定了☆發動天堂鳥魔法！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104402": {
+    "name": "特製魔法materialize",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104501": {
+    "name": "純潔之心",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104502": {
+    "name": "繃帶木乃伊的惡作劇♡",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104503": {
+    "name": "忍法．微笑心形結印",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104601": {
+    "name": "閃耀奪目☆STARDOM",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104602": {
+    "name": "α-star*",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104603": {
+    "name": "Forward March!",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104701": {
+    "name": "舉起吧，我的靈魂之劍！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104702": {
+    "name": "邂逅未知，即為故事",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104801": {
+    "name": "YEAH☆VIVID TIME!",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104802": {
+    "name": "GALmem.直到永遠♪",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "104901": {
+    "name": "身處存亡之際，面顯猖狂訕笑",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "105001": {
+    "name": "Nemesis",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "105002": {
+    "name": "Hephaistos",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "105003": {
+    "name": "Overdrive Speed",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "105101": {
+    "name": "花苞綻放之時",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "105102": {
+    "name": "Flowering Dreams",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "105201": {
+    "name": "雀躍不已的精彩時刻",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "105202": {
+    "name": "113跌倒114爬起",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "105301": {
+    "name": "熱血！！糾察之擊",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "105302": {
+    "name": "奧義‧盛夏燃燒！！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "105401": {
+    "name": "疾風暴衝飛駒衝刺！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "105501": {
+    "name": "萬彩☆美麗★世界",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "105601": {
+    "name": "顯靈了要顯靈了請顯靈吧！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "105602": {
+    "name": "三候秋收開始",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "105701": {
+    "name": "抒情，往旅途的終點",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "105702": {
+    "name": "燦爛闊步",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "105801": {
+    "name": "I Never Goof Up!",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "105802": {
+    "name": "Spooky-Scary-Happy",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "105901": {
+    "name": "彼端就在那前方……",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "105902": {
+    "name": "奔向讓人心動之處",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106001": {
+    "name": "一定能抵達前方……！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106002": {
+    "name": "Go☆Go☆for it!",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106003": {
+    "name": "Q彈．陽光普照",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106101": {
+    "name": "Pride of KING",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106102": {
+    "name": "轟隆作響！特雷森應援團！！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106103": {
+    "name": "邁向理想的winding road",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106201": {
+    "name": "咚、啪、姆！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106202": {
+    "name": "滾呀滾！？強力迴旋",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106301": {
+    "name": "百鍊成鋼",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106401": {
+    "name": "遙遙領先之道",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106402": {
+    "name": "jingle all the way",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106501": {
+    "name": "嗨起來嗨起來把手都舉高！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106502": {
+    "name": "混搭嗨起來！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106601": {
+    "name": "引擎全開！大噴射！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106701": {
+    "name": "永世光輝為我照亮昏暗",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106702": {
+    "name": "消散烏雲的黃金甲箭",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106703": {
+    "name": "鑽石鋒芒",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106801": {
+    "name": "勝利歡呼嘿呀！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106802": {
+    "name": "吉兆驚天大放送！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106803": {
+    "name": "成為大家的我！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106901": {
+    "name": "夢想是超越櫻花！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "106902": {
+    "name": "盛開吧盛開吧！我！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "107001": {
+    "name": "絢爛焦灼",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "107002": {
+    "name": "驅光馳騁，追獵繁星",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "107101": {
+    "name": "畢生夢想剎那翱翔",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "107102": {
+    "name": "Danser le présent",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "107201": {
+    "name": "烈火撩亂，無敵之舞",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "107202": {
+    "name": "勇猛果斷，烈火之刀",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "107301": {
+    "name": "熊熊燃燒的絕對意志",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "107401": {
+    "name": "清雅花信風",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "107402": {
+    "name": "Illuminate you",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "107601": {
+    "name": "花開，世界",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "107701": {
+    "name": "Road to Glory",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "107702": {
+    "name": "Joy to the World",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "107801": {
+    "name": "春光明媚",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "107802": {
+    "name": "Breezy Treat",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "107901": {
+    "name": "「船橋最強！」",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "108001": {
+    "name": "Info: Acquired",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "108101": {
+    "name": "Punkish Bite",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "108201": {
+    "name": "Shining Runway",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "108301": {
+    "name": "Mission: Triumph",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "108302": {
+    "name": "Immortal Work",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "108401": {
+    "name": "雷霆的揚棄",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "108402": {
+    "name": "深淵的舞蹈謬斯",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "108501": {
+    "name": "保持至高",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "108502": {
+    "name": "蒼炎",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "108601": {
+    "name": "就這樣和愛一起熔解吧",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "108602": {
+    "name": "解不開的誓言",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "108701": {
+    "name": "Silent letter",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "108702": {
+    "name": "柔軟療癒時光",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "108801": {
+    "name": "Reversal Illusion",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "108802": {
+    "name": "連鎖夏雷！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "108901": {
+    "name": "Celeste Oath",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "108902": {
+    "name": "Tidebreaker",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "109001": {
+    "name": "Queen's Rebirth",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "109101": {
+    "name": "絢爛☆噴泉",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "109102": {
+    "name": "愛戀☆假期！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "109301": {
+    "name": "幸福的藍光",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "109302": {
+    "name": "奇蹟．思念．彈奏",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "109401": {
+    "name": "Faith in the Feral",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "109601": {
+    "name": "識夜欺敵，百戰不殆",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "109701": {
+    "name": "緋紅百合的激昂",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "109801": {
+    "name": "開運天翔",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "109802": {
+    "name": "五獸齊聚奏響彩光",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "109901": {
+    "name": "閃耀吧☆苫小牧",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "109902": {
+    "name": "躍出海面☆蹦跳貝殼",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "110001": {
+    "name": "Never Say Never",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "110201": {
+    "name": "Vivace Volare",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "110401": {
+    "name": "破曉錦旗「葛城榮主」！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "110402": {
+    "name": "堅定一筆",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "110501": {
+    "name": "飛向星辰彼端",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "110502": {
+    "name": "Encounter with U",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "110601": {
+    "name": "Bang☆大爆冷門的奇蹟！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "110602": {
+    "name": "將小小奇蹟送給你♪",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "110701": {
+    "name": "Billions of stars",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "110702": {
+    "name": "Romantic Horizon",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "110801": {
+    "name": "羅剎，振赤翼直至九霄",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "110901": {
+    "name": "連結．聯繫╳夢想．未來",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "110902": {
+    "name": "永無止境地閃耀光輝",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "111001": {
+    "name": "Guiding Sea",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "111002": {
+    "name": "跨越時光的潺潺流水",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "111101": {
+    "name": "依循血脈，萌芽的未來",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "111301": {
+    "name": "小跳步，向前踏，抓住你♡",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "111501": {
+    "name": "吾之霸道，無人能阻",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "111601": {
+    "name": "烈華的洗禮",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "111701": {
+    "name": "銳不可擋的快板節奏",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "111901": {
+    "name": "「那麼，願祝一路順風」",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "112001": {
+    "name": "無二無三的唯一道路",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "112101": {
+    "name": "Lame de vent",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "112401": {
+    "name": "先驅拓夢，實現的半途",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "112701": {
+    "name": "鎖定對象！執行正義！",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "113101": {
+    "name": "¡Qué alegría!",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "113201": {
+    "name": "Circulating Love♡",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  },
+  "113301": {
+    "name": "Weaving History",
+    "cat": "green",
+    "type": 3,
+    "cat_label": "綠因子(固有)",
+    "stars": [
+      1,
+      2,
+      3
+    ]
+  }
+}

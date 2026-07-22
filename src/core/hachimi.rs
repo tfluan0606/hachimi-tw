@@ -270,6 +270,11 @@ pub struct Config {
     pub disable_auto_update_check: bool,
     #[serde(default)]
     pub disable_translations: bool,
+    /// 因子卡片用亮色主題（預設暗色）
+    #[serde(default)]
+    pub factor_card_light_theme: bool,
+    /// 因子卡片輸出資料夾（未設定＝`<data>/factor_card`）
+    pub factor_card_output_dir: Option<String>,
     #[serde(default = "Config::default_ui_scale")]
     pub ui_scale: f32,
     #[serde(default)]

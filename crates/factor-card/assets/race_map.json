@@ -1,0 +1,5487 @@
+{
+  "1": {
+    "name": "二月S",
+    "grade": 100,
+    "race_group": 1
+  },
+  "2": {
+    "name": "高松宮紀念",
+    "grade": 100,
+    "race_group": 1
+  },
+  "3": {
+    "name": "大阪盃",
+    "grade": 100,
+    "race_group": 1
+  },
+  "4": {
+    "name": "天皇賞（春）",
+    "grade": 100,
+    "race_group": 1
+  },
+  "5": {
+    "name": "維多利亞一哩賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "6": {
+    "name": "日經新春盃",
+    "grade": 200,
+    "race_group": 1
+  },
+  "7": {
+    "name": "東海S",
+    "grade": 200,
+    "race_group": 1
+  },
+  "8": {
+    "name": "美國JCC",
+    "grade": 200,
+    "race_group": 1
+  },
+  "9": {
+    "name": "京都紀念",
+    "grade": 200,
+    "race_group": 1
+  },
+  "10": {
+    "name": "中山紀念",
+    "grade": 200,
+    "race_group": 1
+  },
+  "11": {
+    "name": "金鯱賞",
+    "grade": 200,
+    "race_group": 1
+  },
+  "12": {
+    "name": "阪神大賞典",
+    "grade": 200,
+    "race_group": 1
+  },
+  "13": {
+    "name": "日經賞",
+    "grade": 200,
+    "race_group": 1
+  },
+  "14": {
+    "name": "阪神賽馬娘S",
+    "grade": 200,
+    "race_group": 1
+  },
+  "15": {
+    "name": "一哩跑者C",
+    "grade": 200,
+    "race_group": 1
+  },
+  "16": {
+    "name": "京王盃春季C",
+    "grade": 200,
+    "race_group": 1
+  },
+  "17": {
+    "name": "目黑紀念",
+    "grade": 200,
+    "race_group": 1
+  },
+  "18": {
+    "name": "京都金盃",
+    "grade": 300,
+    "race_group": 1
+  },
+  "19": {
+    "name": "中山金盃",
+    "grade": 300,
+    "race_group": 1
+  },
+  "20": {
+    "name": "愛知盃",
+    "grade": 300,
+    "race_group": 1
+  },
+  "21": {
+    "name": "絲路S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "22": {
+    "name": "根岸S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "23": {
+    "name": "東京新聞盃",
+    "grade": 300,
+    "race_group": 1
+  },
+  "24": {
+    "name": "京都賽馬娘S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "25": {
+    "name": "鑽石S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "26": {
+    "name": "小倉大賞典",
+    "grade": 300,
+    "race_group": 1
+  },
+  "27": {
+    "name": "阪急盃",
+    "grade": 300,
+    "race_group": 1
+  },
+  "28": {
+    "name": "大海S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "29": {
+    "name": "中山賽馬娘S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "30": {
+    "name": "三月S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "31": {
+    "name": "打比伯爵CT",
+    "grade": 300,
+    "race_group": 1
+  },
+  "32": {
+    "name": "心宿二S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "33": {
+    "name": "福島賽馬娘S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "34": {
+    "name": "新潟大賞典",
+    "grade": 300,
+    "race_group": 1
+  },
+  "35": {
+    "name": "平安S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "36": {
+    "name": "萬葉S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "37": {
+    "name": "淀短途S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "38": {
+    "name": "北河三S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "39": {
+    "name": "一月S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "40": {
+    "name": "新年S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "41": {
+    "name": "昴宿S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "42": {
+    "name": "紅寶石S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "43": {
+    "name": "白富士S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "44": {
+    "name": "大和S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "45": {
+    "name": "洛陽S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "46": {
+    "name": "畢宿五S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "47": {
+    "name": "情人節S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "48": {
+    "name": "總武S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "49": {
+    "name": "大阪城S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "50": {
+    "name": "北極星S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "51": {
+    "name": "仁川S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "52": {
+    "name": "東風S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "53": {
+    "name": "千葉S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "55": {
+    "name": "六甲S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "56": {
+    "name": "珊瑚S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "58": {
+    "name": "京葉S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "59": {
+    "name": "春雷S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "60": {
+    "name": "福島民報盃",
+    "grade": 400,
+    "race_group": 1
+  },
+  "61": {
+    "name": "綠洲S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "62": {
+    "name": "天王山S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "63": {
+    "name": "谷川岳S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "64": {
+    "name": "大都會S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "65": {
+    "name": "鞍馬S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "66": {
+    "name": "鑽輝S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "67": {
+    "name": "都大路S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "68": {
+    "name": "栗東S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "69": {
+    "name": "五月S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "70": {
+    "name": "韋馱天S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "71": {
+    "name": "櫸樹S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "72": {
+    "name": "安土城S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "73": {
+    "name": "安田紀念",
+    "grade": 100,
+    "race_group": 1
+  },
+  "74": {
+    "name": "寶塚紀念",
+    "grade": 100,
+    "race_group": 1
+  },
+  "75": {
+    "name": "短途跑者S",
+    "grade": 100,
+    "race_group": 1
+  },
+  "76": {
+    "name": "天皇賞（秋）",
+    "grade": 100,
+    "race_group": 1
+  },
+  "77": {
+    "name": "伊麗莎白女王盃",
+    "grade": 100,
+    "race_group": 1
+  },
+  "78": {
+    "name": "一哩CS",
+    "grade": 100,
+    "race_group": 1
+  },
+  "79": {
+    "name": "日本C",
+    "grade": 100,
+    "race_group": 1
+  },
+  "80": {
+    "name": "日本冠軍C",
+    "grade": 100,
+    "race_group": 1
+  },
+  "81": {
+    "name": "有馬紀念",
+    "grade": 100,
+    "race_group": 1
+  },
+  "82": {
+    "name": "札幌紀念",
+    "grade": 200,
+    "race_group": 1
+  },
+  "83": {
+    "name": "人馬S",
+    "grade": 200,
+    "race_group": 1
+  },
+  "84": {
+    "name": "神戶新聞盃",
+    "grade": 200,
+    "race_group": 1
+  },
+  "85": {
+    "name": "產經賞",
+    "grade": 200,
+    "race_group": 1
+  },
+  "86": {
+    "name": "每日王冠",
+    "grade": 200,
+    "race_group": 1
+  },
+  "87": {
+    "name": "京都大賞典",
+    "grade": 200,
+    "race_group": 1
+  },
+  "88": {
+    "name": "府中賽馬娘S",
+    "grade": 200,
+    "race_group": 1
+  },
+  "89": {
+    "name": "天鵝S",
+    "grade": 200,
+    "race_group": 1
+  },
+  "90": {
+    "name": "阿根廷共和國盃",
+    "grade": 200,
+    "race_group": 1
+  },
+  "91": {
+    "name": "長途跑者S",
+    "grade": 200,
+    "race_group": 1
+  },
+  "92": {
+    "name": "阪神C",
+    "grade": 200,
+    "race_group": 1
+  },
+  "93": {
+    "name": "鳴尾紀念",
+    "grade": 300,
+    "race_group": 1
+  },
+  "94": {
+    "name": "人魚S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "95": {
+    "name": "葉森C",
+    "grade": 300,
+    "race_group": 1
+  },
+  "96": {
+    "name": "函館短途S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "97": {
+    "name": "CBC賞",
+    "grade": 300,
+    "race_group": 1
+  },
+  "98": {
+    "name": "南河三S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "99": {
+    "name": "七夕賞",
+    "grade": 300,
+    "race_group": 1
+  },
+  "100": {
+    "name": "函館紀念",
+    "grade": 300,
+    "race_group": 1
+  },
+  "101": {
+    "name": "中京紀念",
+    "grade": 300,
+    "race_group": 1
+  },
+  "102": {
+    "name": "朱鷺SD",
+    "grade": 300,
+    "race_group": 1
+  },
+  "103": {
+    "name": "女王S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "104": {
+    "name": "小倉紀念",
+    "grade": 300,
+    "race_group": 1
+  },
+  "105": {
+    "name": "關屋紀念",
+    "grade": 300,
+    "race_group": 1
+  },
+  "106": {
+    "name": "榆樹S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "107": {
+    "name": "北九州紀念",
+    "grade": 300,
+    "race_group": 1
+  },
+  "108": {
+    "name": "堅蘭C",
+    "grade": 300,
+    "race_group": 1
+  },
+  "109": {
+    "name": "新潟紀念",
+    "grade": 300,
+    "race_group": 1
+  },
+  "110": {
+    "name": "京成盃AH",
+    "grade": 300,
+    "race_group": 1
+  },
+  "111": {
+    "name": "天狼星S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "112": {
+    "name": "富士S",
+    "grade": 200,
+    "race_group": 1
+  },
+  "113": {
+    "name": "都城S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "114": {
+    "name": "武藏野S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "115": {
+    "name": "福島紀念",
+    "grade": 300,
+    "race_group": 1
+  },
+  "116": {
+    "name": "京阪盃",
+    "grade": 300,
+    "race_group": 1
+  },
+  "117": {
+    "name": "挑戰C",
+    "grade": 300,
+    "race_group": 1
+  },
+  "118": {
+    "name": "中日新聞盃",
+    "grade": 300,
+    "race_group": 1
+  },
+  "119": {
+    "name": "五車二S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "120": {
+    "name": "綠松石S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "121": {
+    "name": "阿哈爾捷金馬S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "122": {
+    "name": "天保山S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "123": {
+    "name": "米子S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "124": {
+    "name": "大沼S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "125": {
+    "name": "天堂S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "126": {
+    "name": "巴賞",
+    "grade": 400,
+    "race_group": 1
+  },
+  "127": {
+    "name": "海洋S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "129": {
+    "name": "福島電視台OP",
+    "grade": 400,
+    "race_group": 1
+  },
+  "130": {
+    "name": "札幌日經OP",
+    "grade": 400,
+    "race_group": 1
+  },
+  "131": {
+    "name": "UHB賞",
+    "grade": 400,
+    "race_group": 1
+  },
+  "132": {
+    "name": "阿蘇S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "133": {
+    "name": "NST賞",
+    "grade": 400,
+    "race_group": 1
+  },
+  "134": {
+    "name": "BSN賞",
+    "grade": 400,
+    "race_group": 1
+  },
+  "135": {
+    "name": "小倉日經OP",
+    "grade": 400,
+    "race_group": 1
+  },
+  "136": {
+    "name": "朱鷺S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "137": {
+    "name": "丹頂S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "138": {
+    "name": "危宿三S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "139": {
+    "name": "日本電台賞",
+    "grade": 400,
+    "race_group": 1
+  },
+  "140": {
+    "name": "港灣人工島S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "141": {
+    "name": "蛋白石S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "142": {
+    "name": "綠色頻道C",
+    "grade": 400,
+    "race_group": 1
+  },
+  "143": {
+    "name": "十月S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "144": {
+    "name": "信越S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "145": {
+    "name": "室町S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "146": {
+    "name": "巴西C",
+    "grade": 400,
+    "race_group": 1
+  },
+  "147": {
+    "name": "仙后座S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "148": {
+    "name": "光芒秋季D",
+    "grade": 400,
+    "race_group": 1
+  },
+  "149": {
+    "name": "黃金C",
+    "grade": 400,
+    "race_group": 1
+  },
+  "150": {
+    "name": "仙女座S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "151": {
+    "name": "霜月S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "152": {
+    "name": "福島民友C",
+    "grade": 400,
+    "race_group": 1
+  },
+  "153": {
+    "name": "首都S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "154": {
+    "name": "秋葉S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "155": {
+    "name": "青金石S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "156": {
+    "name": "師走S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "157": {
+    "name": "參宿七S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "158": {
+    "name": "坦桑石S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "159": {
+    "name": "十二月S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "160": {
+    "name": "銀河S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "161": {
+    "name": "參宿四S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "162": {
+    "name": "櫻花賞",
+    "grade": 100,
+    "race_group": 1
+  },
+  "163": {
+    "name": "皋月賞",
+    "grade": 100,
+    "race_group": 1
+  },
+  "164": {
+    "name": "NHK一哩C",
+    "grade": 100,
+    "race_group": 1
+  },
+  "165": {
+    "name": "奧克斯",
+    "grade": 100,
+    "race_group": 1
+  },
+  "166": {
+    "name": "日本打比",
+    "grade": 100,
+    "race_group": 1
+  },
+  "167": {
+    "name": "秋華賞",
+    "grade": 100,
+    "race_group": 1
+  },
+  "168": {
+    "name": "菊花賞",
+    "grade": 100,
+    "race_group": 1
+  },
+  "169": {
+    "name": "彌生賞",
+    "grade": 200,
+    "race_group": 1
+  },
+  "170": {
+    "name": "賽馬娘賽",
+    "grade": 200,
+    "race_group": 1
+  },
+  "171": {
+    "name": "春季S",
+    "grade": 200,
+    "race_group": 1
+  },
+  "172": {
+    "name": "紐西蘭T",
+    "grade": 200,
+    "race_group": 1
+  },
+  "173": {
+    "name": "花仙S",
+    "grade": 200,
+    "race_group": 1
+  },
+  "174": {
+    "name": "青葉賞",
+    "grade": 200,
+    "race_group": 1
+  },
+  "175": {
+    "name": "京都新聞盃",
+    "grade": 200,
+    "race_group": 1
+  },
+  "176": {
+    "name": "玫瑰S",
+    "grade": 200,
+    "race_group": 1
+  },
+  "177": {
+    "name": "聖烈特紀念",
+    "grade": 200,
+    "race_group": 1
+  },
+  "178": {
+    "name": "新山紀念",
+    "grade": 300,
+    "race_group": 1
+  },
+  "179": {
+    "name": "妖精S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "180": {
+    "name": "京成盃",
+    "grade": 300,
+    "race_group": 1
+  },
+  "181": {
+    "name": "如月賞",
+    "grade": 300,
+    "race_group": 1
+  },
+  "182": {
+    "name": "女王C",
+    "grade": 300,
+    "race_group": 1
+  },
+  "183": {
+    "name": "共同通信盃",
+    "grade": 300,
+    "race_group": 1
+  },
+  "184": {
+    "name": "阿靈頓C",
+    "grade": 300,
+    "race_group": 1
+  },
+  "185": {
+    "name": "鬱金香賞",
+    "grade": 200,
+    "race_group": 1
+  },
+  "186": {
+    "name": "獵鷹S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "187": {
+    "name": "百花C",
+    "grade": 300,
+    "race_group": 1
+  },
+  "188": {
+    "name": "每日盃",
+    "grade": 300,
+    "race_group": 1
+  },
+  "189": {
+    "name": "獨角獸S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "190": {
+    "name": "日經電台賞",
+    "grade": 300,
+    "race_group": 1
+  },
+  "191": {
+    "name": "獵豹S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "192": {
+    "name": "紫苑S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "193": {
+    "name": "新手級C",
+    "grade": 400,
+    "race_group": 1
+  },
+  "194": {
+    "name": "紅梅S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "195": {
+    "name": "幼駒S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "196": {
+    "name": "番紅花S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "197": {
+    "name": "精靈S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "198": {
+    "name": "風信子S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "199": {
+    "name": "菫S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "200": {
+    "name": "銀蓮花S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "201": {
+    "name": "昇龍S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "202": {
+    "name": "若葉S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "203": {
+    "name": "瑪格麗特S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "204": {
+    "name": "伏龍S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "205": {
+    "name": "勿忘草賞",
+    "grade": 400,
+    "race_group": 1
+  },
+  "206": {
+    "name": "橘S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "207": {
+    "name": "端午S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "208": {
+    "name": "香豌豆S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "209": {
+    "name": "主角S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "210": {
+    "name": "葵S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "211": {
+    "name": "青龍S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "212": {
+    "name": "鳳雛S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "213": {
+    "name": "白百合S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "215": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "216": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "217": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "220": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "223": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "224": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "225": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "227": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "228": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "229": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "236": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "239": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "240": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "241": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "244": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "246": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "247": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "260": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "261": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "266": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "267": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "268": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "270": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "271": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "272": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "274": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "275": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "276": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "278": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "279": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "280": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "281": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "282": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "283": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "284": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "285": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "286": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "287": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "291": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "292": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "293": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "294": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "295": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "296": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "297": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "298": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "299": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "300": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "303": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "304": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "305": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "306": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "308": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "309": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "310": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "311": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "314": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "315": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "316": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "317": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "319": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "320": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "321": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "322": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "323": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "324": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "326": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "328": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "330": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "331": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "334": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "335": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "337": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "339": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "341": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "342": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "344": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "345": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "347": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "351": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "352": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "353": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "356": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "357": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "361": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "362": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "363": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "398": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "399": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "400": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "401": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "404": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "405": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "406": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "407": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "408": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "409": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "410": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "411": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "417": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "418": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "419": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "420": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "422": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "423": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "424": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "425": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "430": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "431": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "432": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "433": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "437": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "438": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "439": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "442": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "443": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "444": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "445": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "446": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "448": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "449": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "450": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "538": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "548": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "556": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "560": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "561": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "565": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "574": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "581": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "603": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "606": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "610": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "618": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "622": {
+    "name": "經典級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "623": {
+    "name": "阪神JF",
+    "grade": 100,
+    "race_group": 1
+  },
+  "624": {
+    "name": "朝日盃FS",
+    "grade": 100,
+    "race_group": 1
+  },
+  "625": {
+    "name": "希望S",
+    "grade": 100,
+    "race_group": 1
+  },
+  "626": {
+    "name": "京王盃新手級S",
+    "grade": 200,
+    "race_group": 1
+  },
+  "627": {
+    "name": "每日盃新手級S",
+    "grade": 200,
+    "race_group": 1
+  },
+  "628": {
+    "name": "函館新手級S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "629": {
+    "name": "新潟新手級S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "630": {
+    "name": "札幌新手級S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "631": {
+    "name": "小倉新手級S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "632": {
+    "name": "沙烏地阿拉伯RC",
+    "grade": 300,
+    "race_group": 1
+  },
+  "633": {
+    "name": "阿提米絲S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "634": {
+    "name": "幻想S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "635": {
+    "name": "東京運動盃新手級S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "636": {
+    "name": "京都新手級S",
+    "grade": 300,
+    "race_group": 1
+  },
+  "637": {
+    "name": "中京新手級S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "638": {
+    "name": "大麗花賞",
+    "grade": 400,
+    "race_group": 1
+  },
+  "639": {
+    "name": "鳳凰賞",
+    "grade": 400,
+    "race_group": 1
+  },
+  "640": {
+    "name": "波斯菊賞",
+    "grade": 400,
+    "race_group": 1
+  },
+  "641": {
+    "name": "三葉草賞",
+    "grade": 400,
+    "race_group": 1
+  },
+  "643": {
+    "name": "鈴蘭賞",
+    "grade": 400,
+    "race_group": 1
+  },
+  "644": {
+    "name": "野地菊S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "645": {
+    "name": "桔梗S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "646": {
+    "name": "芙蓉S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "647": {
+    "name": "美人蕉S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "648": {
+    "name": "紅葉S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "649": {
+    "name": "常春藤S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "650": {
+    "name": "萩S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "651": {
+    "name": "福島新手級S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "652": {
+    "name": "聖誕玫瑰S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "653": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "656": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "660": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "661": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "662": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "663": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "666": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "669": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "670": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "671": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "673": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "676": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "685": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "689": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "806": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "807": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "808": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "809": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "810": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "812": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "813": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "816": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "817": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "820": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "821": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "822": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "825": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "826": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "828": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "829": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "830": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "831": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "846": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "851": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "892": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "894": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "897": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "900": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "905": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "909": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "911": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "931": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "946": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "951": {
+    "name": "新手級未獲勝戰",
+    "grade": 800,
+    "race_group": 7
+  },
+  "1022": {
+    "name": "帝王賞",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1023": {
+    "name": "日本沙地打比",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1024": {
+    "name": "JBC女士經典賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1025": {
+    "name": "JBC短途賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1026": {
+    "name": "JBC經典賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1027": {
+    "name": "東京大賞典",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1031": {
+    "name": "紫菀賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1032": {
+    "name": "番紅花賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1033": {
+    "name": "龍膽賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1034": {
+    "name": "紫菊賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1035": {
+    "name": "懸鈴木賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1036": {
+    "name": "撫子賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1037": {
+    "name": "百日草特別賽",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1038": {
+    "name": "金木犀特別賽",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1039": {
+    "name": "酢漿草賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1040": {
+    "name": "黃菊賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1041": {
+    "name": "全緣冬青賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1042": {
+    "name": "赤松賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1043": {
+    "name": "秋明菊賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1044": {
+    "name": "嘉德麗雅蘭賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1045": {
+    "name": "秋海棠賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1046": {
+    "name": "白菊賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1047": {
+    "name": "葉牡丹賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1048": {
+    "name": "日本金松賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1049": {
+    "name": "萬兩賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1050": {
+    "name": "黑松賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1051": {
+    "name": "歐石楠賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1052": {
+    "name": "大吳風草賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1053": {
+    "name": "柊樹賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1054": {
+    "name": "茶梅賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1055": {
+    "name": "寒椿賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1056": {
+    "name": "千兩賞",
+    "grade": 700,
+    "race_group": 1
+  },
+  "1057": {
+    "name": "北九州短距離S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "1058": {
+    "name": "吾妻小富士S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "1059": {
+    "name": "神駿S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "1060": {
+    "name": "三宮S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "1061": {
+    "name": "關越S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "1062": {
+    "name": "長月S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "1063": {
+    "name": "太秦S",
+    "grade": 400,
+    "race_group": 1
+  },
+  "1064": {
+    "name": "名鐵盃",
+    "grade": 400,
+    "race_group": 1
+  },
+  "1065": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1066": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1067": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1068": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1069": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1070": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1071": {
+    "name": "寶塚紀念",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1072": {
+    "name": "寶塚紀念",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1073": {
+    "name": "菊花賞",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1074": {
+    "name": "春季S",
+    "grade": 200,
+    "race_group": 1
+  },
+  "1075": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1076": {
+    "name": "天皇賞（春）",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1077": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1078": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1079": {
+    "name": "天皇賞（春）",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1080": {
+    "name": "天皇賞（秋）",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1081": {
+    "name": "日本C",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1082": {
+    "name": "有馬紀念",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1083": {
+    "name": "天皇賞（春）",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1084": {
+    "name": "天皇賞（秋）",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1085": {
+    "name": "日本C",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1086": {
+    "name": "有馬紀念",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1087": {
+    "name": "天皇賞（秋）",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1088": {
+    "name": "日本C",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1089": {
+    "name": "有馬紀念",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1090": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1091": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1092": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1093": {
+    "name": "京成盃",
+    "grade": 300,
+    "race_group": 1
+  },
+  "1094": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1095": {
+    "name": "皋月賞",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1096": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1097": {
+    "name": "天皇賞（秋）",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1098": {
+    "name": "天皇賞（秋）",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1099": {
+    "name": "天皇賞（秋）",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1100": {
+    "name": "有馬紀念",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1101": {
+    "name": "有馬紀念",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1102": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1103": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1104": {
+    "name": "日本沙地打比",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1105": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1106": {
+    "name": "川崎紀念",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1107": {
+    "name": "全日本新手級優駿",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1108": {
+    "name": "柏紀念",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1109": {
+    "name": "一哩CS南部盃",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1110": {
+    "name": "JBC女士經典賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1111": {
+    "name": "JBC短途賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1112": {
+    "name": "JBC經典賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1113": {
+    "name": "JBC女士經典賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1114": {
+    "name": "JBC短途賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1115": {
+    "name": "JBC經典賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1116": {
+    "name": "JBC女士經典賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1117": {
+    "name": "JBC短途賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1118": {
+    "name": "JBC經典賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1119": {
+    "name": "女士預賽",
+    "grade": 200,
+    "race_group": 1
+  },
+  "1120": {
+    "name": "東京盃",
+    "grade": 200,
+    "race_group": 1
+  },
+  "1121": {
+    "name": "皇后盃",
+    "grade": 200,
+    "race_group": 1
+  },
+  "1122": {
+    "name": "關東奧克斯",
+    "grade": 200,
+    "race_group": 1
+  },
+  "1123": {
+    "name": "閃長岩紀念",
+    "grade": 200,
+    "race_group": 1
+  },
+  "1124": {
+    "name": "茶梅電視台盃",
+    "grade": 200,
+    "race_group": 1
+  },
+  "1125": {
+    "name": "TCK女王盃",
+    "grade": 300,
+    "race_group": 1
+  },
+  "1126": {
+    "name": "東京短途賽",
+    "grade": 300,
+    "race_group": 1
+  },
+  "1127": {
+    "name": "星光女士C",
+    "grade": 300,
+    "race_group": 1
+  },
+  "1128": {
+    "name": "海洋盃",
+    "grade": 300,
+    "race_group": 1
+  },
+  "1129": {
+    "name": "女王賞",
+    "grade": 300,
+    "race_group": 1
+  },
+  "1130": {
+    "name": "水星盃",
+    "grade": 300,
+    "race_group": 1
+  },
+  "1131": {
+    "name": "星團盃",
+    "grade": 300,
+    "race_group": 1
+  },
+  "1132": {
+    "name": "JBC經典賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1133": {
+    "name": "JBC短途賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1134": {
+    "name": "JBC女士經典賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1135": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1136": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1137": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1138": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1139": {
+    "name": "皋月賞",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1140": {
+    "name": "日本打比",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1141": {
+    "name": "菊花賞",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1142": {
+    "name": "天皇賞（秋）",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1143": {
+    "name": "天皇賞（秋）",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1144": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1145": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1146": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1147": {
+    "name": "一哩CS南部盃",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1148": {
+    "name": "一哩CS南部盃",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1149": {
+    "name": "日本C",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1150": {
+    "name": "日本C",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1151": {
+    "name": "短途跑者S",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1152": {
+    "name": "短途跑者S",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1153": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1154": {
+    "name": "JBC經典賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1155": {
+    "name": "JBC短途賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1156": {
+    "name": "JBC女士經典賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1157": {
+    "name": "JBC經典賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1158": {
+    "name": "JBC短途賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1159": {
+    "name": "JBC女士經典賽",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1160": {
+    "name": "一哩CS",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1161": {
+    "name": "一哩CS",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1162": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1163": {
+    "name": "青葉賞",
+    "grade": 200,
+    "race_group": 1
+  },
+  "1164": {
+    "name": "神戶新聞盃",
+    "grade": 200,
+    "race_group": 1
+  },
+  "1165": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "1166": {
+    "name": "伊麗莎白女王盃",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1167": {
+    "name": "伊麗莎白女王盃",
+    "grade": 100,
+    "race_group": 1
+  },
+  "1168": {
+    "name": "新手級閃耀出道戰",
+    "grade": 900,
+    "race_group": 7
+  },
+  "2001": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2002": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2003": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2004": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2005": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2006": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2007": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2008": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2009": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2010": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2011": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2012": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2013": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2014": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2015": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2016": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2017": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2018": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2019": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2020": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2021": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2022": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2023": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2024": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2025": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2026": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2027": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2028": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2029": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2030": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2031": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2032": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2033": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2034": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2035": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2036": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2037": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2038": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2039": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2040": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2041": {
+    "name": "URA決勝系列賽預賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2101": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2102": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2103": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2104": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2105": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2106": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2107": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2108": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2109": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2110": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2111": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2112": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2113": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2114": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2115": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2116": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2117": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2118": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2119": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2120": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2121": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2122": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2123": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2124": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2125": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2126": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2127": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2128": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2129": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2130": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2131": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2132": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2133": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2134": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2135": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2136": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2137": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2138": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2139": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2140": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2141": {
+    "name": "URA決勝系列賽準決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2201": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2202": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2203": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2204": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2205": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2206": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2207": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2208": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2209": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2210": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2211": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2212": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2213": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2214": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2215": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2216": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2217": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2218": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2219": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2220": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2221": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2222": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2223": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2224": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2225": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2226": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2227": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2228": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2229": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2230": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2231": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2232": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2233": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2234": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2235": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2236": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2237": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2238": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2239": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2240": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2241": {
+    "name": "URA決勝系列賽決賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2301": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2302": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2303": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2304": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2305": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2306": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2307": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2308": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2309": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2310": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2311": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2312": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2313": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2314": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2315": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2316": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2317": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2318": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2319": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2320": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2321": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2322": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2323": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2324": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2325": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2326": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2327": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2328": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2329": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2330": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2331": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2332": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2333": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2334": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2335": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2336": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2337": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2338": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2339": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2340": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2341": {
+    "name": "閃耀巨星巔峰賽第1戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2401": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2402": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2403": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2404": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2405": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2406": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2407": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2408": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2409": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2410": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2411": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2412": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2413": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2414": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2415": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2416": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2417": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2418": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2419": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2420": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2421": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2422": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2423": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2424": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2425": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2426": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2427": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2428": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2429": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2430": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2431": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2432": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2433": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2434": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2435": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2436": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2437": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2438": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2439": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2440": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2441": {
+    "name": "閃耀巨星巔峰賽第2戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2501": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2502": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2503": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2504": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2505": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2506": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2507": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2508": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2509": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2510": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2511": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2512": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2513": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2514": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2515": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2516": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2517": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2518": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2519": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2520": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2521": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2522": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2523": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2524": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2525": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2526": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2527": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2528": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2529": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2530": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2531": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2532": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2533": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2534": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2535": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2536": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2537": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2538": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2539": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2540": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2541": {
+    "name": "閃耀巨星巔峰賽第3戰",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2601": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2602": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2603": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2604": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2605": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2606": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2607": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2608": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2609": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2610": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2611": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2612": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2613": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2614": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2615": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2616": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2617": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2618": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2619": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2620": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2621": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2622": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2623": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2624": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2625": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2626": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2627": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2628": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2629": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2630": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2631": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2632": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2633": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2634": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2635": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2636": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2637": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2638": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2639": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2640": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2641": {
+    "name": "成長賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2701": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2702": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2703": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2704": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2705": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2706": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2707": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2708": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2709": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2710": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2711": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2712": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2713": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2714": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2715": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2716": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2717": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2718": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2719": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2720": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2721": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2722": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2723": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2724": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2725": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2726": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2727": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2728": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2729": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2730": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2731": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2732": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2733": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2734": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2735": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2736": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2737": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2738": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2739": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2740": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2741": {
+    "name": "WBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2801": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2802": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2803": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2804": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2805": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2806": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2807": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2808": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2809": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2810": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2811": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2812": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2813": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2814": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2815": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2816": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2817": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2818": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2819": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2820": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2821": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2822": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2823": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2824": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2825": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2826": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2827": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2828": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2829": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2830": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2831": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2832": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2833": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2834": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2835": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2836": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2837": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2838": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2839": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2840": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2841": {
+    "name": "SWBC",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2842": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2843": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2844": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2845": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2846": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2847": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2848": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2849": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2850": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2851": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2852": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2853": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2854": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2855": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2856": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2857": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2858": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2859": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2860": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2861": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2862": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2863": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2864": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2865": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2866": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2867": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2868": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2869": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2870": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2871": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2872": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2873": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2874": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2875": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2876": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2877": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2878": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2879": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2880": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2881": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2882": {
+    "name": "頂尖大師賽",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2901": {
+    "name": "L'Arc代表交流賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2902": {
+    "name": "L'Arc代表交流賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2903": {
+    "name": "L'Arc代表交流賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2904": {
+    "name": "L'Arc代表交流賽",
+    "grade": 1000,
+    "race_group": 7
+  },
+  "2905": {
+    "name": "尼爾賞",
+    "grade": 200,
+    "race_group": 1
+  },
+  "2906": {
+    "name": "凱旋門賞",
+    "grade": 100,
+    "race_group": 1
+  },
+  "2907": {
+    "name": "福伊賞",
+    "grade": 200,
+    "race_group": 1
+  },
+  "2908": {
+    "name": "凱旋門賞",
+    "grade": 100,
+    "race_group": 1
+  },
+  "2909": {
+    "name": "凱旋門賞",
+    "grade": 100,
+    "race_group": 1
+  },
+  "2910": {
+    "name": "Dream Fest Sprint Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2911": {
+    "name": "Dream Fest Sprint Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2912": {
+    "name": "Dream Fest Sprint Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2913": {
+    "name": "Dream Fest Sprint Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2914": {
+    "name": "Dream Fest Sprint Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2915": {
+    "name": "Dream Fest Sprint Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2916": {
+    "name": "Dream Fest Sprint Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2917": {
+    "name": "Dream Fest Mile Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2918": {
+    "name": "Dream Fest Mile Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2919": {
+    "name": "Dream Fest Mile Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2920": {
+    "name": "Dream Fest Mile Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2921": {
+    "name": "Dream Fest Mile Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2922": {
+    "name": "Dream Fest Mile Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2923": {
+    "name": "Dream Fest Mile Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2924": {
+    "name": "Dream Fest Mile Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2925": {
+    "name": "Dream Fest Classic Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2926": {
+    "name": "Dream Fest Classic Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2927": {
+    "name": "Dream Fest Classic Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2928": {
+    "name": "Dream Fest Classic Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2929": {
+    "name": "Dream Fest Classic Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2930": {
+    "name": "Dream Fest Classic Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2931": {
+    "name": "Dream Fest Classic Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2932": {
+    "name": "Dream Fest Classic Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2933": {
+    "name": "Dream Fest Classic Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2934": {
+    "name": "Dream Fest Classic Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2935": {
+    "name": "Dream Fest Dirt Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2936": {
+    "name": "Dream Fest Dirt Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2937": {
+    "name": "Dream Fest Dirt Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2938": {
+    "name": "Dream Fest Dirt Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2939": {
+    "name": "Dream Fest Dirt Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2940": {
+    "name": "Dream Fest Dirt Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2941": {
+    "name": "Dream Fest Dirt Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2942": {
+    "name": "Dream Fest Dirt Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2943": {
+    "name": "Dream Fest Dirt Stella",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2944": {
+    "name": "Dream Fest Sprint Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2945": {
+    "name": "Dream Fest Sprint Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2946": {
+    "name": "Dream Fest Sprint Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2947": {
+    "name": "Dream Fest Sprint Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2948": {
+    "name": "Dream Fest Sprint Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2949": {
+    "name": "Dream Fest Sprint Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2950": {
+    "name": "Dream Fest Sprint Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2951": {
+    "name": "Dream Fest Mile Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2952": {
+    "name": "Dream Fest Mile Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2953": {
+    "name": "Dream Fest Mile Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2954": {
+    "name": "Dream Fest Mile Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2955": {
+    "name": "Dream Fest Mile Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2956": {
+    "name": "Dream Fest Mile Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2957": {
+    "name": "Dream Fest Mile Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2958": {
+    "name": "Dream Fest Mile Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2959": {
+    "name": "Dream Fest Classic Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2960": {
+    "name": "Dream Fest Classic Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2961": {
+    "name": "Dream Fest Classic Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2962": {
+    "name": "Dream Fest Classic Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2963": {
+    "name": "Dream Fest Classic Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2964": {
+    "name": "Dream Fest Classic Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2965": {
+    "name": "Dream Fest Classic Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2966": {
+    "name": "Dream Fest Classic Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2967": {
+    "name": "Dream Fest Classic Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2968": {
+    "name": "Dream Fest Classic Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2969": {
+    "name": "Dream Fest Long Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2970": {
+    "name": "Dream Fest Long Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2971": {
+    "name": "Dream Fest Long Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2972": {
+    "name": "Dream Fest Long Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2973": {
+    "name": "Dream Fest Long Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2974": {
+    "name": "Dream Fest Long Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2975": {
+    "name": "Dream Fest Long Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2976": {
+    "name": "Dream Fest Dirt Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2977": {
+    "name": "Dream Fest Dirt Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2978": {
+    "name": "Dream Fest Dirt Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2979": {
+    "name": "Dream Fest Dirt Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2980": {
+    "name": "Dream Fest Dirt Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2981": {
+    "name": "Dream Fest Dirt Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2982": {
+    "name": "Dream Fest Dirt Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2983": {
+    "name": "Dream Fest Dirt Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2984": {
+    "name": "Dream Fest Dirt Pride",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2985": {
+    "name": "Dream Fest Sprint Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2986": {
+    "name": "Dream Fest Sprint Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2987": {
+    "name": "Dream Fest Sprint Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2988": {
+    "name": "Dream Fest Sprint Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2989": {
+    "name": "Dream Fest Sprint Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2990": {
+    "name": "Dream Fest Sprint Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2991": {
+    "name": "Dream Fest Sprint Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2992": {
+    "name": "Dream Fest Mile Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2993": {
+    "name": "Dream Fest Mile Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2994": {
+    "name": "Dream Fest Mile Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2995": {
+    "name": "Dream Fest Mile Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2996": {
+    "name": "Dream Fest Mile Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2997": {
+    "name": "Dream Fest Mile Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2998": {
+    "name": "Dream Fest Mile Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "2999": {
+    "name": "Dream Fest Mile Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3000": {
+    "name": "Dream Fest Classic Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3001": {
+    "name": "Dream Fest Classic Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3002": {
+    "name": "Dream Fest Classic Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3003": {
+    "name": "Dream Fest Classic Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3004": {
+    "name": "Dream Fest Classic Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3005": {
+    "name": "Dream Fest Classic Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3006": {
+    "name": "Dream Fest Classic Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3007": {
+    "name": "Dream Fest Classic Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3008": {
+    "name": "Dream Fest Classic Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3009": {
+    "name": "Dream Fest Classic Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3010": {
+    "name": "Dream Fest Long Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3011": {
+    "name": "Dream Fest Long Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3012": {
+    "name": "Dream Fest Long Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3013": {
+    "name": "Dream Fest Long Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3014": {
+    "name": "Dream Fest Long Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3015": {
+    "name": "Dream Fest Long Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3016": {
+    "name": "Dream Fest Long Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3017": {
+    "name": "Dream Fest Dirt Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3018": {
+    "name": "Dream Fest Dirt Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3019": {
+    "name": "Dream Fest Dirt Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3020": {
+    "name": "Dream Fest Dirt Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3021": {
+    "name": "Dream Fest Dirt Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3022": {
+    "name": "Dream Fest Dirt Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3023": {
+    "name": "Dream Fest Dirt Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3024": {
+    "name": "Dream Fest Dirt Legend",
+    "grade": 100,
+    "race_group": 7
+  },
+  "3025": {
+    "name": "Dream Fest Dirt Legend",
+    "grade": 100,
+    "race_group": 7
+  }
+}
