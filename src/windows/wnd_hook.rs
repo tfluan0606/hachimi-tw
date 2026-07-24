@@ -136,30 +136,50 @@ extern "system" fn cbt_proc(ncode: i32, wparam: WPARAM, lparam: LPARAM) -> LRESU
     unsafe { CallNextHookEx(HCBTHOOK, ncode, wparam, lparam) }
 }
 
+/// wndproc + CBT hook 只裝一次的閘門。
+static INSTALLED: AtomicBool = AtomicBool::new(false);
+
 pub fn init() {
+    // 早期嘗試：用 class+title 找視窗，找到就先裝好（能盡早支援 always-on-top / CBT）。
+    // 找不到也**不是錯誤**——render_hook 第一次 Present 會用 swapchain 的 OutputWindow 補裝，
+    // 那才是最可靠的來源。遊戲更新後視窗標題／建立時序改變，FindWindowW 會失效（＝之前的
+    // 「Failed to find game window」，連帶 overlay 因 TARGET_HWND=0 而完全不渲染）。
+    let hwnd = find_window_by_title();
+    if hwnd.0 != 0 {
+        ensure_installed(hwnd);
+    }
+    else {
+        info!("Game window not found by title yet; will install on first Present");
+    }
+}
+
+/// 沿用原本的 class+title 精確比對（早期最佳嘗試）。
+fn find_window_by_title() -> HWND {
+    let game = &Hachimi::instance().game;
+    let window_name = if game.region == Region::Japan && game.is_steam_release {
+        w!("UmamusumePrettyDerby_Jpn")
+    }
+    else if game.region == Region::Taiwan {
+        w!("komoeumamusume")
+    }
+    else {
+        w!("umamusume")
+    };
+    unsafe { FindWindowW(w!("UnityWndClass"), window_name) }
+}
+
+/// 記住目標視窗並裝上 wndproc + CBT hook。**冪等**——只有第一次真正執行。
+/// 由 [`init`] 早期嘗試，或（更可靠地）由 render_hook 首次 Present 用 swapchain 的
+/// OutputWindow 呼叫。
+pub fn ensure_installed(hwnd: HWND) {
+    if hwnd.0 == 0 {
+        return;
+    }
+    if INSTALLED.swap(true, atomic::Ordering::AcqRel) {
+        return; // 已裝過
+    }
     unsafe {
         let hachimi = Hachimi::instance();
-        let game = &hachimi.game;
-
-        let window_name = if game.region == Region::Japan && game.is_steam_release {
-            // lmao
-            w!("UmamusumePrettyDerby_Jpn")
-        }
-        else if game.region == Region::Taiwan {
-            // 繁中服 Komoe：遊戲本體視窗 class=UnityWndClass、title=komoeumamusume（= exe stem）。
-            // 啟動器是另一個 class(CGameLauncherWnd)，不會誤抓。
-            w!("komoeumamusume")
-        }
-        else {
-            // global technically has "Umamusume" as its title but this api
-            // is case insensitive so it works. why am i surprised
-            w!("umamusume")
-        };
-        let hwnd = FindWindowW(w!("UnityWndClass"), window_name);
-        if hwnd.0 == 0 {
-            error!("Failed to find game window");
-            return;
-        }
         TARGET_HWND.store(hwnd.0, atomic::Ordering::Relaxed);
 
         info!("Hooking WndProc");
