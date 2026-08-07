@@ -635,7 +635,7 @@ pub fn init() {
     // 那才是最可靠的來源。遊戲更新後視窗標題／建立時序改變，FindWindowW 會失效（＝之前的
     // 「Failed to find game window」，連帶 overlay 因 TARGET_HWND=0 而完全不渲染）。
     let hwnd = find_window_by_title();
-    if hwnd.0 != 0 {
+    if !hwnd.0.is_null() {
         ensure_installed(hwnd);
     }
     else {
@@ -655,14 +655,14 @@ fn find_window_by_title() -> HWND {
     else {
         w!("umamusume")
     };
-    unsafe { FindWindowW(w!("UnityWndClass"), window_name) }
+    unsafe { FindWindowW(w!("UnityWndClass"), window_name) }.unwrap_or_default()
 }
 
 /// 記住目標視窗並裝上 wndproc + CBT hook。**冪等**——只有第一次真正執行。
 /// 由 [`init`] 早期嘗試，或（更可靠地）由 render_hook 首次 Present 用 swapchain 的
 /// OutputWindow 呼叫。
 pub fn ensure_installed(hwnd: HWND) {
-    if hwnd.0 == 0 {
+    if hwnd.0.is_null() {
         return;
     }
     if INSTALLED.swap(true, atomic::Ordering::AcqRel) {
@@ -670,27 +670,10 @@ pub fn ensure_installed(hwnd: HWND) {
     }
     unsafe {
         let hachimi = Hachimi::instance();
-        let game = &hachimi.game;
 
-        let window_name = if game.region == Region::Japan && game.is_steam_release {
-            // lmao
-            w!("UmamusumePrettyDerby_Jpn")
-        }
-        else if game.region == Region::Taiwan {
-            // 繁中服 Komoe：遊戲本體視窗 class=UnityWndClass、title=komoeumamusume（= exe stem）。
-            // 啟動器是另一個 class(CGameLauncherWnd)，不會誤抓。
-            w!("komoeumamusume")
-        }
-        else {
-            // global technically has "Umamusume" as its title but this api
-            // is case insensitive so it works. why am i surprised
-            w!("umamusume")
-        };
-        let hwnd = FindWindowW(w!("UnityWndClass"), window_name).unwrap_or_default();
-        if hwnd.0 == ptr::null_mut() {
-            // 只記錄，不 return：早期 return 會讓 overlay 整個消失
-            error!("Failed to find game window");
-        }
+        // 一律採用呼叫端給的 hwnd。這正是 76140b8 的重點：render_hook 首次 Present 時
+        // 從 swapchain 的 OutputWindow 拿到的視窗是最可靠來源，不能在這裡再用會失效的
+        // FindWindowW 覆蓋掉（那樣 TARGET_HWND 會變 0，overlay 整個不渲染）。
         TARGET_HWND.store(hwnd.0 as isize, atomic::Ordering::Relaxed);
 
         let title = hachimi.config.load().windows.custom_title_name.clone();

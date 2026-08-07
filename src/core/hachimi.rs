@@ -84,7 +84,9 @@ pub struct Hachimi {
     #[cfg(target_os = "windows")]
     pub discord_rpc: AtomicBool,
 
-    pub updater: Arc<updater::Updater>
+    pub updater: Arc<updater::Updater>,
+
+    #[cfg(target_os = "windows")]
     pub disable_game_cursor: AtomicBool,
 
 }
@@ -181,6 +183,9 @@ impl Hachimi {
             #[cfg(target_os = "windows")]
             discord_rpc: AtomicBool::new(config.windows.discord_rpc),
 
+            updater: Arc::default(),
+
+            #[cfg(target_os = "windows")]
             disable_game_cursor: AtomicBool::new(config.windows.disable_game_cursor),
 
 

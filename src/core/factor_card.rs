@@ -202,7 +202,7 @@ fn portrait(dir: &std::path::Path, card_id: i64) -> Result<Portrait, Error> {
                 .call()
                 .map_err(|e| err(format!("下載失敗：{e}")))?;
             let mut buf = Vec::new();
-            std::io::Read::read_to_end(&mut resp.into_reader(), &mut buf)
+            std::io::Read::read_to_end(&mut resp.into_body().into_reader(), &mut buf)
                 .map_err(|e| err(e.to_string()))?;
             _ = std::fs::write(&path, &buf);
             buf

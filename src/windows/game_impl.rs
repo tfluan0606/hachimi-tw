@@ -23,7 +23,6 @@ pub fn get_region(package_name: &str) -> Region {
         "umamusume.exe" | "umamusumeprettyderby_jpn.exe" => Region::Japan,
         "komoeumamusume.exe" => Region::Taiwan,
         "umamusumeprettyderby.exe" => Region::Global,
-        "komoeumamusume.exe" => Region::Taiwan, // 繁中服 Komoe PC 端
         _ => Region::Unknown
     }
 }

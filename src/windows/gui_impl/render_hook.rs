@@ -37,12 +37,12 @@ fn check_hwnd(this: *mut c_void) -> HWND {
     };
 
     let out = desc.OutputWindow;
-    if out.0 == 0 {
-        return HWND(0);
+    if out.0.is_null() {
+        return HWND(std::ptr::null_mut());
     }
 
     let target = wnd_hook::get_target_hwnd();
-    if target.0 == 0 {
+    if target.0.is_null() {
         // wnd_hook::init 沒能用標題找到視窗（遊戲更新後標題／時序改變）。swapchain 的
         // OutputWindow 就是遊戲視窗——採用它並補裝 wndproc hook（冪等）。這是最可靠的來源，
         // 首次 Present 時視窗一定存在。

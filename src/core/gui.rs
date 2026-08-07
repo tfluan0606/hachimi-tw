@@ -1063,6 +1063,7 @@ impl Gui {
     }
 
     const ICON_IMAGE: egui::ImageSource<'static> = egui::include_image!("../../assets/icon.png");
+    const BANNER_IMAGE: egui::ImageSource<'static> = egui::include_image!("../../assets/ASKRNB_ver2.png");
     fn icon<'a>(ctx: &egui::Context) -> egui::Image<'a> {
         let scale = get_scale(ctx);
         egui::Image::new(Self::ICON_IMAGE)
@@ -1136,6 +1137,12 @@ impl Gui {
                 ui.with_layout(egui::Layout::top_down_justified(egui::Align::TOP), |ui| {
                     #[cfg(target_os = "windows")]
                     {
+                        // ASKR 牛逼！banner
+                        ui.vertical_centered(|ui| {
+                            ui.add(egui::Image::new(Self::BANNER_IMAGE)
+                                .fit_to_exact_size(egui::Vec2::splat(96.0 * scale)));
+                        });
+                        ui.add_space(4.0 * scale);
                         ui.horizontal(|ui| {
                             ui.add(Self::icon(ctx));
                             ui.heading(t!("hachimi"));
@@ -1143,6 +1150,7 @@ impl Gui {
                                 show_window = Some(Box::new(AboutWindow::new()));
                             }
                         });
+                        ui.label("ASKR牛逼");
                         ui.label(env!("HACHIMI_DISPLAY_VERSION"));
                         if ui.button(t!("menu.close_menu")).clicked() {
                             self.show_menu = false;
@@ -1191,6 +1199,56 @@ impl Gui {
                             show_window = Some(Box::new(FirstTimeSetupWindow::new()));
                         }
                         ui.separator();
+
+                        #[cfg(target_os = "windows")]
+                        {
+                            use crate::core::factor_card;
+
+                            ui.heading("因子卡片");
+                            ui.label(format!("已收集 {} 隻練成角色", factor_card::stored_count()));
+                            ui.label(match factor_card::last_viewed_label() {
+                                Some(label) => format!("目前目標：{label}"),
+                                None => "目前目標：（先點開一隻馬的詳細視窗）".to_owned()
+                            });
+                            ui.horizontal(|ui| {
+                                let mut light = factor_card::light_theme();
+                                ui.label("卡片主題");
+                                if ui.selectable_label(!light, "暗色").clicked() {
+                                    light = false;
+                                }
+                                if ui.selectable_label(light, "亮色").clicked() {
+                                    light = true;
+                                }
+                                factor_card::set_light_theme(light);
+                            });
+                            ui.horizontal(|ui| {
+                                if ui.button("設定輸出位置").clicked() {
+                                    show_window = Some(Box::new(FactorCardOutputDirWindow::new()));
+                                }
+                                if ui.button("開啟輸出資料夾").clicked() {
+                                    let dir = factor_card::output_dir();
+                                    _ = std::fs::create_dir_all(&dir);
+                                    _ = std::process::Command::new("explorer").arg(&dir).spawn();
+                                }
+                            });
+                            if ui.button("擷取目前這隻的因子卡片").clicked() {
+                                // 下載立繪＋繪圖可能要一點時間，丟到背景執行緒
+                                std::thread::spawn(|| {
+                                    let msg = match factor_card::capture(None) {
+                                        Ok(path) => format!(
+                                            "因子卡片已存到 {}",
+                                            path.file_name().map(|n| n.to_string_lossy().into_owned())
+                                                .unwrap_or_else(|| path.to_string_lossy().into_owned())
+                                        ),
+                                        Err(e) => format!("因子卡片失敗：{e}")
+                                    };
+                                    if let Some(mutex) = Gui::instance() {
+                                        mutex.lock().unwrap().show_notification(&msg);
+                                    }
+                                });
+                            }
+                            ui.separator();
+                        }
 
                         ui.heading(t!("menu.graphics_heading"));
                         ui.horizontal(|ui| {
@@ -1241,6 +1299,19 @@ impl Gui {
                                     if let Err(e) = if value { discord::start_rpc() } else { discord::stop_rpc() } {
                                         error!("{}", e);
                                     }
+                                }
+                            });
+
+                            ui.horizontal(|ui| {
+                                use crate::il2cpp::hook::UnityEngine_CoreModule::Cursor;
+
+                                let mut value = hachimi.disable_game_cursor.load(atomic::Ordering::Relaxed);
+
+                                ui.label("隱藏遊戲游標");
+                                if ui.checkbox(&mut value, "").changed() {
+                                    hachimi.disable_game_cursor.store(value, atomic::Ordering::Relaxed);
+                                    // 開啟時立即還原成系統游標；關閉時遊戲會在下次重設游標時恢復自訂圖
+                                    Cursor::apply();
                                 }
                             });
 
@@ -2196,8 +2267,7 @@ impl Window for FactorCardOutputDirWindow {
         // 借用檢查：兩個 closure 不能同時碰 self，先把路徑搬出來
         let mut path = std::mem::take(&mut self.path);
 
-        new_window(ctx, "因子卡片輸出位置")
-        .id(self.id)
+        new_window(ctx, self.id, "因子卡片輸出位置")
         .open(&mut open)
         .show(ctx, |ui| {
             simple_window_layout(ui, self.id,
