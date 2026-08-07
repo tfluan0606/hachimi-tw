@@ -2942,6 +2942,10 @@ impl ConfigEditor {
                     ui.label(t!("config_editor.window_always_on_top"));
                     ui.checkbox(&mut config.windows.window_always_on_top, "");
                     ui.end_row();
+
+                    ui.label("隱藏遊戲游標");
+                    ui.checkbox(&mut config.windows.disable_game_cursor, "");
+                    ui.end_row();
                 }
             }
         }

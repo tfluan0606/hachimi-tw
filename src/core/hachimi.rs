@@ -85,6 +85,8 @@ pub struct Hachimi {
     pub discord_rpc: AtomicBool,
 
     pub updater: Arc<updater::Updater>
+    pub disable_game_cursor: AtomicBool,
+
 }
 
 static INSTANCE: OnceCell<Arc<Hachimi>> = OnceCell::new();
@@ -179,7 +181,8 @@ impl Hachimi {
             #[cfg(target_os = "windows")]
             discord_rpc: AtomicBool::new(config.windows.discord_rpc),
 
-            updater: Arc::default(),
+            disable_game_cursor: AtomicBool::new(config.windows.disable_game_cursor),
+
 
             config: ArcSwap::new(Arc::new(config))
         })

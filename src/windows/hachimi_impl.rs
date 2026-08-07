@@ -60,6 +60,11 @@ pub fn on_hooking_finished(hachimi: &Hachimi) {
         });
     }
 
+    // Apply game cursor override (hide the game's built-in custom cursor)
+    if hachimi.config.load().windows.disable_game_cursor {
+        crate::il2cpp::hook::UnityEngine_CoreModule::Cursor::apply();
+    }
+
     // Clean up the update installer
     _ = std::fs::remove_file(utils::get_tmp_installer_path());
 }
@@ -112,6 +117,9 @@ pub struct Config {
     pub ingame_webview: bool,
     #[serde(default)]
     pub free_camera: super::free_camera::FreeCameraConfig,
+    /// 關閉遊戲內建的自訂滑鼠游標，還原成 Windows 系統游標（預設開啟）
+    #[serde(default = "Config::default_disable_game_cursor")]
+    pub disable_game_cursor: bool
 }
 
 impl Config {
@@ -121,6 +129,7 @@ impl Config {
     fn default_true() -> bool { true }
     fn default_gui_landscape_ratio() -> f32 { 1.0 }
     fn default_freeform_ui_scale_auto_ratio() -> f32 { 0.55 }
+    fn default_disable_game_cursor() -> bool { true }
 }
 
 #[derive(Deserialize, Serialize, Copy, Clone, Default, Eq, PartialEq)]
