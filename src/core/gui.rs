@@ -384,6 +384,18 @@ impl Gui {
                                 });
                             }
                         });
+                        ui.horizontal(|ui| {
+                            use crate::il2cpp::hook::UnityEngine_CoreModule::Cursor;
+
+                            let mut value = hachimi.disable_game_cursor.load(atomic::Ordering::Relaxed);
+
+                            ui.label("隱藏遊戲游標");
+                            if ui.checkbox(&mut value, "").changed() {
+                                hachimi.disable_game_cursor.store(value, atomic::Ordering::Relaxed);
+                                // 開啟時立即還原成系統游標；關閉時遊戲會在下次重設游標時恢復自訂圖
+                                Cursor::apply();
+                            }
+                        });
                     }
                     ui.separator();
 
@@ -1078,6 +1090,10 @@ impl ConfigEditor {
 
                     ui.label(t!("config_editor.window_always_on_top"));
                     ui.checkbox(&mut config.windows.window_always_on_top, "");
+                    ui.end_row();
+
+                    ui.label("隱藏遊戲游標");
+                    ui.checkbox(&mut config.windows.disable_game_cursor, "");
                     ui.end_row();
                 }
             },

@@ -33,6 +33,9 @@ pub struct Hachimi {
     pub window_always_on_top: AtomicBool,
 
     #[cfg(target_os = "windows")]
+    pub disable_game_cursor: AtomicBool,
+
+    #[cfg(target_os = "windows")]
     pub updater: Arc<crate::windows::updater::Updater>
 }
 
@@ -109,6 +112,9 @@ impl Hachimi {
 
             #[cfg(target_os = "windows")]
             window_always_on_top: AtomicBool::new(config.windows.window_always_on_top),
+
+            #[cfg(target_os = "windows")]
+            disable_game_cursor: AtomicBool::new(config.windows.disable_game_cursor),
 
             #[cfg(target_os = "windows")]
             updater: Arc::default(),

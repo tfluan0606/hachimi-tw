@@ -16,6 +16,8 @@ pub mod Component;
 pub mod QualitySettings;
 #[cfg(target_os = "windows")]
 pub mod Screen;
+#[cfg(target_os = "windows")]
+pub mod Cursor;
 
 pub const HideFlags_DontUnloadUnusedAsset: i32 = 32;
 
@@ -45,5 +47,6 @@ pub fn init() {
     {
         QualitySettings::init(image);
         Screen::init(image);
+        Cursor::init(image);
     }
 }

@@ -58,6 +58,11 @@ pub fn on_hooking_finished(hachimi: &Hachimi) {
         });
     }
 
+    // Apply game cursor override (hide the game's built-in custom cursor)
+    if hachimi.config.load().windows.disable_game_cursor {
+        crate::il2cpp::hook::UnityEngine_CoreModule::Cursor::apply();
+    }
+
     // Clean up the update installer
     _ = std::fs::remove_file(utils::get_tmp_installer_path());
 }
@@ -81,12 +86,16 @@ pub struct Config {
     #[serde(default)]
     pub block_minimize_in_full_screen: bool,
     #[serde(default)]
-    pub window_always_on_top: bool
+    pub window_always_on_top: bool,
+    /// 關閉遊戲內建的自訂滑鼠游標，還原成 Windows 系統游標（預設開啟）
+    #[serde(default = "Config::default_disable_game_cursor")]
+    pub disable_game_cursor: bool
 }
 
 impl Config {
     fn default_vsync_count() -> i32 { -1 }
     fn default_menu_open_key() -> u16 { windows::Win32::UI::Input::KeyboardAndMouse::VK_RIGHT.0 }
+    fn default_disable_game_cursor() -> bool { true }
 }
 
 #[derive(Deserialize, Serialize, Copy, Clone, Default, Eq, PartialEq)]
