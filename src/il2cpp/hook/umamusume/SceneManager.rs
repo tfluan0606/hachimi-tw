@@ -2,6 +2,8 @@ use std::sync::atomic::{self, AtomicBool};
 
 use crate::{il2cpp::{symbols::get_method_addr, types::*}, windows::wnd_hook};
 
+use super::SceneDefine::view_id;
+
 static SPLASH_SHOWN: AtomicBool = AtomicBool::new(false);
 pub fn is_splash_shown() -> bool {
     SPLASH_SHOWN.load(atomic::Ordering::Acquire)
@@ -27,10 +29,12 @@ extern "C" fn ChangeView(
         this, next_view_id, view_info, callback_on_change_view_cancel, callback_on_change_view_accept,
         force_change, is_fast_destroy
     );
-    if next_view_id == 1 { // ViewId.Splash
+    if next_view_id == view_id::SPLASH {
         SPLASH_SHOWN.store(true, atomic::Ordering::Release);
         wnd_hook::drain_wm_size_buffer();
     }
+
+    crate::windows::discord::on_view_changed(next_view_id);
 }
 
 static mut GETCURRENTVIEWID_ADDR: usize = 0;

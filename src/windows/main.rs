@@ -5,7 +5,7 @@ use windows::{core::PCWSTR, Win32::{Foundation::{BOOL, HMODULE, TRUE}, System::L
 
 use crate::{core::{plugin_api::Plugin, Hachimi}, windows::utils};
 
-use super::{hook, proxy, wnd_hook};
+use super::{discord, hook, proxy, wnd_hook};
 
 const DLL_PROCESS_ATTACH: c_ulong = 1;
 const DLL_PROCESS_DETACH: c_ulong = 0;
@@ -61,6 +61,7 @@ pub extern "C" fn DllMain(hmodule: HMODULE, call_reason: c_ulong, _reserved: *mu
         info!("Attach completed");
     }
     else if call_reason == DLL_PROCESS_DETACH && Hachimi::is_initialized() {
+        discord::stop();
         wnd_hook::uninit();
 
         info!("Unhooking everything");

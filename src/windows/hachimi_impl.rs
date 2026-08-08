@@ -63,6 +63,11 @@ pub fn on_hooking_finished(hachimi: &Hachimi) {
         crate::il2cpp::hook::UnityEngine_CoreModule::Cursor::apply();
     }
 
+    // Discord Rich Presence
+    if hachimi.config.load().windows.enable_discord_rpc {
+        super::discord::start();
+    }
+
     // Clean up the update installer
     _ = std::fs::remove_file(utils::get_tmp_installer_path());
 }
@@ -89,7 +94,10 @@ pub struct Config {
     pub window_always_on_top: bool,
     /// 關閉遊戲內建的自訂滑鼠游標，還原成 Windows 系統游標（預設開啟）
     #[serde(default = "Config::default_disable_game_cursor")]
-    pub disable_game_cursor: bool
+    pub disable_game_cursor: bool,
+    /// 在 Discord 顯示目前的遊戲活動（預設關閉——會把遊玩狀態送到 Discord）
+    #[serde(default)]
+    pub enable_discord_rpc: bool
 }
 
 impl Config {

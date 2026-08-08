@@ -54,6 +54,9 @@ mod LiveTheaterViewController;
 pub mod CySpringController;
 
 #[cfg(target_os = "windows")]
+pub mod SceneDefine;
+
+#[cfg(target_os = "windows")]
 pub mod SceneManager;
 
 #[cfg(target_os = "windows")]

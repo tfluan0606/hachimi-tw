@@ -417,13 +417,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "discord-rich-presence"
+version = "1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "90c55d69cab17c19677ce3a5f8face993a9e6eaf847fecac3547f3a3ff4a2494"
+dependencies = [
+ "log",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "serde_repr",
+ "thiserror 2.0.20",
+ "uuid",
+]
+
+[[package]]
 name = "dobby-rs"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a0b8fbf3688f3584f3f87ec7024032d81da6e8b868a1d23d8a6c0a399e7c9935"
 dependencies = [
  "dobby-sys",
- "thiserror",
+ "thiserror 1.0.57",
 ]
 
 [[package]]
@@ -717,6 +732,7 @@ dependencies = [
  "cbc",
  "cc",
  "cstr",
+ "discord-rich-presence",
  "dobby-rs",
  "egui",
  "egui-directx11",
@@ -886,7 +902,7 @@ dependencies = [
  "combine",
  "jni-sys",
  "log",
- "thiserror",
+ "thiserror 1.0.57",
  "walkdir",
  "windows-sys 0.45.0",
 ]
@@ -936,9 +952,9 @@ dependencies = [
 
 [[package]]
 name = "log"
-version = "0.4.21"
+version = "0.4.33"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "90ed8c1e510134f979dbc4f070f87d4313098b704861a105fe34231c70a3901c"
+checksum = "0ceec5bc11778974d1bcb055b18002eba7f4b3518b6a0081b3af5f21666da9ad"
 
 [[package]]
 name = "lz4_flex"
@@ -1124,9 +1140,9 @@ checksum = "dc375e1527247fe1a97d8b7156678dfe7c1af2fc075c9a4db3690ecd2a148068"
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.78"
+version = "1.0.107"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e2422ad645d89c99f8f3e6b88a9fdeca7fabeac836b1002371c4367c8f984aae"
+checksum = "985e7ec9bb745e6ce6535b544d84d6cd6f7ad8bd711c398938ae983b91a766d9"
 dependencies = [
  "unicode-ident",
 ]
@@ -1410,6 +1426,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "serde_repr"
+version = "0.1.21"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8d3b1629de253c70a0508c3899572da79ca359fdab27c7920ff00406df418906"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 3.0.3",
+]
+
+[[package]]
 name = "serde_spanned"
 version = "0.6.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1532,6 +1559,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "syn"
+version = "3.0.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "53e9bae58849f64dfa4f5d5ae372c8341f7305f82a3868709269343628b659a3"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "unicode-ident",
+]
+
+[[package]]
 name = "tauri-winres"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1558,7 +1596,16 @@ version = "1.0.57"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1e45bcbe8ed29775f228095caf2cd67af7a4ccf756ebff23a306bf3e8b47b24b"
 dependencies = [
- "thiserror-impl",
+ "thiserror-impl 1.0.57",
+]
+
+[[package]]
+name = "thiserror"
+version = "2.0.20"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ec86235f5fcc2a73650310756d2ac5b138a5780bbbdfae3eeccec992c435ba4f"
+dependencies = [
+ "thiserror-impl 2.0.20",
 ]
 
 [[package]]
@@ -1570,6 +1617,17 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.49",
+]
+
+[[package]]
+name = "thiserror-impl"
+version = "2.0.20"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bc04cd3e1236dd4a98afca4569f2deb3f120e5422a4023be2cb683f8486292af"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 3.0.3",
 ]
 
 [[package]]
@@ -1826,6 +1884,15 @@ dependencies = [
  "form_urlencoded",
  "idna",
  "percent-encoding",
+]
+
+[[package]]
+name = "uuid"
+version = "0.8.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bc5cf98d8186244414c848017f0e2676b3fcb46807f6668a97dfe67359a3c4b7"
+dependencies = [
+ "getrandom",
 ]
 
 [[package]]

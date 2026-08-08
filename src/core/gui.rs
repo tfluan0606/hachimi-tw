@@ -1026,6 +1026,21 @@ impl ConfigEditor {
                 }
                 ui.end_row();
 
+                #[cfg(target_os = "windows")]
+                {
+                    ui.label("Discord 顯示遊戲活動");
+                    if ui.checkbox(&mut config.windows.enable_discord_rpc, "").changed() {
+                        // 存檔前就先套用，讓使用者馬上在 Discord 上看到結果
+                        if config.windows.enable_discord_rpc {
+                            crate::windows::discord::start();
+                        }
+                        else {
+                            crate::windows::discord::stop();
+                        }
+                    }
+                    ui.end_row();
+                }
+
                 ui.label(t!("config_editor.debug_mode"));
                 ui.checkbox(&mut config.debug_mode, "");
                 ui.end_row();

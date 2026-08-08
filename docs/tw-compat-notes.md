@@ -50,6 +50,22 @@ grep -F "Gallop.SceneManager::ChangeView" il2cpp_dump.txt
 > `<ChangeLive>b__41_1`）。`4b3e559` / `76140b8` 的 fallback 仍然保留 —— WM_SIZE 放行改用
 > 「第一次 Present」當訊號，跟這個 hook 解耦，兩者不衝突。
 
+### ViewId 數值：繁中服與日服一致（2026-08-09 實測）
+
+il2cpp dump 只含方法簽章、不含 enum 值，所以 `SceneDefine.ViewId` 一度只能靠日服清單推測。
+實機走一輪後確認**數值相同**，且橫跨多個相距很遠的區段：
+
+```
+1 Splash    2 Title    100/101 Home    1300/1301 SingleMode結算
+3000 Story  4000 TeamStadium           6500 ScheduleBook
+```
+
+即使如此，`src/il2cpp/hook/umamusume/SceneDefine.rs` 仍刻意用**區段**而非逐一數值對應。
+Cygames 是按功能分段配號、新功能往段尾追加，段界比個別數值穩定；台服日後補上新內容時
+（例如五週年那批）不必逐項回頭補表。
+
+完整日服清單在 `edge/main:src/il2cpp/hook/umamusume/SceneDefine.rs`，要查名字時去翻。
+
 ### `Gallop.Live.Director` — 唯一語意也不同的
 
 Edge 的 hook 是 `AlterUpdate(this, delta_time, is_update_delta_time)`（2 參數）。
@@ -161,7 +177,7 @@ overlay 能出來完全是靠 `76140b8` 的 fallback —— render_hook 首次 P
 
 ### A — 零風險，完全不碰 il2cpp
 
-- **Discord Rich Presence**（`src/windows/discord.rs`，47 行）
+- ~~**Discord Rich Presence**~~ — 已做，且不再是 A 類（加了場景顯示後會用到 `ChangeView` hook）
 - 開選單熱鍵可在 UI 修改（鍵位系統重寫）
 - updater 的 blake3 校驗
 - Windows IME 支援（GUI 裡能打中文）
@@ -208,11 +224,16 @@ overlay 能出來完全是靠 `76140b8` 的 fallback —— render_hook 首次 P
 
 ## 未來工作包
 
+**已完成**
+
+1. ~~Discord Rich Presence~~ — 2026-08-09 完成，比原本規劃的 A 類大：
+   除了「正在玩」還會顯示目前畫面（首頁／育成／競技場…），資料來自修好的 `ChangeView` hook。
+   自己的 Application ID `1535642752665260093`，預設**關閉**（Edge 是預設開啟）。
+   實作要點見 `src/windows/discord.rs` 的檔頭：hook 跑在遊戲主執行緒，只寫 atomic，
+   named pipe 通訊全在 worker；Discord 的 `SET_ACTIVITY` 約 15 秒節流，期間變化合併成最後一筆。
+
 **已排定**
 
-1. Discord Rich Presence — A 類暖身。需要**自己的 Discord Application ID**
-   （Edge 用的是它自己的 `1440812697925980294`，會顯示 Edge 的名字）。
-   ⚠️ Edge 預設是開啟的，我們應該預設關閉。
 2. Free Camera + 返回鍵 + 解析度縮放 — 同一子系統（Live/賽事的攝影機與渲染），一起做。
 
 **延後**

@@ -60,6 +60,7 @@ dobby-rs = "0.1"
 factor-card = { path = "crates/factor-card" }
 windebug_logger = "0.1"
 minhook = "0.5"
+discord-rich-presence = "1.0"
 egui-directx11 = "0.4"
 pelite = "0.10"
 
