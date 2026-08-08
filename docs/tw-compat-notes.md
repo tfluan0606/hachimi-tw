@@ -45,6 +45,11 @@ grep -F "Gallop.SceneManager::ChangeView" il2cpp_dump.txt
 `ChangeView` 值得特別記：**日服 7、Edge 猜非日服 5、繁中服實際是 6**，兩邊都猜錯。
 這是我們 `4b3e559`（點擊偏移修正）當初要繞過的根因。
 
+> **已修（2026-08-09）**：改成 6 個參數後 hook 正常裝上，實機 log 有 `new_hook!: ChangeView`
+> 且能持續收到畫面切換。**NULL hook 從 4 個降為 3 個**（剩 `UpdateItem`、`InitializeGame`、
+> `<ChangeLive>b__41_1`）。`4b3e559` / `76140b8` 的 fallback 仍然保留 —— WM_SIZE 放行改用
+> 「第一次 Present」當訊號，跟這個 hook 解耦，兩者不衝突。
+
 ### `Gallop.Live.Director` — 唯一語意也不同的
 
 Edge 的 hook 是 `AlterUpdate(this, delta_time, is_update_delta_time)`（2 參數）。
@@ -81,6 +86,8 @@ get_LiveTotalTime()
 
 四個共通的（`UpdateItem`、`InitializeGame`、`<ChangeLive>b__41_1`、`ChangeView`）
 是從上游封存版就帶著的既有問題。**多出來的 10 個全部來自 Edge 新增的功能。**
+
+（2026-08-09 起 `ChangeView` 已修好，我們這邊剩 3 個。差距只會更大。）
 
 我們 fork 砍得多、表面積小，這不是技術債，是設計。
 
