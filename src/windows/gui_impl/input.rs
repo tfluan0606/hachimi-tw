@@ -9,13 +9,18 @@ use windows::Win32::{
         SystemServices::{MK_CONTROL, MK_SHIFT}
     },
     UI::{
+        Input::Ime::{
+            ImmGetCompositionStringW, ImmGetContext, ImmReleaseContext,
+            GCS_COMPSTR, GCS_RESULTSTR, IME_COMPOSITION_STRING
+        },
         Input::KeyboardAndMouse::{
             GetAsyncKeyState, VIRTUAL_KEY, VK_BACK, VK_CONTROL, VK_DELETE, VK_DOWN, VK_END,
             VK_ESCAPE, VK_HOME, VK_INSERT, VK_LEFT, VK_LSHIFT, VK_NEXT, VK_PRIOR, VK_RETURN,
             VK_RIGHT, VK_SPACE, VK_TAB, VK_UP,
         },
         WindowsAndMessaging::{
-            WHEEL_DELTA, WM_CHAR, WM_KEYDOWN, WM_KEYUP,
+            WHEEL_DELTA, WM_CHAR, WM_IME_COMPOSITION, WM_IME_ENDCOMPOSITION, WM_IME_STARTCOMPOSITION,
+            WM_KEYDOWN, WM_KEYUP,
             WM_LBUTTONDBLCLK, WM_LBUTTONDOWN, WM_LBUTTONUP, WM_MBUTTONDBLCLK, WM_MBUTTONDOWN,
             WM_MBUTTONUP, WM_MOUSEHWHEEL, WM_MOUSEMOVE, WM_MOUSEWHEEL, WM_RBUTTONDBLCLK,
             WM_RBUTTONDOWN, WM_RBUTTONUP, WM_SYSKEYDOWN, WM_SYSKEYUP,
@@ -168,6 +173,78 @@ pub fn process(input: &mut RawInput, zoom_factor: f32, umsg: u32, wparam: usize,
         }
         _ => InputResult::Unknown,
     }
+}
+
+/// 從 IME 取出來的一則事件。字串在視窗執行緒上就先抓好了。
+pub enum ImeInput {
+    Start,
+    /// 組字中的預覽（注音、拼音那條）
+    Update(String),
+    /// 確定送出的字
+    Commit(String)
+}
+
+/// **必須在擁有視窗的執行緒上呼叫**——`Imm*` 系列是綁執行緒的，從別的執行緒問會拿到空的。
+/// 所以字串在 wndproc 當場取出，之後才丟給處理輸入的執行緒。
+pub fn read_ime_event(hwnd: HWND, umsg: u32, lparam: isize) -> Option<ImeInput> {
+    match umsg {
+        WM_IME_STARTCOMPOSITION => Some(ImeInput::Start),
+        WM_IME_ENDCOMPOSITION => Some(ImeInput::Update(String::new())),
+        WM_IME_COMPOSITION => {
+            let flags = lparam as u32;
+            // 先看有沒有確定的字，有的話組字這輪就結束了
+            if flags & GCS_RESULTSTR.0 != 0 {
+                return get_composition_string(hwnd, GCS_RESULTSTR).map(ImeInput::Commit);
+            }
+            if flags & GCS_COMPSTR.0 != 0 {
+                // 組字被清空時也要送空字串，否則預覽會留在畫面上
+                return Some(ImeInput::Update(
+                    get_composition_string(hwnd, GCS_COMPSTR).unwrap_or_default()
+                ));
+            }
+            None
+        }
+        _ => None
+    }
+}
+
+fn get_composition_string(hwnd: HWND, index: IME_COMPOSITION_STRING) -> Option<String> {
+    unsafe {
+        let himc = ImmGetContext(hwnd);
+        if himc.0 == 0 {
+            return None;
+        }
+
+        // 先問長度（回傳的是位元組數，UTF-16 所以要除以 2）
+        let byte_len = ImmGetCompositionStringW(himc, index, None, 0);
+        let result = if byte_len > 0 {
+            let mut buf = vec![0u16; byte_len as usize / 2];
+            let written = ImmGetCompositionStringW(
+                himc, index,
+                Some(buf.as_mut_ptr() as *mut _),
+                byte_len as u32
+            );
+            (written > 0).then(|| String::from_utf16_lossy(&buf))
+        }
+        else {
+            None
+        };
+
+        _ = ImmReleaseContext(hwnd, himc);
+        result
+    }
+}
+
+pub fn push_ime(input: &mut RawInput, ime: ImeInput) {
+    input.events.push(match ime {
+        ImeInput::Start => Event::CompositionStart,
+        ImeInput::Update(text) => Event::CompositionUpdate(text),
+        ImeInput::Commit(text) => Event::CompositionEnd(text)
+    });
+}
+
+pub fn is_ime_msg(umsg: u32) -> bool {
+    matches!(umsg, WM_IME_STARTCOMPOSITION | WM_IME_COMPOSITION | WM_IME_ENDCOMPOSITION)
 }
 
 pub fn is_handled_msg(umsg: u32) -> bool {

@@ -154,6 +154,21 @@ extern "system" fn wnd_proc(hwnd: HWND, umsg: c_uint, wparam: WPARAM, lparam: LP
         return unsafe { orig_fn(hwnd, umsg, wparam, lparam) };
     }
 
+    // IME 要在這條執行緒上處理——Imm* 是綁視窗執行緒的，丟到別的執行緒去問會拿到空字串。
+    // 這裡取完字串才交給下面的處理執行緒。訊息**不能**往下傳給遊戲：轉出去的話
+    // Windows 會為了組好的字再送一次 WM_CHAR，變成重複輸入。
+    if input::is_ime_msg(umsg) {
+        if let Some(ime) = input::read_ime_event(hwnd, umsg, lparam.0) {
+            std::thread::spawn(move || {
+                let Some(mut gui) = Gui::instance().map(|m| m.lock().unwrap()) else {
+                    return;
+                };
+                input::push_ime(&mut gui.input, ime);
+            });
+        }
+        return LRESULT(0);
+    }
+
     // Check if the input processor handles this message
     if !input::is_handled_msg(umsg) {
         return unsafe { orig_fn(hwnd, umsg, wparam, lparam) };
