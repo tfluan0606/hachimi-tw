@@ -18,6 +18,10 @@ pub mod QualitySettings;
 pub mod Screen;
 #[cfg(target_os = "windows")]
 pub mod Cursor;
+#[cfg(target_os = "windows")]
+pub mod Transform;
+#[cfg(target_os = "windows")]
+pub mod Camera;
 
 pub const HideFlags_DontUnloadUnusedAsset: i32 = 32;
 
@@ -48,5 +52,7 @@ pub fn init() {
         QualitySettings::init(image);
         Screen::init(image);
         Cursor::init(image);
+        Transform::init(image);
+        Camera::init(image);
     }
 }

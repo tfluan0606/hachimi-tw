@@ -78,6 +78,25 @@ impl Fonts {
         )
     }
 
+    /// 非 Windows 的便利路徑（Noto Sans CJK）。
+    ///
+    /// ⚠️ ttc index 這裡一律給 0，而 Debian 的 `NotoSansCJK-*.ttc` 第 0 面是 **JP**，
+    /// 部分漢字會是日文字形。要正體字形請改用 [`Fonts::from_paths`] 明確指定 TC 的
+    /// index（用 `fc-query -i` 查）。這個函式只是給開發／臨時測試用的方便入口。
+    #[cfg(not(target_os = "windows"))]
+    pub fn system() -> Result<Fonts, String> {
+        const DIRS: &[&str] = &["/usr/share/fonts/opentype/noto", "/usr/share/fonts/truetype/noto"];
+        let find = |name: &str| -> Vec<(String, u32)> {
+            DIRS.iter().map(|d| (format!("{d}/{name}"), 0u32)).collect()
+        };
+        // 自由函式而非 closure：closure 推不出「回傳值借用參數」的 lifetime
+        fn borrow(v: &[(String, u32)]) -> Vec<(&str, u32)> {
+            v.iter().map(|(p, i)| (p.as_str(), *i)).collect()
+        }
+        let (reg, bold) = (find("NotoSansCJK-Regular.ttc"), find("NotoSansCJK-Bold.ttc"));
+        Fonts::from_paths(&borrow(&reg), &borrow(&bold))
+    }
+
     fn chain(&self, bold: bool) -> &Chain {
         if bold && !self.bold.0.is_empty() {
             &self.bold

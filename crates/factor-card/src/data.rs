@@ -197,6 +197,12 @@ pub struct Stat {
 pub struct Extras {
     /// 玩家的追蹤者數（`follower_num`，來自好友頁 API）
     pub follower_num: Option<i64>,
+    /// 由呼叫端算好的 G1 勝場。給了就直接用，不跑本檔的 [`g1_wins`]。
+    ///
+    /// 網站端已改成「以勝鞍 `group_id` 去重」推算——friend/search API 沒有
+    /// `race_result_list`，祖輩更是完全沒這個欄位，所以舊演算法在那條資料流上
+    /// 一定得 0。從網站餵資料進來時務必給這個值。
+    pub g1_wins: Option<i64>,
 }
 
 pub struct CardData {
@@ -389,7 +395,9 @@ impl CardData {
             },
             Stat {
                 key: "G1勝場",
-                value: StatValue::Single(g1_wins(entry, maps).to_string()),
+                value: StatValue::Single(
+                    extras.g1_wins.unwrap_or_else(|| g1_wins(entry, maps) as i64).to_string(),
+                ),
                 tone: Tone::Default,
             },
         ];
