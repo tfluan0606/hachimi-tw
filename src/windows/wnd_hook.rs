@@ -1,13 +1,16 @@
-use std::{os::raw::c_uint, sync::atomic::{self, AtomicBool, AtomicIsize}};
+use std::{os::raw::c_uint, sync::atomic::{self, AtomicBool, AtomicIsize, AtomicU32}};
 
 use egui::mutex::Mutex;
 use once_cell::sync::Lazy;
-use windows::{core::w, Win32::{
+use widestring::U16CString;
+use windows::{core::{w, PCWSTR}, Win32::{
     Foundation::{HWND, LPARAM, LRESULT, WPARAM},
     System::Threading::GetCurrentThreadId,
+    UI::Input::KeyboardAndMouse::{GetKeyNameTextW, MapVirtualKeyW, MAPVK_VK_TO_VSC},
     UI::WindowsAndMessaging::{
-        CallNextHookEx, DefWindowProcW, FindWindowW, GetWindowLongPtrW, SetWindowsHookExW, UnhookWindowsHookEx,
-        GWLP_WNDPROC, HCBT_MINMAX, HHOOK, SW_RESTORE, WH_CBT, WM_CLOSE, WM_KEYDOWN, WM_SYSKEYDOWN, WM_SIZE, WNDPROC
+        CallNextHookEx, DefWindowProcW, FindWindowW, GetWindowLongPtrW, GetWindowTextLengthW, GetWindowTextW,
+        SetWindowsHookExW, SetWindowTextW, UnhookWindowsHookEx, GWLP_WNDPROC, HCBT_MINMAX, HHOOK, SW_RESTORE,
+        WH_CBT, WM_CLOSE, WM_KEYDOWN, WM_SYSKEYDOWN, WM_SIZE, WNDPROC
     }
 }};
 
@@ -47,6 +50,49 @@ pub fn drain_wm_size_buffer() {
     }
 }
 
+// 熱鍵改鍵。直接在 wndproc 抓原始 VK code，不走 egui 的鍵位對應——那張表不完整，
+// 而且我們要能設成任何鍵，包含 egui 不認得的。
+static CAPTURING_KEY: AtomicBool = AtomicBool::new(false);
+/// 抓到的 VK；`u32::MAX` 代表還沒抓到。
+static CAPTURED_KEY: AtomicU32 = AtomicU32::new(u32::MAX);
+
+pub fn begin_key_capture() {
+    CAPTURED_KEY.store(u32::MAX, atomic::Ordering::Release);
+    CAPTURING_KEY.store(true, atomic::Ordering::Release);
+}
+
+pub fn cancel_key_capture() {
+    CAPTURING_KEY.store(false, atomic::Ordering::Release);
+}
+
+pub fn is_capturing_key() -> bool {
+    CAPTURING_KEY.load(atomic::Ordering::Acquire)
+}
+
+/// 取走抓到的按鍵（只會回傳一次）。
+pub fn take_captured_key() -> Option<u16> {
+    let key = CAPTURED_KEY.swap(u32::MAX, atomic::Ordering::AcqRel);
+    (key != u32::MAX).then_some(key as u16)
+}
+
+/// 按鍵的顯示名稱。用系統的鍵盤配置去問，所以會跟著使用者的鍵盤語系走。
+pub fn key_display_name(vk: u16) -> String {
+    unsafe {
+        let scan_code = MapVirtualKeyW(vk as u32, MAPVK_VK_TO_VSC);
+        if scan_code != 0 {
+            let mut buf = [0u16; 64];
+            // 方向鍵那類 extended key 要把 bit24 設起來，否則會拿到數字鍵盤的名字
+            let extended = matches!(vk as u32, 0x21..=0x28 | 0x2D | 0x2E | 0x24 | 0x23);
+            let lparam = ((scan_code as i32) << 16) | if extended { 1 << 24 } else { 0 };
+            let len = GetKeyNameTextW(lparam, &mut buf);
+            if len > 0 {
+                return String::from_utf16_lossy(&buf[..len as usize]);
+            }
+        }
+    }
+    format!("VK {}", vk)
+}
+
 static TARGET_HWND: AtomicIsize = AtomicIsize::new(0);
 pub fn get_target_hwnd() -> HWND {
     HWND(TARGET_HWND.load(atomic::Ordering::Relaxed))
@@ -63,6 +109,11 @@ extern "system" fn wnd_proc(hwnd: HWND, umsg: c_uint, wparam: WPARAM, lparam: LP
     match umsg {
         // Check for Home key presses
         WM_KEYDOWN | WM_SYSKEYDOWN => {
+            // 改鍵模式：吃掉這次按鍵當成新的熱鍵，不要順便把選單開關掉
+            if CAPTURING_KEY.swap(false, atomic::Ordering::AcqRel) {
+                CAPTURED_KEY.store(wparam.0 as u32, atomic::Ordering::Release);
+                return LRESULT(0);
+            }
             if wparam.0 as u16 == Hachimi::instance().config.load().windows.menu_open_key {
                 let Some(mut gui) = Gui::instance().map(|m| m.lock().unwrap()) else {
                     return unsafe { orig_fn(hwnd, umsg, wparam, lparam) };
@@ -198,6 +249,49 @@ pub fn ensure_installed(hwnd: HWND) {
         if hachimi.window_always_on_top.load(atomic::Ordering::Relaxed) {
             _ = utils::set_window_topmost(hwnd, true);
         }
+    }
+
+    *ORIGINAL_TITLE.lock() = read_window_title(hwnd);
+    apply_custom_title();
+}
+
+/// 遊戲原本的視窗標題，第一次裝 hook 時記下來，讓使用者清空設定後能還原。
+static ORIGINAL_TITLE: Lazy<Mutex<Option<String>>> = Lazy::new(|| Mutex::new(None));
+
+fn read_window_title(hwnd: HWND) -> Option<String> {
+    unsafe {
+        let len = GetWindowTextLengthW(hwnd);
+        if len <= 0 {
+            return None;
+        }
+        let mut buf = vec![0u16; len as usize + 1];
+        let written = GetWindowTextW(hwnd, &mut buf);
+        (written > 0).then(|| String::from_utf16_lossy(&buf[..written as usize]))
+    }
+}
+
+/// 套用自訂視窗標題。設定改動時也會呼叫，所以不用重開遊戲。
+/// 清空設定會還原成遊戲原本的標題，而不是留著上一次設的。
+pub fn apply_custom_title() {
+    let hwnd = get_target_hwnd();
+    if hwnd.0 == 0 {
+        return;
+    }
+
+    let custom = Hachimi::instance().config.load().windows.custom_title_name.clone();
+    let title = match custom {
+        Some(title) => title,
+        None => match ORIGINAL_TITLE.lock().clone() {
+            Some(original) => original,
+            None => return // 沒記到原標題就別亂改
+        }
+    };
+
+    let Ok(title_cstr) = U16CString::from_str(&title) else {
+        return;
+    };
+    unsafe {
+        _ = SetWindowTextW(hwnd, PCWSTR(title_cstr.as_ptr()));
     }
 }
 

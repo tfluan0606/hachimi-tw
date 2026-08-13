@@ -158,7 +158,11 @@ impl Gui {
 
     pub fn set_screen_size(&mut self, width: i32, height: i32) {
         let main_axis_size = if width < height { width } else { height };
-        let pixels_per_point = main_axis_size as f32 * PIXELS_PER_POINT_RATIO;
+        // 每幀都會走到這裡，所以縮放直接乘進來就能即時生效，不必額外記狀態。
+        // 乘在 pixels_per_point 上而不是縮放 Style，連 screen_rect 和 input.rs 換算滑鼠座標
+        // 用的 zoom_factor 都會跟著對，不會出現「畫面放大了但點擊位置沒跟著」。
+        let gui_scale = Hachimi::instance().config.load().gui_scale.clamp(0.5, 3.0);
+        let pixels_per_point = main_axis_size as f32 * PIXELS_PER_POINT_RATIO * gui_scale;
         self.context.set_pixels_per_point(pixels_per_point);
 
         self.input.screen_rect = Some(egui::Rect {
@@ -1026,8 +1030,40 @@ impl ConfigEditor {
                 }
                 ui.end_row();
 
+                ui.label("介面縮放（Hachimi 選單）");
+                ui.add(egui::Slider::new(&mut config.gui_scale, 0.5..=3.0).step_by(0.05));
+                ui.end_row();
+
                 #[cfg(target_os = "windows")]
                 {
+                    use crate::windows::wnd_hook;
+
+                    ui.label("開啟選單的按鍵");
+                    // 按下按鈕後由 wndproc 攔下一個按鍵，這裡每幀輪詢結果
+                    if let Some(key) = wnd_hook::take_captured_key() {
+                        config.windows.menu_open_key = key;
+                    }
+                    let capturing = wnd_hook::is_capturing_key();
+                    let label = if capturing {
+                        "請按下新按鍵…".to_owned()
+                    }
+                    else {
+                        wnd_hook::key_display_name(config.windows.menu_open_key)
+                    };
+                    if ui.button(label).clicked() {
+                        if capturing { wnd_hook::cancel_key_capture(); }
+                        else { wnd_hook::begin_key_capture(); }
+                    }
+                    ui.end_row();
+
+                    ui.label("視窗標題");
+                    let mut title = config.windows.custom_title_name.clone().unwrap_or_default();
+                    if ui.add(egui::TextEdit::singleline(&mut title).desired_width(150.0)).changed() {
+                        config.windows.custom_title_name =
+                            (!title.trim().is_empty()).then(|| title.trim().to_owned());
+                    }
+                    ui.end_row();
+
                     ui.label("Discord 顯示遊戲活動");
                     if ui.checkbox(&mut config.windows.enable_discord_rpc, "").changed() {
                         // 存檔前就先套用，讓使用者馬上在 Discord 上看到結果
@@ -1230,6 +1266,10 @@ fn save_and_reload_config(config: hachimi::Config) {
         Ok(_) => t!("notification.config_saved").into_owned(),
         Err(e) => e.to_string()
     };
+
+    // 標題要在設定生效後才套用，才讀得到新值
+    #[cfg(target_os = "windows")]
+    crate::windows::wnd_hook::apply_custom_title();
 
     // workaround since we can't get a mutable ref to the Gui and
     // locking the mutex on the current thread would cause a deadlock

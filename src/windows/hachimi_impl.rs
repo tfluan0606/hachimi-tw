@@ -97,7 +97,10 @@ pub struct Config {
     pub disable_game_cursor: bool,
     /// 在 Discord 顯示目前的遊戲活動（預設關閉——會把遊玩狀態送到 Discord）
     #[serde(default)]
-    pub enable_discord_rpc: bool
+    pub enable_discord_rpc: bool,
+    /// 覆寫遊戲視窗標題；`None` 或空字串＝維持原樣
+    #[serde(default)]
+    pub custom_title_name: Option<String>
 }
 
 impl Config {
