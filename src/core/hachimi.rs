@@ -286,6 +286,9 @@ pub struct Config {
     /// Hachimi 自己這層介面的縮放（不是遊戲畫面）。高解析度螢幕上選單會太小，這個放大它。
     #[serde(default = "Config::default_gui_scale")]
     pub gui_scale: f32,
+    /// 演唱會播放速度倍率（1.0＝原速）
+    #[serde(default = "Config::default_live_playback_speed")]
+    pub live_playback_speed: f32,
     #[serde(default)]
     pub graphics_quality: crate::il2cpp::hook::umamusume::GraphicSettings::GraphicsQuality,
     #[serde(default = "Config::default_story_choice_auto_select_delay")]
@@ -331,6 +334,7 @@ impl Config {
     fn default_virtual_res_mult() -> f32 { 1.0 }
     fn default_ui_scale() -> f32 { 1.0 }
     fn default_gui_scale() -> f32 { 1.0 }
+    fn default_live_playback_speed() -> f32 { 1.0 }
     fn default_story_choice_auto_select_delay() -> f32 { 0.75 }
     fn default_story_tcps_multiplier() -> f32 { 1.0 }
     fn default_meta_index_url() -> String { "https://files.leadrdrk.com/hachimi/meta/index.json".to_owned() }

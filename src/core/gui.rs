@@ -1175,6 +1175,22 @@ impl ConfigEditor {
                 ui.label(t!("config_editor.live_theater_allow_same_chara"));
                 ui.checkbox(&mut config.live_theater_allow_same_chara, "");
                 ui.end_row();
+
+                ui.label("演唱會播放速度");
+                ui.add(egui::Slider::new(&mut config.live_playback_speed, 0.1..=4.0).step_by(0.05));
+                ui.end_row();
+
+                // 只在真的在播的時候顯示進度，其他畫面掛一條不動的條沒有意義
+                {
+                    use crate::il2cpp::hook::umamusume::Director;
+                    if Director::is_live_active() {
+                        let (current, total) = Director::live_progress();
+                        ui.label("播放進度");
+                        ui.label(format!("{:.0}:{:02.0} / {:.0}:{:02.0}",
+                            current / 60.0, current % 60.0, total / 60.0, total % 60.0));
+                        ui.end_row();
+                    }
+                }
             }
         }
 
