@@ -154,6 +154,9 @@ pub fn capture(trained_chara_id: Option<i64>) -> Result<PathBuf, Error> {
             -1 => None,
             n => Some(n),
         },
+        // 遊戲內這條路攔到的是完整的 trained_chara（含 race_result_list），
+        // 交給 factor-card 自己算即可。網站那條資料流沒有勝鞍資訊才需要外面算好餵進來。
+        g1_wins: None,
     };
     let data = CardData::from_trained_chara_with(&entry, &MAPS, extras);
 
