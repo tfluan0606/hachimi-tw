@@ -66,6 +66,34 @@ Cygames 是按功能分段配號、新功能往段尾追加，段界比個別數
 
 完整日服清單在 `edge/main:src/il2cpp/hook/umamusume/SceneDefine.rs`，要查名字時去翻。
 
+### 首頁代表馬娘：兩條死路和一條活路
+
+Discord RPC 要顯示首頁角色時查過的，記下來免得再走一次：
+
+| 方法 | 結果 |
+|---|---|
+| `PartsFavoriteCharacterTop::get_CurrentCharaId` | ❌ 那是「選擇代表馬娘」的**對話框**，只有開著時才有值 |
+| `HomeCharacterCreator::CreateAdditionalStandCharacter` | ❌ hook 裝得上但**永遠不觸發**。"Additional" 是字面意思，主角色走 `InitFooterCharacter` coroutine |
+| `HomeCharacterCreator::GetFooterCharaInfo()` | ✅ static、0 參數，回傳 `Dictionary<StandPos, CreateInfo>` |
+
+活路的兩個前提：**要在遊戲主執行緒上呼叫**（從背景執行緒用 `Thread::main_thread().schedule`），
+而且**進首頁當下讀不到** —— 角色是 `ChangeView` 之後才由 coroutine 擺出來的，要重試個幾秒。
+
+### dress id 和 card id 是兩張表
+
+**沒有可推導的關係**，別想找規律：
+
+```
+目白多伯  正常版  card 105901 ← dress 105901   （相同）
+          換裝版  card 105902 ← dress 105923   （差 21）
+```
+
+遊戲給的是 dress id，站台圖片和 `card_map` 都以 card id 為索引，中間只能查表。
+表在 `assets/card_dress_map.json`（來自 `uma-pc-datamine`，原檔照搬，更新＝覆蓋）。
+
+> 陷阱：**不要用 `dress_id_by_rarity` 反轉**。那裡面 2★ 那格是共用制服 `101`，
+> 22 張卡都指向它，反轉會變成一對多。只有頂層的 `dress_id` 是該卡專屬的。
+
 ### `Gallop.Live.Director` — 唯一語意也不同的
 
 Edge 的 hook 是 `AlterUpdate(this, delta_time, is_update_delta_time)`（2 參數）。
@@ -178,12 +206,13 @@ overlay 能出來完全是靠 `76140b8` 的 fallback —— render_hook 首次 P
 ### A — 零風險，完全不碰 il2cpp
 
 - ~~**Discord Rich Presence**~~ — 已做，且不再是 A 類（加了場景顯示後會用到 `ChangeView` hook）
-- 開選單熱鍵可在 UI 修改（鍵位系統重寫）
-- updater 的 blake3 校驗
+- ~~開選單熱鍵可在 UI 修改~~ — 已做（`3b8c21a`）
+- ~~GUI 縮放~~ — 已做（`3b8c21a`）
+- ~~自訂視窗標題~~ — 已做（`3b8c21a`）
 - Windows IME 支援（GUI 裡能打中文）
-- GUI 縮放（縮放 egui 介面本身，不是遊戲畫面）
-- Config Editor 搜尋列（沒有 IME 的話用途有限）
-- 自訂視窗標題、內建 webview
+- Config Editor 搜尋列 —— **要先有 IME**。選項名稱現在都是中文，沒有 IME 就打不進搜尋框
+- updater 的 blake3 校驗 —— 單獨搬沒用，得等自寫換檔邏輯（見〈已知死路〉）
+- 內建 webview
 
 > `enable_file_logging` **不需要搬** —— 我們已經有自製版（`hachimi_tw_<exe>.log`）。
 
@@ -204,12 +233,17 @@ overlay 能出來完全是靠 `76140b8` 的 fallback —— render_hook 首次 P
 |---|---|---|
 | **Free Camera**（Live/賽事自由視角，三種模式：自由移動/第一人稱/跟隨角色） | `GetCharacterWorldPos`、`Director::AlterUpdate` | ✅ |
 | **Live 循環播放 + 進度滑桿** | `Director::AlterUpdate` | ✅ |
-| **解析度縮放**（跟著螢幕/視窗真實解析度渲染，4K 上真的變清晰） | `Screen::SetResolution` | ✅ |
-| 返回鍵處理 | `BackKeyInputManager` 兩個方法 | ✅ Free Camera 的配套，攔截返回鍵避免誤觸退出 |
+| ~~**解析度縮放**~~ | — | ✅ **已經做好了**，見下 |
+| 返回鍵處理 | `BackKeyInputManager` | ✅ Free Camera 的配套，攔截返回鍵避免誤觸退出 |
 | 劇情文字換行 / 行距 | `LineHeadWrapCommon`、`SetLineSpacing` | ❌ 翻譯衍生 |
 | 自訂技能說明視窗 | `UpdateItem`、`SetSkillNameText` | 之後再議 |
 | 賽事分析事件列表 | class 不存在 | ⛔ 日服五週年功能，台服約還要一年 |
 | 劇情素質變化特效 | class 不存在 | ❌ 素材替換系統 |
+
+> **解析度縮放不必再做**（2026-08-14 查證）。我們走的路和 Edge 不同：Edge 攔
+> `Screen::SetResolution`，我們是 hook `Gallop.Screen::get_Width` / `get_Height` 回傳縮放後的值
+> （`windows::utils::get_scaling_res`），config 的 `resolution_scaling` 與 GUI 下拉都已經在。
+> log 裡 Screen 沒有任何 NULL。上面那格原本是照抄 Edge 的問題清單，對我們不成立。
 
 ### D — 對繁中服無意義
 
@@ -234,7 +268,42 @@ overlay 能出來完全是靠 `76140b8` 的 fallback —— render_hook 首次 P
 
 **已排定**
 
-2. Free Camera + 返回鍵 + 解析度縮放 — 同一子系統（Live/賽事的攝影機與渲染），一起做。
+2. Free Camera + 返回鍵 — 原本這包還有「解析度縮放」，查證後發現**早就做好了**（見 C 類）。
+
+   ### 動工前先看這裡（2026-08-14 事前調查）
+
+   簽章都查過了，**沒有一個對不上**：
+
+   | 需要的 | dump 裡的實際簽章 |
+   |---|---|
+   | `Gallop.Live.Cutt.LiveTimelineKeyCameraLookAtData::GetCharacterWorldPos` | 5 參數 static，如筆記所載 |
+   | `Gallop.BackKeyInputManager::ExecuteBackKeyAction()` | 0 參數 |
+   | `Gallop.BackKeyInputManager::set_OverrideAction(System.Action)` | 存在 |
+
+   > `set_OverrideAction` 值得注意：**這是官方留的覆寫點，比 hook `Update` 乾淨**。
+   > 代價是要從 Rust 造一個 C# `Action` delegate（`symbols::create_delegate` 已經有）。
+   > 先試這條，不要一開始就去攔 `Update`。
+
+   **真正的成本不在簽章，在移植面積：**
+
+   ```
+   edge/main:src/windows/free_camera.rs                2209 行
+   edge/main:src/il2cpp/hook/Unity_InputSystem/Gamepad.rs 172 行   ← 我們沒有這個模組
+   edge/main:src/il2cpp/hook/umamusume/ModelController.rs  19 行   ← 我們沒有
+   ```
+
+   再加上 `Director` 那層本來就得重寫（繁中服是舊 API 形狀，見上面的簽章對照）。
+
+   **所以不要整檔搬。** 建議切成可各自驗證的階段，每階段都要能單獨開遊戲確認：
+
+   1. `Director::AlterUpdateTimeline` 的 by-ref `timescale` —— 先做播放速度，最小、最好驗
+   2. `get_LiveCurrentTime` / `get_LiveTotalTime` → 進度滑桿
+   3. 鍵盤操作的自由視角（**先不要碰 gamepad**，那是另外 172 行且與核心無關）
+   4. `BackKeyInputManager` 攔返回鍵
+   5. 手把支援 —— 真的需要再說
+
+   ※ 這個 fork 的教訓：每次「猜結構」都錯，每次都是實機 log 抓出來的。
+   2209 行一次進來沒辦法二分定位問題。
 
 **延後**
 
