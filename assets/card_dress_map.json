@@ -1,0 +1,5205 @@
+{
+ "100101": {
+  "card_id": 100101,
+  "chara_id": 1001,
+  "name": "[特別夢想家]特別週",
+  "name_jp": "[スペシャルドリーマー]スペシャルウィーク",
+  "chara_name": "特別週",
+  "dress_id": 100101,
+  "dress_name": "特別夢想家",
+  "dress_id_by_rarity": {
+   "3": 100101,
+   "4": 100101,
+   "5": 100101
+  },
+  "icon": "chara/chr1001/chr_icon_1001_100101",
+  "icon_variants": [
+   "chara/chr1001/chr_icon_1001_100101_01",
+   "chara/chr1001/chr_icon_1001_100101_02"
+  ],
+  "in_tw": true
+ },
+ "100102": {
+  "card_id": 100102,
+  "chara_id": 1001,
+  "name": "[跳躍♪富含維他命的心]特別週",
+  "name_jp": "[ほっぴん♪ビタミンハート]スペシャルウィーク",
+  "chara_name": "特別週",
+  "dress_id": 100130,
+  "dress_name": "跳躍♪富含維他命的心",
+  "dress_id_by_rarity": {
+   "3": 100130,
+   "4": 100130,
+   "5": 100130
+  },
+  "icon": "chara/chr1001/chr_icon_1001_100130",
+  "icon_variants": [
+   "chara/chr1001/chr_icon_1001_100130_01",
+   "chara/chr1001/chr_icon_1001_100130_02"
+  ],
+  "in_tw": true
+ },
+ "100103": {
+  "card_id": 100103,
+  "chara_id": 1001,
+  "name": "[日之本第一總大將]特別週",
+  "name_jp": "[日之本一の総大将]スペシャルウィーク",
+  "chara_name": "特別週",
+  "dress_id": 100102,
+  "dress_name": "日之本第一總大將",
+  "dress_id_by_rarity": {
+   "3": 100102,
+   "4": 100102,
+   "5": 100102
+  },
+  "icon": "chara/chr1001/chr_icon_1001_100102",
+  "icon_variants": [
+   "chara/chr1001/chr_icon_1001_100102_01",
+   "chara/chr1001/chr_icon_1001_100102_02"
+  ],
+  "in_tw": true
+ },
+ "100201": {
+  "card_id": 100201,
+  "chara_id": 1002,
+  "name": "[無聲純真]無聲鈴鹿",
+  "name_jp": "[サイレントイノセンス]サイレンススズカ",
+  "chara_name": "無聲鈴鹿",
+  "dress_id": 100201,
+  "dress_name": "無聲純真",
+  "dress_id_by_rarity": {
+   "3": 100201,
+   "4": 100201,
+   "5": 100201
+  },
+  "icon": "chara/chr1002/chr_icon_1002_100201",
+  "icon_variants": [
+   "chara/chr1002/chr_icon_1002_100201_01",
+   "chara/chr1002/chr_icon_1002_100201_02"
+  ],
+  "in_tw": true
+ },
+ "100202": {
+  "card_id": 100202,
+  "chara_id": 1002,
+  "name": "[波浪間的綠寶石]無聲鈴鹿",
+  "name_jp": "[波間のエメラルド]サイレンススズカ",
+  "chara_name": "無聲鈴鹿",
+  "dress_id": 100230,
+  "dress_name": "波浪間的綠寶石",
+  "dress_id_by_rarity": {
+   "3": 100230,
+   "4": 100230,
+   "5": 100230
+  },
+  "icon": "chara/chr1002/chr_icon_1002_100230",
+  "icon_variants": [
+   "chara/chr1002/chr_icon_1002_100230_01",
+   "chara/chr1002/chr_icon_1002_100230_02"
+  ],
+  "in_tw": true
+ },
+ "100301": {
+  "card_id": 100301,
+  "chara_id": 1003,
+  "name": "[歡樂巔峰]東海帝皇",
+  "name_jp": "[トップ・オブ・ジョイフル]トウカイテイオー",
+  "chara_name": "東海帝皇",
+  "dress_id": 100301,
+  "dress_name": "歡樂巔峰",
+  "dress_id_by_rarity": {
+   "3": 100301,
+   "4": 100301,
+   "5": 100301
+  },
+  "icon": "chara/chr1003/chr_icon_1003_100301",
+  "icon_variants": [
+   "chara/chr1003/chr_icon_1003_100301_01",
+   "chara/chr1003/chr_icon_1003_100301_02"
+  ],
+  "in_tw": true
+ },
+ "100302": {
+  "card_id": 100302,
+  "chara_id": 1003,
+  "name": "[超越地平線]東海帝皇",
+  "name_jp": "[ビヨンド・ザ・ホライズン]トウカイテイオー",
+  "chara_name": "東海帝皇",
+  "dress_id": 100302,
+  "dress_name": "超越地平線",
+  "dress_id_by_rarity": {
+   "3": 100302,
+   "4": 100302,
+   "5": 100302
+  },
+  "icon": "chara/chr1003/chr_icon_1003_100302",
+  "icon_variants": [
+   "chara/chr1003/chr_icon_1003_100302_01",
+   "chara/chr1003/chr_icon_1003_100302_02"
+  ],
+  "in_tw": true
+ },
+ "100303": {
+  "card_id": 100303,
+  "chara_id": 1003,
+  "name": "[紫雲下的追夢蝶]東海帝皇",
+  "name_jp": "[紫雲の夢見取り]トウカイテイオー",
+  "chara_name": "東海帝皇",
+  "dress_id": 100343,
+  "dress_name": "紫雲下的追夢蝶",
+  "dress_id_by_rarity": {
+   "3": 100343,
+   "4": 100343,
+   "5": 100343
+  },
+  "icon": "chara/chr1003/chr_icon_1003_100343",
+  "icon_variants": [
+   "chara/chr1003/chr_icon_1003_100343_01",
+   "chara/chr1003/chr_icon_1003_100343_02"
+  ],
+  "in_tw": true
+ },
+ "100401": {
+  "card_id": 100401,
+  "chara_id": 1004,
+  "name": "[嫣紅方程式]丸善斯基",
+  "name_jp": "[フォーミュラオブルージュ]マルゼンスキー",
+  "chara_name": "丸善斯基",
+  "dress_id": 100401,
+  "dress_name": "嫣紅方程式",
+  "dress_id_by_rarity": {
+   "3": 100401,
+   "4": 100401,
+   "5": 100401
+  },
+  "icon": "chara/chr1004/chr_icon_1004_100401",
+  "icon_variants": [
+   "chara/chr1004/chr_icon_1004_100401_01",
+   "chara/chr1004/chr_icon_1004_100401_02"
+  ],
+  "in_tw": true
+ },
+ "100402": {
+  "card_id": 100402,
+  "chara_id": 1004,
+  "name": "[飛越☆盛夏騎士]丸善斯基",
+  "name_jp": "[ぶっとび☆さまーナイト]マルゼンスキー",
+  "chara_name": "丸善斯基",
+  "dress_id": 100430,
+  "dress_name": "飛越☆盛夏騎士",
+  "dress_id_by_rarity": {
+   "3": 100430,
+   "4": 100430,
+   "5": 100430
+  },
+  "icon": "chara/chr1004/chr_icon_1004_100430",
+  "icon_variants": [
+   "chara/chr1004/chr_icon_1004_100430_01",
+   "chara/chr1004/chr_icon_1004_100430_02"
+  ],
+  "in_tw": true
+ },
+ "100403": {
+  "card_id": 100403,
+  "chara_id": 1004,
+  "name": "[祈福祝賀的神速天女]丸善斯基",
+  "name_jp": "[祝ひ寿ぐ神速天女]マルゼンスキー",
+  "chara_name": "丸善斯基",
+  "dress_id": 100410,
+  "dress_name": "祈福祝賀的神速天女",
+  "dress_id_by_rarity": {
+   "3": 100410,
+   "4": 100410,
+   "5": 100410
+  },
+  "icon": "chara/chr1004/chr_icon_1004_100410",
+  "icon_variants": [
+   "chara/chr1004/chr_icon_1004_100410_01",
+   "chara/chr1004/chr_icon_1004_100410_02"
+  ],
+  "in_tw": true
+ },
+ "100501": {
+  "card_id": 100501,
+  "chara_id": 1005,
+  "name": "[流星歌舞劇]富士奇石",
+  "name_jp": "[シューティンスタァ・ルヴュ]フジキセキ",
+  "chara_name": "富士奇石",
+  "dress_id": 100501,
+  "dress_name": "流星歌舞劇",
+  "dress_id_by_rarity": {
+   "3": 100501,
+   "4": 100501,
+   "5": 100501
+  },
+  "icon": "chara/chr1005/chr_icon_1005_100501",
+  "icon_variants": [
+   "chara/chr1005/chr_icon_1005_100501_01",
+   "chara/chr1005/chr_icon_1005_100501_02"
+  ],
+  "in_tw": true
+ },
+ "100502": {
+  "card_id": 100502,
+  "chara_id": 1005,
+  "name": "[勝利明星]富士奇石",
+  "name_jp": "[シュクセ・エトワーレ]フジキセキ",
+  "chara_name": "富士奇石",
+  "dress_id": 100520,
+  "dress_name": "勝利明星",
+  "dress_id_by_rarity": {
+   "3": 100520,
+   "4": 100520,
+   "5": 100520
+  },
+  "icon": "chara/chr1005/chr_icon_1005_100520",
+  "icon_variants": [
+   "chara/chr1005/chr_icon_1005_100520_01",
+   "chara/chr1005/chr_icon_1005_100520_02"
+  ],
+  "in_tw": true
+ },
+ "100503": {
+  "card_id": 100503,
+  "chara_id": 1005,
+  "name": "[ブランシュ・エトワール]フジキセキ",
+  "name_jp": "[ブランシュ・エトワール]フジキセキ",
+  "chara_name": "富士奇石",
+  "dress_id": 100550,
+  "dress_name": "ブランシュ・エトワール",
+  "dress_id_by_rarity": {
+   "3": 100550,
+   "4": 100550,
+   "5": 100550
+  },
+  "icon": "chara/chr1005/chr_icon_1005_100550",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "100601": {
+  "card_id": 100601,
+  "chara_id": 1006,
+  "name": "[星光躍動]小栗帽",
+  "name_jp": "[スターライトビート]オグリキャップ",
+  "chara_name": "小栗帽",
+  "dress_id": 100601,
+  "dress_name": "星光躍動",
+  "dress_id_by_rarity": {
+   "3": 100601,
+   "4": 100601,
+   "5": 100601
+  },
+  "icon": "chara/chr1006/chr_icon_1006_100601",
+  "icon_variants": [
+   "chara/chr1006/chr_icon_1006_100601_01",
+   "chara/chr1006/chr_icon_1006_100601_02"
+  ],
+  "in_tw": true
+ },
+ "100602": {
+  "card_id": 100602,
+  "chara_id": 1006,
+  "name": "[奇蹟白星]小栗帽",
+  "name_jp": "[キセキの白星]オグリキャップ",
+  "chara_name": "小栗帽",
+  "dress_id": 100646,
+  "dress_name": "奇蹟白星",
+  "dress_id_by_rarity": {
+   "3": 100646,
+   "4": 100646,
+   "5": 100646
+  },
+  "icon": "chara/chr1006/chr_icon_1006_100646",
+  "icon_variants": [
+   "chara/chr1006/chr_icon_1006_100646_01",
+   "chara/chr1006/chr_icon_1006_100646_02"
+  ],
+  "in_tw": true
+ },
+ "100603": {
+  "card_id": 100603,
+  "chara_id": 1006,
+  "name": "[シンデレラグレイ]オグリキャップ",
+  "name_jp": "[シンデレラグレイ]オグリキャップ",
+  "chara_name": "小栗帽",
+  "dress_id": 100602,
+  "dress_name": "シンデレラグレイ",
+  "dress_id_by_rarity": {
+   "3": 100602,
+   "4": 100602,
+   "5": 100602
+  },
+  "icon": "chara/chr1006/chr_icon_1006_100602",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "100701": {
+  "card_id": 100701,
+  "chara_id": 1007,
+  "name": "[火紅鬥爭]黃金船",
+  "name_jp": "[レッドストライフ]ゴールドシップ",
+  "chara_name": "黃金船",
+  "dress_id": 100701,
+  "dress_name": "火紅鬥爭",
+  "dress_id_by_rarity": {
+   "2": 101,
+   "3": 100701,
+   "4": 100701,
+   "5": 100701
+  },
+  "icon": "chara/chr1007/chr_icon_1007_100701",
+  "icon_variants": [
+   "chara/chr1007/chr_icon_1007_100701_01",
+   "chara/chr1007/chr_icon_1007_100701_02"
+  ],
+  "in_tw": true
+ },
+ "100702": {
+  "card_id": 100702,
+  "chara_id": 1007,
+  "name": "[RUN！亂！亂槍射手！！]黃金船",
+  "name_jp": "[RUN！乱！ランチャー！！]ゴールドシップ",
+  "chara_name": "黃金船",
+  "dress_id": 100730,
+  "dress_name": "RUN！亂！亂槍射手！！",
+  "dress_id_by_rarity": {
+   "3": 100730,
+   "4": 100730,
+   "5": 100730
+  },
+  "icon": "chara/chr1007/chr_icon_1007_100730",
+  "icon_variants": [
+   "chara/chr1007/chr_icon_1007_100730_01",
+   "chara/chr1007/chr_icon_1007_100730_02"
+  ],
+  "in_tw": true
+ },
+ "100703": {
+  "card_id": 100703,
+  "chara_id": 1007,
+  "name": "[La mode 564]黃金船",
+  "name_jp": "[La mode 564]ゴールドシップ",
+  "chara_name": "黃金船",
+  "dress_id": 100702,
+  "dress_name": "La mode 564",
+  "dress_id_by_rarity": {
+   "3": 100702,
+   "4": 100702,
+   "5": 100702
+  },
+  "icon": "chara/chr1007/chr_icon_1007_100702",
+  "icon_variants": [
+   "chara/chr1007/chr_icon_1007_100702_01",
+   "chara/chr1007/chr_icon_1007_100702_02"
+  ],
+  "in_tw": true
+ },
+ "100801": {
+  "card_id": 100801,
+  "chara_id": 1008,
+  "name": "[狂野極速]伏特加",
+  "name_jp": "[ワイルドトップギア]ウオッカ",
+  "chara_name": "伏特加",
+  "dress_id": 100801,
+  "dress_name": "狂野極速",
+  "dress_id_by_rarity": {
+   "2": 101,
+   "3": 100801,
+   "4": 100801,
+   "5": 100801
+  },
+  "icon": "chara/chr1008/chr_icon_1008_100801",
+  "icon_variants": [
+   "chara/chr1008/chr_icon_1008_100801_01",
+   "chara/chr1008/chr_icon_1008_100801_02"
+  ],
+  "in_tw": true
+ },
+ "100802": {
+  "card_id": 100802,
+  "chara_id": 1008,
+  "name": "[不凍的生命之水]伏特加",
+  "name_jp": "[不凍のアクア・ウィタエ]ウオッカ",
+  "chara_name": "伏特加",
+  "dress_id": 100846,
+  "dress_name": "不凍的生命之水",
+  "dress_id_by_rarity": {
+   "3": 100846,
+   "4": 100846,
+   "5": 100846
+  },
+  "icon": "chara/chr1008/chr_icon_1008_100846",
+  "icon_variants": [
+   "chara/chr1008/chr_icon_1008_100846_01",
+   "chara/chr1008/chr_icon_1008_100846_02"
+  ],
+  "in_tw": true
+ },
+ "100901": {
+  "card_id": 100901,
+  "chara_id": 1009,
+  "name": "[蒼藍巔峰]大和赤驥",
+  "name_jp": "[トップ・オブ・ブルー]ダイワスカーレット",
+  "chara_name": "大和赤驥",
+  "dress_id": 100901,
+  "dress_name": "蒼藍巔峰",
+  "dress_id_by_rarity": {
+   "2": 101,
+   "3": 100901,
+   "4": 100901,
+   "5": 100901
+  },
+  "icon": "chara/chr1009/chr_icon_1009_100901",
+  "icon_variants": [
+   "chara/chr1009/chr_icon_1009_100901_01",
+   "chara/chr1009/chr_icon_1009_100901_02"
+  ],
+  "in_tw": true
+ },
+ "100902": {
+  "card_id": 100902,
+  "chara_id": 1009,
+  "name": "[緋紅的星落之夜]大和赤驥",
+  "name_jp": "[緋色のニュイ・エトワレ]ダイワスカーレット",
+  "chara_name": "大和赤驥",
+  "dress_id": 100946,
+  "dress_name": "緋紅的星落之夜",
+  "dress_id_by_rarity": {
+   "3": 100946,
+   "4": 100946,
+   "5": 100946
+  },
+  "icon": "chara/chr1009/chr_icon_1009_100946",
+  "icon_variants": [
+   "chara/chr1009/chr_icon_1009_100946_01",
+   "chara/chr1009/chr_icon_1009_100946_02"
+  ],
+  "in_tw": true
+ },
+ "101001": {
+  "card_id": 101001,
+  "chara_id": 1010,
+  "name": "[野性邊境]大樹快車",
+  "name_jp": "[ワイルド・フロンティア]タイキシャトル",
+  "chara_name": "大樹快車",
+  "dress_id": 101001,
+  "dress_name": "野性邊境",
+  "dress_id_by_rarity": {
+   "3": 101001,
+   "4": 101001,
+   "5": 101001
+  },
+  "icon": "chara/chr1010/chr_icon_1010_101001",
+  "icon_variants": [
+   "chara/chr1010/chr_icon_1010_101001_01",
+   "chara/chr1010/chr_icon_1010_101001_02"
+  ],
+  "in_tw": true
+ },
+ "101002": {
+  "card_id": 101002,
+  "chara_id": 1010,
+  "name": "[Bubblegum☆Memories]大樹快車",
+  "name_jp": "[Bubblegum☆Memories]タイキシャトル",
+  "chara_name": "大樹快車",
+  "dress_id": 101023,
+  "dress_name": "Bubblegum☆Memories",
+  "dress_id_by_rarity": {
+   "3": 101023,
+   "4": 101023,
+   "5": 101023
+  },
+  "icon": "chara/chr1010/chr_icon_1010_101023",
+  "icon_variants": [
+   "chara/chr1010/chr_icon_1010_101023_01",
+   "chara/chr1010/chr_icon_1010_101023_02"
+  ],
+  "in_tw": true
+ },
+ "101003": {
+  "card_id": 101003,
+  "chara_id": 1010,
+  "name": "[Baa Baa Patisserie]タイキシャトル",
+  "name_jp": "[Baa Baa Patisserie]タイキシャトル",
+  "chara_name": "大樹快車",
+  "dress_id": 101013,
+  "dress_name": "Baa Baa Patisserie",
+  "dress_id_by_rarity": {
+   "3": 101013,
+   "4": 101013,
+   "5": 101013
+  },
+  "icon": "chara/chr1010/chr_icon_1010_101013",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "101101": {
+  "card_id": 101101,
+  "chara_id": 1011,
+  "name": "[穿岩之青]草上飛",
+  "name_jp": "[岩穿つ青]グラスワンダー",
+  "chara_name": "草上飛",
+  "dress_id": 101101,
+  "dress_name": "穿岩之青",
+  "dress_id_by_rarity": {
+   "2": 101,
+   "3": 101101,
+   "4": 101101,
+   "5": 101101
+  },
+  "icon": "chara/chr1011/chr_icon_1011_101101",
+  "icon_variants": [
+   "chara/chr1011/chr_icon_1011_101101_01",
+   "chara/chr1011/chr_icon_1011_101101_02"
+  ],
+  "in_tw": true
+ },
+ "101102": {
+  "card_id": 101102,
+  "chara_id": 1011,
+  "name": "[神聖翡翠治癒師]草上飛",
+  "name_jp": "[セイントジェード・ヒーラー]グラスワンダー",
+  "chara_name": "草上飛",
+  "dress_id": 101116,
+  "dress_name": "神聖翡翠治癒師",
+  "dress_id_by_rarity": {
+   "3": 101116,
+   "4": 101116,
+   "5": 101116
+  },
+  "icon": "chara/chr1011/chr_icon_1011_101116",
+  "icon_variants": [
+   "chara/chr1011/chr_icon_1011_101116_01",
+   "chara/chr1011/chr_icon_1011_101116_02"
+  ],
+  "in_tw": true
+ },
+ "101103": {
+  "card_id": 101103,
+  "chara_id": 1011,
+  "name": "[蒼炎之譽]草上飛",
+  "name_jp": "[蒼炎の誉]グラスワンダー",
+  "chara_name": "草上飛",
+  "dress_id": 101102,
+  "dress_name": "蒼炎之譽",
+  "dress_id_by_rarity": {
+   "3": 101102,
+   "4": 101102,
+   "5": 101102
+  },
+  "icon": "chara/chr1011/chr_icon_1011_101102",
+  "icon_variants": [
+   "chara/chr1011/chr_icon_1011_101102_01",
+   "chara/chr1011/chr_icon_1011_101102_02"
+  ],
+  "in_tw": true
+ },
+ "101201": {
+  "card_id": 101201,
+  "chara_id": 1012,
+  "name": "[亞馬遜青金石]菱亞馬遜",
+  "name_jp": "[アマゾネス・ラピス]ヒシアマゾン",
+  "chara_name": "菱亞馬遜",
+  "dress_id": 101201,
+  "dress_name": "亞馬遜青金石",
+  "dress_id_by_rarity": {
+   "3": 101201,
+   "4": 101201,
+   "5": 101201
+  },
+  "icon": "chara/chr1012/chr_icon_1012_101201",
+  "icon_variants": [
+   "chara/chr1012/chr_icon_1012_101201_01",
+   "chara/chr1012/chr_icon_1012_101201_02"
+  ],
+  "in_tw": true
+ },
+ "101202": {
+  "card_id": 101202,
+  "chara_id": 1012,
+  "name": "[Hungry Veil]菱亞馬遜",
+  "name_jp": "[Hungry Veil]ヒシアマゾン",
+  "chara_name": "菱亞馬遜",
+  "dress_id": 101226,
+  "dress_name": "Hungry Veil",
+  "dress_id_by_rarity": {
+   "3": 101226,
+   "4": 101226,
+   "5": 101226
+  },
+  "icon": "chara/chr1012/chr_icon_1012_101226",
+  "icon_variants": [
+   "chara/chr1012/chr_icon_1012_101226_01",
+   "chara/chr1012/chr_icon_1012_101226_02"
+  ],
+  "in_tw": true
+ },
+ "101301": {
+  "card_id": 101301,
+  "chara_id": 1013,
+  "name": "[優雅線條]目白麥昆",
+  "name_jp": "[エレガンス・ライン]メジロマックイーン",
+  "chara_name": "目白麥昆",
+  "dress_id": 101301,
+  "dress_name": "優雅線條",
+  "dress_id_by_rarity": {
+   "3": 101301,
+   "4": 101301,
+   "5": 101301
+  },
+  "icon": "chara/chr1013/chr_icon_1013_101301",
+  "icon_variants": [
+   "chara/chr1013/chr_icon_1013_101301_01",
+   "chara/chr1013/chr_icon_1013_101301_02"
+  ],
+  "in_tw": true
+ },
+ "101302": {
+  "card_id": 101302,
+  "chara_id": 1013,
+  "name": "[空之盡頭]目白麥昆",
+  "name_jp": "[エンド・オブ・スカイ]メジロマックイーン",
+  "chara_name": "目白麥昆",
+  "dress_id": 101302,
+  "dress_name": "空之盡頭",
+  "dress_id_by_rarity": {
+   "3": 101302,
+   "4": 101302,
+   "5": 101302
+  },
+  "icon": "chara/chr1013/chr_icon_1013_101302",
+  "icon_variants": [
+   "chara/chr1013/chr_icon_1013_101302_01",
+   "chara/chr1013/chr_icon_1013_101302_02"
+  ],
+  "in_tw": true
+ },
+ "101303": {
+  "card_id": 101303,
+  "chara_id": 1013,
+  "name": "[漣漪窈窕淑女]目白麥昆",
+  "name_jp": "[さざ波フェアレディ]メジロマックイーン",
+  "chara_name": "目白麥昆",
+  "dress_id": 101330,
+  "dress_name": "漣漪窈窕淑女",
+  "dress_id_by_rarity": {
+   "3": 101330,
+   "4": 101330,
+   "5": 101330
+  },
+  "icon": "chara/chr1013/chr_icon_1013_101330",
+  "icon_variants": [
+   "chara/chr1013/chr_icon_1013_101330_01",
+   "chara/chr1013/chr_icon_1013_101330_02"
+  ],
+  "in_tw": true
+ },
+ "101401": {
+  "card_id": 101401,
+  "chara_id": 1014,
+  "name": "[神鷹☆Número 1]神鷹",
+  "name_jp": "[エル☆Número 1]エルコンドルパサー",
+  "chara_name": "神鷹",
+  "dress_id": 101401,
+  "dress_name": "神鷹☆Número 1",
+  "dress_id_by_rarity": {
+   "2": 101,
+   "3": 101401,
+   "4": 101401,
+   "5": 101401
+  },
+  "icon": "chara/chr1014/chr_icon_1014_101401",
+  "icon_variants": [
+   "chara/chr1014/chr_icon_1014_101401_01",
+   "chara/chr1014/chr_icon_1014_101401_02"
+  ],
+  "in_tw": true
+ },
+ "101402": {
+  "card_id": 101402,
+  "chara_id": 1014,
+  "name": "[羽蛇神武鬥家]神鷹",
+  "name_jp": "[ククルカン・モンク]エルコンドルパサー",
+  "chara_name": "神鷹",
+  "dress_id": 101416,
+  "dress_name": "羽蛇神武鬥家",
+  "dress_id_by_rarity": {
+   "3": 101416,
+   "4": 101416,
+   "5": 101416
+  },
+  "icon": "chara/chr1014/chr_icon_1014_101416",
+  "icon_variants": [
+   "chara/chr1014/chr_icon_1014_101416_01",
+   "chara/chr1014/chr_icon_1014_101416_02"
+  ],
+  "in_tw": true
+ },
+ "101501": {
+  "card_id": 101501,
+  "chara_id": 1015,
+  "name": "[你的太陽！]好歌劇",
+  "name_jp": "[オー・ソレ・スーオ！]テイエムオペラオー",
+  "chara_name": "好歌劇",
+  "dress_id": 101501,
+  "dress_name": "你的太陽！",
+  "dress_id_by_rarity": {
+   "3": 101501,
+   "4": 101501,
+   "5": 101501
+  },
+  "icon": "chara/chr1015/chr_icon_1015_101501",
+  "icon_variants": [
+   "chara/chr1015/chr_icon_1015_101501_01",
+   "chara/chr1015/chr_icon_1015_101501_02"
+  ],
+  "in_tw": true
+ },
+ "101502": {
+  "card_id": 101502,
+  "chara_id": 1015,
+  "name": "[初晴．湛藍絢爛]好歌劇",
+  "name_jp": "[初晴・青き絢爛]テイエムオペラオー",
+  "chara_name": "好歌劇",
+  "dress_id": 101510,
+  "dress_name": "初晴．湛藍絢爛",
+  "dress_id_by_rarity": {
+   "3": 101510,
+   "4": 101510,
+   "5": 101510
+  },
+  "icon": "chara/chr1015/chr_icon_1015_101510",
+  "icon_variants": [
+   "chara/chr1015/chr_icon_1015_101510_01",
+   "chara/chr1015/chr_icon_1015_101510_02"
+  ],
+  "in_tw": true
+ },
+ "101601": {
+  "card_id": 101601,
+  "chara_id": 1016,
+  "name": "[Maverick]成田白仁",
+  "name_jp": "[Maverick]ナリタブライアン",
+  "chara_name": "成田白仁",
+  "dress_id": 101601,
+  "dress_name": "Maverick",
+  "dress_id_by_rarity": {
+   "3": 101601,
+   "4": 101601,
+   "5": 101601
+  },
+  "icon": "chara/chr1016/chr_icon_1016_101601",
+  "icon_variants": [
+   "chara/chr1016/chr_icon_1016_101601_01",
+   "chara/chr1016/chr_icon_1016_101601_02"
+  ],
+  "in_tw": true
+ },
+ "101602": {
+  "card_id": 101602,
+  "chara_id": 1016,
+  "name": "[餓狼]成田白仁",
+  "name_jp": "[餓狼]ナリタブライアン",
+  "chara_name": "成田白仁",
+  "dress_id": 101602,
+  "dress_name": "餓狼",
+  "dress_id_by_rarity": {
+   "3": 101602,
+   "4": 101602,
+   "5": 101602
+  },
+  "icon": "chara/chr1016/chr_icon_1016_101602",
+  "icon_variants": [
+   "chara/chr1016/chr_icon_1016_101602_01",
+   "chara/chr1016/chr_icon_1016_101602_02"
+  ],
+  "in_tw": true
+ },
+ "101701": {
+  "card_id": 101701,
+  "chara_id": 1017,
+  "name": "[皇帝之路]魯道夫象徵",
+  "name_jp": "[ロード・オブ・エンペラー]シンボリルドルフ",
+  "chara_name": "魯道夫象徵",
+  "dress_id": 101701,
+  "dress_name": "皇帝之路",
+  "dress_id_by_rarity": {
+   "3": 101701,
+   "4": 101701,
+   "5": 101701
+  },
+  "icon": "chara/chr1017/chr_icon_1017_101701",
+  "icon_variants": [
+   "chara/chr1017/chr_icon_1017_101701_01",
+   "chara/chr1017/chr_icon_1017_101701_02"
+  ],
+  "in_tw": true
+ },
+ "101702": {
+  "card_id": 101702,
+  "chara_id": 1017,
+  "name": "[皓月下的弓手]魯道夫象徵",
+  "name_jp": "[皓月の弓取り]シンボリルドルフ",
+  "chara_name": "魯道夫象徵",
+  "dress_id": 101743,
+  "dress_name": "皓月下的弓手",
+  "dress_id_by_rarity": {
+   "3": 101743,
+   "4": 101743,
+   "5": 101743
+  },
+  "icon": "chara/chr1017/chr_icon_1017_101743",
+  "icon_variants": [
+   "chara/chr1017/chr_icon_1017_101743_01",
+   "chara/chr1017/chr_icon_1017_101743_02"
+  ],
+  "in_tw": true
+ },
+ "101801": {
+  "card_id": 101801,
+  "chara_id": 1018,
+  "name": "[女帝之路]氣槽",
+  "name_jp": "[エンプレスロード]エアグルーヴ",
+  "chara_name": "氣槽",
+  "dress_id": 101801,
+  "dress_name": "女帝之路",
+  "dress_id_by_rarity": {
+   "2": 101,
+   "3": 101801,
+   "4": 101801,
+   "5": 101801
+  },
+  "icon": "chara/chr1018/chr_icon_1018_101801",
+  "icon_variants": [
+   "chara/chr1018/chr_icon_1018_101801_01",
+   "chara/chr1018/chr_icon_1018_101801_02"
+  ],
+  "in_tw": true
+ },
+ "101802": {
+  "card_id": 101802,
+  "chara_id": 1018,
+  "name": "[榮譽橡木冠]氣槽",
+  "name_jp": "[クエルクス・キウィーリス]エアグルーヴ",
+  "chara_name": "氣槽",
+  "dress_id": 101826,
+  "dress_name": "榮譽橡木冠",
+  "dress_id_by_rarity": {
+   "3": 101826,
+   "4": 101826,
+   "5": 101826
+  },
+  "icon": "chara/chr1018/chr_icon_1018_101826",
+  "icon_variants": [
+   "chara/chr1018/chr_icon_1018_101826_01",
+   "chara/chr1018/chr_icon_1018_101826_02"
+  ],
+  "in_tw": true
+ },
+ "101901": {
+  "card_id": 101901,
+  "chara_id": 1019,
+  "name": "[超特急！全彩特殊膜]愛麗數碼",
+  "name_jp": "[超特急！フルカラー特殊PP]アグネスデジタル",
+  "chara_name": "愛麗數碼",
+  "dress_id": 101901,
+  "dress_name": "超特急！全彩特殊膜",
+  "dress_id_by_rarity": {
+   "3": 101901,
+   "4": 101901,
+   "5": 101901
+  },
+  "icon": "chara/chr1019/chr_icon_1019_101901",
+  "icon_variants": [
+   "chara/chr1019/chr_icon_1019_101901_01",
+   "chara/chr1019/chr_icon_1019_101901_02"
+  ],
+  "in_tw": true
+ },
+ "101902": {
+  "card_id": 101902,
+  "chara_id": 1019,
+  "name": "[愛麗♡殭屍]愛麗數碼",
+  "name_jp": "[愛麗♡キョンシー]アグネスデジタル",
+  "chara_name": "愛麗數碼",
+  "dress_id": 101940,
+  "dress_name": "愛麗♡殭屍",
+  "dress_id_by_rarity": {
+   "3": 101940,
+   "4": 101940,
+   "5": 101940
+  },
+  "icon": "chara/chr1019/chr_icon_1019_101940",
+  "icon_variants": [
+   "chara/chr1019/chr_icon_1019_101940_01",
+   "chara/chr1019/chr_icon_1019_101940_02"
+  ],
+  "in_tw": true
+ },
+ "102001": {
+  "card_id": 102001,
+  "chara_id": 1020,
+  "name": "[青雲釣術]青雲天空",
+  "name_jp": "[あおぐもサミング]セイウンスカイ",
+  "chara_name": "青雲天空",
+  "dress_id": 102001,
+  "dress_name": "青雲釣術",
+  "dress_id_by_rarity": {
+   "3": 102001,
+   "4": 102001,
+   "5": 102001
+  },
+  "icon": "chara/chr1020/chr_icon_1020_102001",
+  "icon_variants": [
+   "chara/chr1020/chr_icon_1020_102001_01",
+   "chara/chr1020/chr_icon_1020_102001_02"
+  ],
+  "in_tw": true
+ },
+ "102002": {
+  "card_id": 102002,
+  "chara_id": 1020,
+  "name": "[小貓咪的晚宴]青雲天空",
+  "name_jp": "[ソワレ・ド・シャトン]セイウンスカイ",
+  "chara_name": "青雲天空",
+  "dress_id": 102020,
+  "dress_name": "小貓咪的晚宴",
+  "dress_id_by_rarity": {
+   "3": 102020,
+   "4": 102020,
+   "5": 102020
+  },
+  "icon": "chara/chr1020/chr_icon_1020_102020",
+  "icon_variants": [
+   "chara/chr1020/chr_icon_1020_102020_01",
+   "chara/chr1020/chr_icon_1020_102020_02"
+  ],
+  "in_tw": true
+ },
+ "102003": {
+  "card_id": 102003,
+  "chara_id": 1020,
+  "name": "[渚のきまぐれオランジュ]セイウンスカイ",
+  "name_jp": "[渚のきまぐれオランジュ]セイウンスカイ",
+  "chara_name": "青雲天空",
+  "dress_id": 102030,
+  "dress_name": "渚のきまぐれオランジュ",
+  "dress_id_by_rarity": {
+   "3": 102030,
+   "4": 102030,
+   "5": 102030
+  },
+  "icon": "chara/chr1020/chr_icon_1020_102030",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "102101": {
+  "card_id": 102101,
+  "chara_id": 1021,
+  "name": "[疾風迅雷]玉藻十字",
+  "name_jp": "[疾風迅雷]タマモクロス",
+  "chara_name": "玉藻十字",
+  "dress_id": 102101,
+  "dress_name": "疾風迅雷",
+  "dress_id_by_rarity": {
+   "3": 102101,
+   "4": 102101,
+   "5": 102101
+  },
+  "icon": "chara/chr1021/chr_icon_1021_102101",
+  "icon_variants": [
+   "chara/chr1021/chr_icon_1021_102101_01",
+   "chara/chr1021/chr_icon_1021_102101_02"
+  ],
+  "in_tw": true
+ },
+ "102102": {
+  "card_id": 102102,
+  "chara_id": 1021,
+  "name": "[荒暴雷神]玉藻十字",
+  "name_jp": "[猛ル鳴神]タマモクロス",
+  "chara_name": "玉藻十字",
+  "dress_id": 102143,
+  "dress_name": "荒暴雷神",
+  "dress_id_by_rarity": {
+   "3": 102143,
+   "4": 102143,
+   "5": 102143
+  },
+  "icon": "chara/chr1021/chr_icon_1021_102143",
+  "icon_variants": [
+   "chara/chr1021/chr_icon_1021_102143_01",
+   "chara/chr1021/chr_icon_1021_102143_02"
+  ],
+  "in_tw": true
+ },
+ "102201": {
+  "card_id": 102201,
+  "chara_id": 1022,
+  "name": "[Noble Seamair]美妙姿勢",
+  "name_jp": "[Noble Seamair]ファインモーション",
+  "chara_name": "美妙姿勢",
+  "dress_id": 102201,
+  "dress_name": "Noble Seamair",
+  "dress_id_by_rarity": {
+   "3": 102201,
+   "4": 102201,
+   "5": 102201
+  },
+  "icon": "chara/chr1022/chr_icon_1022_102201",
+  "icon_variants": [
+   "chara/chr1022/chr_icon_1022_102201_01",
+   "chara/chr1022/chr_icon_1022_102201_02"
+  ],
+  "in_tw": true
+ },
+ "102202": {
+  "card_id": 102202,
+  "chara_id": 1022,
+  "name": "[Titania]美妙姿勢",
+  "name_jp": "[Titania]ファインモーション",
+  "chara_name": "美妙姿勢",
+  "dress_id": 102226,
+  "dress_name": "Titania",
+  "dress_id_by_rarity": {
+   "3": 102226,
+   "4": 102226,
+   "5": 102226
+  },
+  "icon": "chara/chr1022/chr_icon_1022_102226",
+  "icon_variants": [
+   "chara/chr1022/chr_icon_1022_102226_01",
+   "chara/chr1022/chr_icon_1022_102226_02"
+  ],
+  "in_tw": true
+ },
+ "102203": {
+  "card_id": 102203,
+  "chara_id": 1022,
+  "name": "[麺華煌彩伝・極]ファインモーション",
+  "name_jp": "[麺華煌彩伝・極]ファインモーション",
+  "chara_name": "美妙姿勢",
+  "dress_id": 102202,
+  "dress_name": "麺華煌彩伝・極",
+  "dress_id_by_rarity": {
+   "3": 102202,
+   "4": 102202,
+   "5": 102202
+  },
+  "icon": "chara/chr1022/chr_icon_1022_102202",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "102301": {
+  "card_id": 102301,
+  "chara_id": 1023,
+  "name": "[pf.Victory formula...]琵琶晨光",
+  "name_jp": "[pf.Victory formula...]ビワハヤヒデ",
+  "chara_name": "琵琶晨光",
+  "dress_id": 102301,
+  "dress_name": "pf.Victory formula...",
+  "dress_id_by_rarity": {
+   "3": 102301,
+   "4": 102301,
+   "5": 102301
+  },
+  "icon": "chara/chr1023/chr_icon_1023_102301",
+  "icon_variants": [
+   "chara/chr1023/chr_icon_1023_102301_01",
+   "chara/chr1023/chr_icon_1023_102301_02"
+  ],
+  "in_tw": true
+ },
+ "102302": {
+  "card_id": 102302,
+  "chara_id": 1023,
+  "name": "[聖夜紅袍頌歌]琵琶晨光",
+  "name_jp": "[ノエルージュ・キャロル]ビワハヤヒデ",
+  "chara_name": "琵琶晨光",
+  "dress_id": 102346,
+  "dress_name": "聖夜紅袍頌歌",
+  "dress_id_by_rarity": {
+   "3": 102346,
+   "4": 102346,
+   "5": 102346
+  },
+  "icon": "chara/chr1023/chr_icon_1023_102346",
+  "icon_variants": [
+   "chara/chr1023/chr_icon_1023_102346_01",
+   "chara/chr1023/chr_icon_1023_102346_02"
+  ],
+  "in_tw": true
+ },
+ "102303": {
+  "card_id": 102303,
+  "chara_id": 1023,
+  "name": "[Engineered Victory]琵琶晨光",
+  "name_jp": "[Engineered Victory]ビワハヤヒデ",
+  "chara_name": "琵琶晨光",
+  "dress_id": 102302,
+  "dress_name": "Engineered Victory",
+  "dress_id_by_rarity": {
+   "3": 102302,
+   "4": 102302,
+   "5": 102302
+  },
+  "icon": "chara/chr1023/chr_icon_1023_102302",
+  "icon_variants": [
+   "chara/chr1023/chr_icon_1023_102302_01",
+   "chara/chr1023/chr_icon_1023_102302_02"
+  ],
+  "in_tw": true
+ },
+ "102401": {
+  "card_id": 102401,
+  "chara_id": 1024,
+  "name": "[急飛☆區域]重砲",
+  "name_jp": "[すくらんぶる☆ゾーン]マヤノトップガン",
+  "chara_name": "重砲",
+  "dress_id": 102401,
+  "dress_name": "急飛☆區域",
+  "dress_id_by_rarity": {
+   "2": 101,
+   "3": 102401,
+   "4": 102401,
+   "5": 102401
+  },
+  "icon": "chara/chr1024/chr_icon_1024_102401",
+  "icon_variants": [
+   "chara/chr1024/chr_icon_1024_102401_01",
+   "chara/chr1024/chr_icon_1024_102401_02"
+  ],
+  "in_tw": true
+ },
+ "102402": {
+  "card_id": 102402,
+  "chara_id": 1024,
+  "name": "[陽光捧花]重砲",
+  "name_jp": "[サンライト・ブーケ]マヤノトップガン",
+  "chara_name": "重砲",
+  "dress_id": 102426,
+  "dress_name": "陽光捧花",
+  "dress_id_by_rarity": {
+   "3": 102426,
+   "4": 102426,
+   "5": 102426
+  },
+  "icon": "chara/chr1024/chr_icon_1024_102426",
+  "icon_variants": [
+   "chara/chr1024/chr_icon_1024_102426_01",
+   "chara/chr1024/chr_icon_1024_102426_02"
+  ],
+  "in_tw": true
+ },
+ "102403": {
+  "card_id": 102403,
+  "chara_id": 1024,
+  "name": "[搖滾☆MewMeow]重砲",
+  "name_jp": "[ろっきん☆MewMeow]マヤノトップガン",
+  "chara_name": "重砲",
+  "dress_id": 102440,
+  "dress_name": "搖滾☆MewMeow",
+  "dress_id_by_rarity": {
+   "3": 102440,
+   "4": 102440,
+   "5": 102440
+  },
+  "icon": "chara/chr1024/chr_icon_1024_102440",
+  "icon_variants": [
+   "chara/chr1024/chr_icon_1024_102440_01",
+   "chara/chr1024/chr_icon_1024_102440_02"
+  ],
+  "in_tw": true
+ },
+ "102501": {
+  "card_id": 102501,
+  "chara_id": 1025,
+  "name": "[Creeping Black]曼哈頓咖啡",
+  "name_jp": "[Creeping Black]マンハッタンカフェ",
+  "chara_name": "曼哈頓咖啡",
+  "dress_id": 102501,
+  "dress_name": "Creeping Black",
+  "dress_id_by_rarity": {
+   "3": 102501,
+   "4": 102501,
+   "5": 102501
+  },
+  "icon": "chara/chr1025/chr_icon_1025_102501",
+  "icon_variants": [
+   "chara/chr1025/chr_icon_1025_102501_01",
+   "chara/chr1025/chr_icon_1025_102501_02"
+  ],
+  "in_tw": true
+ },
+ "102502": {
+  "card_id": 102502,
+  "chara_id": 1025,
+  "name": "[柳綠小夜]曼哈頓咖啡",
+  "name_jp": "[柳緑小夜]マンハッタンカフェ",
+  "chara_name": "曼哈頓咖啡",
+  "dress_id": 102513,
+  "dress_name": "柳綠小夜",
+  "dress_id_by_rarity": {
+   "3": 102513,
+   "4": 102513,
+   "5": 102513
+  },
+  "icon": "chara/chr1025/chr_icon_1025_102513",
+  "icon_variants": [
+   "chara/chr1025/chr_icon_1025_102513_01",
+   "chara/chr1025/chr_icon_1025_102513_02"
+  ],
+  "in_tw": true
+ },
+ "102503": {
+  "card_id": 102503,
+  "chara_id": 1025,
+  "name": "[幽玄薔薇]マンハッタンカフェ",
+  "name_jp": "[幽玄薔薇]マンハッタンカフェ",
+  "chara_name": "曼哈頓咖啡",
+  "dress_id": 102526,
+  "dress_name": "幽玄薔薇",
+  "dress_id_by_rarity": {
+   "3": 102526,
+   "4": 102526,
+   "5": 102526
+  },
+  "icon": "chara/chr1025/chr_icon_1025_102526",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "102601": {
+  "card_id": 102601,
+  "chara_id": 1026,
+  "name": "[MB-19890425]美浦波旁",
+  "name_jp": "[MB-19890425]ミホノブルボン",
+  "chara_name": "美浦波旁",
+  "dress_id": 102601,
+  "dress_name": "MB-19890425",
+  "dress_id_by_rarity": {
+   "3": 102601,
+   "4": 102601,
+   "5": 102601
+  },
+  "icon": "chara/chr1026/chr_icon_1026_102601",
+  "icon_variants": [
+   "chara/chr1026/chr_icon_1026_102601_01",
+   "chara/chr1026/chr_icon_1026_102601_02"
+  ],
+  "in_tw": true
+ },
+ "102602": {
+  "card_id": 102602,
+  "chara_id": 1026,
+  "name": "[CODE：淋面裝飾]美浦波旁",
+  "name_jp": "[CODE：グラサージュ]ミホノブルボン",
+  "chara_name": "美浦波旁",
+  "dress_id": 102613,
+  "dress_name": "CODE：淋面裝飾",
+  "dress_id_by_rarity": {
+   "3": 102613,
+   "4": 102613,
+   "5": 102613
+  },
+  "icon": "chara/chr1026/chr_icon_1026_102613",
+  "icon_variants": [
+   "chara/chr1026/chr_icon_1026_102613_01",
+   "chara/chr1026/chr_icon_1026_102613_02"
+  ],
+  "in_tw": true
+ },
+ "102701": {
+  "card_id": 102701,
+  "chara_id": 1027,
+  "name": "[勇往直前]目白雷恩",
+  "name_jp": "[ストレート・ライン]メジロライアン",
+  "chara_name": "目白雷恩",
+  "dress_id": 102701,
+  "dress_name": "勇往直前",
+  "dress_id_by_rarity": {
+   "1": 101,
+   "2": 101,
+   "3": 102701,
+   "4": 102701,
+   "5": 102701
+  },
+  "icon": "chara/chr1027/chr_icon_1027_102701",
+  "icon_variants": [
+   "chara/chr1027/chr_icon_1027_102701_01",
+   "chara/chr1027/chr_icon_1027_102701_02"
+  ],
+  "in_tw": true
+ },
+ "102702": {
+  "card_id": 102702,
+  "chara_id": 1027,
+  "name": "[雛菊．拿鐵]目白雷恩",
+  "name_jp": "[マーガレット・ラッテ]メジロライアン",
+  "chara_name": "目白雷恩",
+  "dress_id": 102713,
+  "dress_name": "雛菊．拿鐵",
+  "dress_id_by_rarity": {
+   "3": 102713,
+   "4": 102713,
+   "5": 102713
+  },
+  "icon": "chara/chr1027/chr_icon_1027_102713",
+  "icon_variants": [
+   "chara/chr1027/chr_icon_1027_102713_01",
+   "chara/chr1027/chr_icon_1027_102713_02"
+  ],
+  "in_tw": true
+ },
+ "102801": {
+  "card_id": 102801,
+  "chara_id": 1028,
+  "name": "[Buono☆時尚]菱曙",
+  "name_jp": "[ボーノ☆アラモーダ]ヒシアケボノ",
+  "chara_name": "菱曙",
+  "dress_id": 102801,
+  "dress_name": "Buono☆時尚",
+  "dress_id_by_rarity": {
+   "3": 102801,
+   "4": 102801,
+   "5": 102801
+  },
+  "icon": "chara/chr1028/chr_icon_1028_102801",
+  "icon_variants": [
+   "chara/chr1028/chr_icon_1028_102801_01",
+   "chara/chr1028/chr_icon_1028_102801_02"
+  ],
+  "in_tw": true
+ },
+ "102802": {
+  "card_id": 102802,
+  "chara_id": 1028,
+  "name": "[マジックナイトガーランド]ヒシアケボノ",
+  "name_jp": "[マジックナイトガーランド]ヒシアケボノ",
+  "chara_name": "菱曙",
+  "dress_id": 102840,
+  "dress_name": "マジックナイトガーランド",
+  "dress_id_by_rarity": {
+   "3": 102840,
+   "4": 102840,
+   "5": 102840
+  },
+  "icon": "chara/chr1028/chr_icon_1028_102840",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "102901": {
+  "card_id": 102901,
+  "chara_id": 1029,
+  "name": "[好口愛好口愛的銀粟]雪之美人",
+  "name_jp": "[めんこいめんこいむつのはな]ユキノビジン",
+  "chara_name": "雪之美人",
+  "dress_id": 102901,
+  "dress_name": "好口愛好口愛的銀粟",
+  "dress_id_by_rarity": {
+   "3": 102901,
+   "4": 102901,
+   "5": 102901
+  },
+  "icon": "chara/chr1029/chr_icon_1029_102901",
+  "icon_variants": [
+   "chara/chr1029/chr_icon_1029_102901_01",
+   "chara/chr1029/chr_icon_1029_102901_02"
+  ],
+  "in_tw": true
+ },
+ "102902": {
+  "card_id": 102902,
+  "chara_id": 1029,
+  "name": "[小茶點小雪精]雪之美人",
+  "name_jp": "[茶の子雪ん子]ユキノビジン",
+  "chara_name": "雪之美人",
+  "dress_id": 102913,
+  "dress_name": "小茶點小雪精",
+  "dress_id_by_rarity": {
+   "3": 102913,
+   "4": 102913,
+   "5": 102913
+  },
+  "icon": "chara/chr1029/chr_icon_1029_102913",
+  "icon_variants": [
+   "chara/chr1029/chr_icon_1029_102913_01",
+   "chara/chr1029/chr_icon_1029_102913_02"
+  ],
+  "in_tw": true
+ },
+ "103001": {
+  "card_id": 103001,
+  "chara_id": 1030,
+  "name": "[薔薇之夢]米浴",
+  "name_jp": "[ローゼスドリーム]ライスシャワー",
+  "chara_name": "米浴",
+  "dress_id": 103001,
+  "dress_name": "薔薇之夢",
+  "dress_id_by_rarity": {
+   "3": 103001,
+   "4": 103001,
+   "5": 103001
+  },
+  "icon": "chara/chr1030/chr_icon_1030_103001",
+  "icon_variants": [
+   "chara/chr1030/chr_icon_1030_103001_01",
+   "chara/chr1030/chr_icon_1030_103001_02"
+  ],
+  "in_tw": true
+ },
+ "103002": {
+  "card_id": 103002,
+  "chara_id": 1030,
+  "name": "[Make up Vampire!]米浴",
+  "name_jp": "[Make up Vampire!]ライスシャワー",
+  "chara_name": "米浴",
+  "dress_id": 103040,
+  "dress_name": "Make up Vampire!",
+  "dress_id_by_rarity": {
+   "3": 103040,
+   "4": 103040,
+   "5": 103040
+  },
+  "icon": "chara/chr1030/chr_icon_1030_103040",
+  "icon_variants": [
+   "chara/chr1030/chr_icon_1030_103040_01",
+   "chara/chr1030/chr_icon_1030_103040_02"
+  ],
+  "in_tw": true
+ },
+ "103003": {
+  "card_id": 103003,
+  "chara_id": 1030,
+  "name": "[Yummy Dreamy Fairy]米浴",
+  "name_jp": "[Yummy Dreamy Fairy]ライスシャワー",
+  "chara_name": "米浴",
+  "dress_id": 103002,
+  "dress_name": "Yummy Dreamy Fairy",
+  "dress_id_by_rarity": {
+   "3": 103002,
+   "4": 103002,
+   "5": 103002
+  },
+  "icon": "chara/chr1030/chr_icon_1030_103002",
+  "icon_variants": [
+   "chara/chr1030/chr_icon_1030_103002_01",
+   "chara/chr1030/chr_icon_1030_103002_02"
+  ],
+  "in_tw": true
+ },
+ "103101": {
+  "card_id": 103101,
+  "chara_id": 1031,
+  "name": "[全天候狂熱]艾尼風神",
+  "name_jp": "[オールタイム・フィーバー]アイネスフウジン",
+  "chara_name": "艾尼風神",
+  "dress_id": 103101,
+  "dress_name": "全天候狂熱",
+  "dress_id_by_rarity": {
+   "3": 103101,
+   "4": 103101,
+   "5": 103101
+  },
+  "icon": "chara/chr1031/chr_icon_1031_103101",
+  "icon_variants": [
+   "chara/chr1031/chr_icon_1031_103101_01",
+   "chara/chr1031/chr_icon_1031_103101_02"
+  ],
+  "in_tw": true
+ },
+ "103102": {
+  "card_id": 103102,
+  "chara_id": 1031,
+  "name": "[MELTY GIFT]艾尼風神",
+  "name_jp": "[MELTY GIFT]アイネスフウジン",
+  "chara_name": "艾尼風神",
+  "dress_id": 103113,
+  "dress_name": "MELTY GIFT",
+  "dress_id_by_rarity": {
+   "3": 103113,
+   "4": 103113,
+   "5": 103113
+  },
+  "icon": "chara/chr1031/chr_icon_1031_103113",
+  "icon_variants": [
+   "chara/chr1031/chr_icon_1031_103113_01",
+   "chara/chr1031/chr_icon_1031_103113_02"
+  ],
+  "in_tw": true
+ },
+ "103103": {
+  "card_id": 103103,
+  "chara_id": 1031,
+  "name": "[Hello Hello Island]艾尼風神",
+  "name_jp": "[Hello Hello Island]アイネスフウジン",
+  "chara_name": "艾尼風神",
+  "dress_id": 103102,
+  "dress_name": "Hello Hello Island",
+  "dress_id_by_rarity": {
+   "3": 103102,
+   "4": 103102,
+   "5": 103102
+  },
+  "icon": "chara/chr1031/chr_icon_1031_103102",
+  "icon_variants": [
+   "chara/chr1031/chr_icon_1031_103102_01",
+   "chara/chr1031/chr_icon_1031_103102_02"
+  ],
+  "in_tw": true
+ },
+ "103201": {
+  "card_id": 103201,
+  "chara_id": 1032,
+  "name": "[tach-nology]愛麗速子",
+  "name_jp": "[tach-nology]アグネスタキオン",
+  "chara_name": "愛麗速子",
+  "dress_id": 103201,
+  "dress_name": "tach-nology",
+  "dress_id_by_rarity": {
+   "1": 101,
+   "2": 101,
+   "3": 103201,
+   "4": 103201,
+   "5": 103201
+  },
+  "icon": "chara/chr1032/chr_icon_1032_103201",
+  "icon_variants": [
+   "chara/chr1032/chr_icon_1032_103201_01",
+   "chara/chr1032/chr_icon_1032_103201_02"
+  ],
+  "in_tw": true
+ },
+ "103202": {
+  "card_id": 103202,
+  "chara_id": 1032,
+  "name": "[Lunatic Lab]愛麗速子",
+  "name_jp": "[Lunatic Lab]アグネスタキオン",
+  "chara_name": "愛麗速子",
+  "dress_id": 103230,
+  "dress_name": "Lunatic Lab",
+  "dress_id_by_rarity": {
+   "3": 103230,
+   "4": 103230,
+   "5": 103230
+  },
+  "icon": "chara/chr1032/chr_icon_1032_103230",
+  "icon_variants": [
+   "chara/chr1032/chr_icon_1032_103230_01",
+   "chara/chr1032/chr_icon_1032_103230_02"
+  ],
+  "in_tw": true
+ },
+ "103203": {
+  "card_id": 103203,
+  "chara_id": 1032,
+  "name": "[Σ Experiment]愛麗速子",
+  "name_jp": "[Σ Experiment]アグネスタキオン",
+  "chara_name": "愛麗速子",
+  "dress_id": 103202,
+  "dress_name": "Σ Experiment",
+  "dress_id_by_rarity": {
+   "3": 103202,
+   "4": 103202,
+   "5": 103202
+  },
+  "icon": "chara/chr1032/chr_icon_1032_103202",
+  "icon_variants": [
+   "chara/chr1032/chr_icon_1032_103202_01",
+   "chara/chr1032/chr_icon_1032_103202_02"
+  ],
+  "in_tw": true
+ },
+ "103301": {
+  "card_id": 103301,
+  "chara_id": 1033,
+  "name": "[Starry Nocturne]愛慕織姬",
+  "name_jp": "[Starry Nocturne]アドマイヤベガ",
+  "chara_name": "愛慕織姬",
+  "dress_id": 103301,
+  "dress_name": "Starry Nocturne",
+  "dress_id_by_rarity": {
+   "3": 103301,
+   "4": 103301,
+   "5": 103301
+  },
+  "icon": "chara/chr1033/chr_icon_1033_103301",
+  "icon_variants": [
+   "chara/chr1033/chr_icon_1033_103301_01",
+   "chara/chr1033/chr_icon_1033_103301_02"
+  ],
+  "in_tw": true
+ },
+ "103302": {
+  "card_id": 103302,
+  "chara_id": 1033,
+  "name": "[Glacialis Vega]愛慕織姬",
+  "name_jp": "[Glacialis Vega]アドマイヤベガ",
+  "chara_name": "愛慕織姬",
+  "dress_id": 103346,
+  "dress_name": "Glacialis Vega",
+  "dress_id_by_rarity": {
+   "3": 103346,
+   "4": 103346,
+   "5": 103346
+  },
+  "icon": "chara/chr1033/chr_icon_1033_103346",
+  "icon_variants": [
+   "chara/chr1033/chr_icon_1033_103346_01",
+   "chara/chr1033/chr_icon_1033_103346_02"
+  ],
+  "in_tw": true
+ },
+ "103401": {
+  "card_id": 103401,
+  "chara_id": 1034,
+  "name": "[稻荷因緣江戶紫]稻荷一",
+  "name_jp": "[稲荷所縁江戸紫]イナリワン",
+  "chara_name": "稻荷一",
+  "dress_id": 103401,
+  "dress_name": "稻荷因緣江戶紫",
+  "dress_id_by_rarity": {
+   "3": 103401,
+   "4": 103401,
+   "5": 103401
+  },
+  "icon": "chara/chr1034/chr_icon_1034_103401",
+  "icon_variants": [
+   "chara/chr1034/chr_icon_1034_103401_01",
+   "chara/chr1034/chr_icon_1034_103401_02"
+  ],
+  "in_tw": true
+ },
+ "103402": {
+  "card_id": 103402,
+  "chara_id": 1034,
+  "name": "[夢想的金原]稻荷一",
+  "name_jp": "[夢ノ金原]イナリワン",
+  "chara_name": "稻荷一",
+  "dress_id": 103443,
+  "dress_name": "夢想的金原",
+  "dress_id_by_rarity": {
+   "3": 103443,
+   "4": 103443,
+   "5": 103443
+  },
+  "icon": "chara/chr1034/chr_icon_1034_103443",
+  "icon_variants": [
+   "chara/chr1034/chr_icon_1034_103443_01",
+   "chara/chr1034/chr_icon_1034_103443_02"
+  ],
+  "in_tw": true
+ },
+ "103501": {
+  "card_id": 103501,
+  "chara_id": 1035,
+  "name": "[Go To Winning!]勝利獎券",
+  "name_jp": "[Go To Winning!]ウイニングチケット",
+  "chara_name": "勝利獎券",
+  "dress_id": 103501,
+  "dress_name": "Go To Winning!",
+  "dress_id_by_rarity": {
+   "1": 101,
+   "2": 101,
+   "3": 103501,
+   "4": 103501,
+   "5": 103501
+  },
+  "icon": "chara/chr1035/chr_icon_1035_103501",
+  "icon_variants": [
+   "chara/chr1035/chr_icon_1035_103501_01",
+   "chara/chr1035/chr_icon_1035_103501_02"
+  ],
+  "in_tw": true
+ },
+ "103502": {
+  "card_id": 103502,
+  "chara_id": 1035,
+  "name": "[Dream Deliverer]勝利獎券",
+  "name_jp": "[Dream Deliverer]ウイニングチケット",
+  "chara_name": "勝利獎券",
+  "dress_id": 103516,
+  "dress_name": "Dream Deliverer",
+  "dress_id_by_rarity": {
+   "3": 103516,
+   "4": 103516,
+   "5": 103516
+  },
+  "icon": "chara/chr1035/chr_icon_1035_103516",
+  "icon_variants": [
+   "chara/chr1035/chr_icon_1035_103516_01",
+   "chara/chr1035/chr_icon_1035_103516_02"
+  ],
+  "in_tw": true
+ },
+ "103503": {
+  "card_id": 103503,
+  "chara_id": 1035,
+  "name": "[Glorious Coat]勝利獎券",
+  "name_jp": "[Glorious Coat]ウイニングチケット",
+  "chara_name": "勝利獎券",
+  "dress_id": 103502,
+  "dress_name": "Glorious Coat",
+  "dress_id_by_rarity": {
+   "3": 103502,
+   "4": 103502,
+   "5": 103502
+  },
+  "icon": "chara/chr1035/chr_icon_1035_103502",
+  "icon_variants": [
+   "chara/chr1035/chr_icon_1035_103502_01",
+   "chara/chr1035/chr_icon_1035_103502_02"
+  ],
+  "in_tw": true
+ },
+ "103601": {
+  "card_id": 103601,
+  "chara_id": 1036,
+  "name": "[unsigned]空中神宮",
+  "name_jp": "[unsigned]エアシャカール",
+  "chara_name": "空中神宮",
+  "dress_id": 103601,
+  "dress_name": "unsigned",
+  "dress_id_by_rarity": {
+   "3": 103601,
+   "4": 103601,
+   "5": 103601
+  },
+  "icon": "chara/chr1036/chr_icon_1036_103601",
+  "icon_variants": [
+   "chara/chr1036/chr_icon_1036_103601_01",
+   "chara/chr1036/chr_icon_1036_103601_02"
+  ],
+  "in_tw": true
+ },
+ "103602": {
+  "card_id": 103602,
+  "chara_id": 1036,
+  "name": "[Belphegor's Prime]空中神宮",
+  "name_jp": "[Belphegor's Prime]エアシャカール",
+  "chara_name": "空中神宮",
+  "dress_id": 103640,
+  "dress_name": "Belphegor's Prime",
+  "dress_id_by_rarity": {
+   "3": 103640,
+   "4": 103640,
+   "5": 103640
+  },
+  "icon": "chara/chr1036/chr_icon_1036_103640",
+  "icon_variants": [
+   "chara/chr1036/chr_icon_1036_103640_01",
+   "chara/chr1036/chr_icon_1036_103640_02"
+  ],
+  "in_tw": true
+ },
+ "103701": {
+  "card_id": 103701,
+  "chara_id": 1037,
+  "name": "[Meisterschaft]榮進閃耀",
+  "name_jp": "[Meisterschaft]エイシンフラッシュ",
+  "chara_name": "榮進閃耀",
+  "dress_id": 103701,
+  "dress_name": "Meisterschaft",
+  "dress_id_by_rarity": {
+   "3": 103701,
+   "4": 103701,
+   "5": 103701
+  },
+  "icon": "chara/chr1037/chr_icon_1037_103701",
+  "icon_variants": [
+   "chara/chr1037/chr_icon_1037_103701_01",
+   "chara/chr1037/chr_icon_1037_103701_02"
+  ],
+  "in_tw": true
+ },
+ "103702": {
+  "card_id": 103702,
+  "chara_id": 1037,
+  "name": "[精確無比巧克力師]榮進閃耀",
+  "name_jp": "[コレクト・ショコラティエ]エイシンフラッシュ",
+  "chara_name": "榮進閃耀",
+  "dress_id": 103713,
+  "dress_name": "精確無比巧克力師",
+  "dress_id_by_rarity": {
+   "3": 103713,
+   "4": 103713,
+   "5": 103713
+  },
+  "icon": "chara/chr1037/chr_icon_1037_103713",
+  "icon_variants": [
+   "chara/chr1037/chr_icon_1037_103713_01",
+   "chara/chr1037/chr_icon_1037_103713_02"
+  ],
+  "in_tw": true
+ },
+ "103703": {
+  "card_id": 103703,
+  "chara_id": 1037,
+  "name": "[Reines Plätschern]榮進閃耀",
+  "name_jp": "[Reines Plätschern]エイシンフラッシュ",
+  "chara_name": "榮進閃耀",
+  "dress_id": 103730,
+  "dress_name": "Reines Plätschern",
+  "dress_id_by_rarity": {
+   "3": 103730,
+   "4": 103730,
+   "5": 103730
+  },
+  "icon": "chara/chr1037/chr_icon_1037_103730",
+  "icon_variants": [
+   "chara/chr1037/chr_icon_1037_103730_01",
+   "chara/chr1037/chr_icon_1037_103730_02"
+  ],
+  "in_tw": true
+ },
+ "103801": {
+  "card_id": 103801,
+  "chara_id": 1038,
+  "name": "[閃光少女]真機伶",
+  "name_jp": "[フィーユ・エクレール]カレンチャン",
+  "chara_name": "真機伶",
+  "dress_id": 103801,
+  "dress_name": "閃光少女",
+  "dress_id_by_rarity": {
+   "3": 103801,
+   "4": 103801,
+   "5": 103801
+  },
+  "icon": "chara/chr1038/chr_icon_1038_103801",
+  "icon_variants": [
+   "chara/chr1038/chr_icon_1038_103801_01",
+   "chara/chr1038/chr_icon_1038_103801_02"
+  ],
+  "in_tw": true
+ },
+ "103802": {
+  "card_id": 103802,
+  "chara_id": 1038,
+  "name": "[朔月甜心]真機伶",
+  "name_jp": "[朔月のマ・シェリ]カレンチャン",
+  "chara_name": "真機伶",
+  "dress_id": 103826,
+  "dress_name": "朔月甜心",
+  "dress_id_by_rarity": {
+   "3": 103826,
+   "4": 103826,
+   "5": 103826
+  },
+  "icon": "chara/chr1038/chr_icon_1038_103826",
+  "icon_variants": [
+   "chara/chr1038/chr_icon_1038_103826_01",
+   "chara/chr1038/chr_icon_1038_103826_02"
+  ],
+  "in_tw": true
+ },
+ "103901": {
+  "card_id": 103901,
+  "chara_id": 1039,
+  "name": "[Princess of pink]川上公主",
+  "name_jp": "[プリンセス・オブ・ピンク]カワカミプリンセス",
+  "chara_name": "川上公主",
+  "dress_id": 103901,
+  "dress_name": "Princess of pink",
+  "dress_id_by_rarity": {
+   "3": 103901,
+   "4": 103901,
+   "5": 103901
+  },
+  "icon": "chara/chr1039/chr_icon_1039_103901",
+  "icon_variants": [
+   "chara/chr1039/chr_icon_1039_103901_01",
+   "chara/chr1039/chr_icon_1039_103901_02"
+  ],
+  "in_tw": true
+ },
+ "103902": {
+  "card_id": 103902,
+  "chara_id": 1039,
+  "name": "[水干撫子]川上公主",
+  "name_jp": "[水干撫子]カワカミプリンセス",
+  "chara_name": "川上公主",
+  "dress_id": 103943,
+  "dress_name": "水干撫子",
+  "dress_id_by_rarity": {
+   "3": 103943,
+   "4": 103943,
+   "5": 103943
+  },
+  "icon": "chara/chr1039/chr_icon_1039_103943",
+  "icon_variants": [
+   "chara/chr1039/chr_icon_1039_103943_01",
+   "chara/chr1039/chr_icon_1039_103943_02"
+  ],
+  "in_tw": true
+ },
+ "104001": {
+  "card_id": 104001,
+  "chara_id": 1040,
+  "name": "[純正/1928]黃金城市",
+  "name_jp": "[オーセンティック/1928]ゴールドシチー",
+  "chara_name": "黃金城市",
+  "dress_id": 104001,
+  "dress_name": "純正/1928",
+  "dress_id_by_rarity": {
+   "3": 104001,
+   "4": 104001,
+   "5": 104001
+  },
+  "icon": "chara/chr1040/chr_icon_1040_104001",
+  "icon_variants": [
+   "chara/chr1040/chr_icon_1040_104001_01",
+   "chara/chr1040/chr_icon_1040_104001_02"
+  ],
+  "in_tw": true
+ },
+ "104002": {
+  "card_id": 104002,
+  "chara_id": 1040,
+  "name": "[秋櫻舞者]黃金城市",
+  "name_jp": "[秋桜ダンツァトリーチェ]ゴールドシチー",
+  "chara_name": "黃金城市",
+  "dress_id": 104043,
+  "dress_name": "秋櫻舞者",
+  "dress_id_by_rarity": {
+   "3": 104043,
+   "4": 104043,
+   "5": 104043
+  },
+  "icon": "chara/chr1040/chr_icon_1040_104043",
+  "icon_variants": [
+   "chara/chr1040/chr_icon_1040_104043_01",
+   "chara/chr1040/chr_icon_1040_104043_02"
+  ],
+  "in_tw": true
+ },
+ "104003": {
+  "card_id": 104003,
+  "chara_id": 1040,
+  "name": "[Boho Flare]黃金城市",
+  "name_jp": "[Boho Flare]ゴールドシチー",
+  "chara_name": "黃金城市",
+  "dress_id": 104002,
+  "dress_name": "Boho Flare",
+  "dress_id_by_rarity": {
+   "3": 104002,
+   "4": 104002,
+   "5": 104002
+  },
+  "icon": "chara/chr1040/chr_icon_1040_104002",
+  "icon_variants": [
+   "chara/chr1040/chr_icon_1040_104002_01",
+   "chara/chr1040/chr_icon_1040_104002_02"
+  ],
+  "in_tw": true
+ },
+ "104101": {
+  "card_id": 104101,
+  "chara_id": 1041,
+  "name": "[前進吧！櫻花]櫻花驀進王",
+  "name_jp": "[サクラ、すすめ！]サクラバクシンオー",
+  "chara_name": "櫻花驀進王",
+  "dress_id": 104101,
+  "dress_name": "前進吧！櫻花",
+  "dress_id_by_rarity": {
+   "1": 101,
+   "2": 101,
+   "3": 104101,
+   "4": 104101,
+   "5": 104101
+  },
+  "icon": "chara/chr1041/chr_icon_1041_104101",
+  "icon_variants": [
+   "chara/chr1041/chr_icon_1041_104101_01",
+   "chara/chr1041/chr_icon_1041_104101_02"
+  ],
+  "in_tw": true
+ },
+ "104102": {
+  "card_id": 104102,
+  "chara_id": 1041,
+  "name": "[赤熱☆隊長]櫻花驀進王",
+  "name_jp": "[レッドホット☆リーダー]サクラバクシンオー",
+  "chara_name": "櫻花驀進王",
+  "dress_id": 104150,
+  "dress_name": "赤熱☆隊長",
+  "dress_id_by_rarity": {
+   "3": 104150,
+   "4": 104150,
+   "5": 104150
+  },
+  "icon": "chara/chr1041/chr_icon_1041_104150",
+  "icon_variants": [
+   "chara/chr1041/chr_icon_1041_104150_01",
+   "chara/chr1041/chr_icon_1041_104150_02"
+  ],
+  "in_tw": true
+ },
+ "104103": {
+  "card_id": 104103,
+  "chara_id": 1041,
+  "name": "[春雷の韋駄天]サクラバクシンオー",
+  "name_jp": "[春雷の韋駄天]サクラバクシンオー",
+  "chara_name": "櫻花驀進王",
+  "dress_id": 104120,
+  "dress_name": "春雷の韋駄天",
+  "dress_id_by_rarity": {
+   "3": 104120,
+   "4": 104120,
+   "5": 104120
+  },
+  "icon": "chara/chr1041/chr_icon_1041_104120",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "104201": {
+  "card_id": 104201,
+  "chara_id": 1042,
+  "name": "[Rocket☆Star]採珠",
+  "name_jp": "[Rocket☆Star]シーキングザパール",
+  "chara_name": "採珠",
+  "dress_id": 104201,
+  "dress_name": "Rocket☆Star",
+  "dress_id_by_rarity": {
+   "3": 104201,
+   "4": 104201,
+   "5": 104201
+  },
+  "icon": "chara/chr1042/chr_icon_1042_104201",
+  "icon_variants": [
+   "chara/chr1042/chr_icon_1042_104201_01",
+   "chara/chr1042/chr_icon_1042_104201_02"
+  ],
+  "in_tw": true
+ },
+ "104202": {
+  "card_id": 104202,
+  "chara_id": 1042,
+  "name": "[Be♪Witched]採珠",
+  "name_jp": "[Be♪Witched]シーキングザパール",
+  "chara_name": "採珠",
+  "dress_id": 104240,
+  "dress_name": "Be♪Witched",
+  "dress_id_by_rarity": {
+   "3": 104240,
+   "4": 104240,
+   "5": 104240
+  },
+  "icon": "chara/chr1042/chr_icon_1042_104240",
+  "icon_variants": [
+   "chara/chr1042/chr_icon_1042_104240_01",
+   "chara/chr1042/chr_icon_1042_104240_02"
+  ],
+  "in_tw": true
+ },
+ "104301": {
+  "card_id": 104301,
+  "chara_id": 1043,
+  "name": "[Wicked Punk]新光風",
+  "name_jp": "[Wicked Punk]シンコウウインディ",
+  "chara_name": "新光風",
+  "dress_id": 104301,
+  "dress_name": "Wicked Punk",
+  "dress_id_by_rarity": {
+   "3": 104301,
+   "4": 104301,
+   "5": 104301
+  },
+  "icon": "chara/chr1043/chr_icon_1043_104301",
+  "icon_variants": [
+   "chara/chr1043/chr_icon_1043_104301_01",
+   "chara/chr1043/chr_icon_1043_104301_02"
+  ],
+  "in_tw": true
+ },
+ "104401": {
+  "card_id": 104401,
+  "chara_id": 1044,
+  "name": "[懸鈴木魔女]東商變革",
+  "name_jp": "[プラタナス・ウィッチ]スイープトウショウ",
+  "chara_name": "東商變革",
+  "dress_id": 104401,
+  "dress_name": "懸鈴木魔女",
+  "dress_id_by_rarity": {
+   "3": 104401,
+   "4": 104401,
+   "5": 104401
+  },
+  "icon": "chara/chr1044/chr_icon_1044_104401",
+  "icon_variants": [
+   "chara/chr1044/chr_icon_1044_104401_01",
+   "chara/chr1044/chr_icon_1044_104401_02"
+  ],
+  "in_tw": true
+ },
+ "104402": {
+  "card_id": 104402,
+  "chara_id": 1044,
+  "name": "[實現憧憬的符文]東商變革",
+  "name_jp": "[リアライズ・ルーン]スイープトウショウ",
+  "chara_name": "東商變革",
+  "dress_id": 104426,
+  "dress_name": "實現憧憬的符文",
+  "dress_id_by_rarity": {
+   "3": 104426,
+   "4": 104426,
+   "5": 104426
+  },
+  "icon": "chara/chr1044/chr_icon_1044_104426",
+  "icon_variants": [
+   "chara/chr1044/chr_icon_1044_104426_01",
+   "chara/chr1044/chr_icon_1044_104426_02"
+  ],
+  "in_tw": true
+ },
+ "104501": {
+  "card_id": 104501,
+  "chara_id": 1045,
+  "name": "[低語溪流]超級小溪",
+  "name_jp": "[マーマリングストリーム]スーパークリーク",
+  "chara_name": "超級小溪",
+  "dress_id": 104501,
+  "dress_name": "低語溪流",
+  "dress_id_by_rarity": {
+   "2": 101,
+   "3": 104501,
+   "4": 104501,
+   "5": 104501
+  },
+  "icon": "chara/chr1045/chr_icon_1045_104501",
+  "icon_variants": [
+   "chara/chr1045/chr_icon_1045_104501_01",
+   "chara/chr1045/chr_icon_1045_104501_02"
+  ],
+  "in_tw": true
+ },
+ "104502": {
+  "card_id": 104502,
+  "chara_id": 1045,
+  "name": "[雪紡緞帶木乃伊]超級小溪",
+  "name_jp": "[シフォンリボンマミー]スーパークリーク",
+  "chara_name": "超級小溪",
+  "dress_id": 104540,
+  "dress_name": "雪紡緞帶木乃伊",
+  "dress_id_by_rarity": {
+   "3": 104540,
+   "4": 104540,
+   "5": 104540
+  },
+  "icon": "chara/chr1045/chr_icon_1045_104540",
+  "icon_variants": [
+   "chara/chr1045/chr_icon_1045_104540_01",
+   "chara/chr1045/chr_icon_1045_104540_02"
+  ],
+  "in_tw": true
+ },
+ "104503": {
+  "card_id": 104503,
+  "chara_id": 1045,
+  "name": "[慈雨華影]超級小溪",
+  "name_jp": "[慈雨華影]スーパークリーク",
+  "chara_name": "超級小溪",
+  "dress_id": 104550,
+  "dress_name": "慈雨華影",
+  "dress_id_by_rarity": {
+   "3": 104550,
+   "4": 104550,
+   "5": 104550
+  },
+  "icon": "chara/chr1045/chr_icon_1045_104550",
+  "icon_variants": [
+   "chara/chr1045/chr_icon_1045_104550_01",
+   "chara/chr1045/chr_icon_1045_104550_02"
+  ],
+  "in_tw": true
+ },
+ "104601": {
+  "card_id": 104601,
+  "chara_id": 1046,
+  "name": "[絕對純粹☆LOVE]醒目飛鷹",
+  "name_jp": "[あぶそりゅーと☆LOVE]スマートファルコン",
+  "chara_name": "醒目飛鷹",
+  "dress_id": 104601,
+  "dress_name": "絕對純粹☆LOVE",
+  "dress_id_by_rarity": {
+   "3": 104601,
+   "4": 104601,
+   "5": 104601
+  },
+  "icon": "chara/chr1046/chr_icon_1046_104601",
+  "icon_variants": [
+   "chara/chr1046/chr_icon_1046_104601_01",
+   "chara/chr1046/chr_icon_1046_104601_02"
+  ],
+  "in_tw": true
+ },
+ "104602": {
+  "card_id": 104602,
+  "chara_id": 1046,
+  "name": "[黃昏凱旋]醒目飛鷹",
+  "name_jp": "[黄昏トライアンフ]スマートファルコン",
+  "chara_name": "醒目飛鷹",
+  "dress_id": 104602,
+  "dress_name": "黃昏凱旋",
+  "dress_id_by_rarity": {
+   "3": 104602,
+   "4": 104602,
+   "5": 104602
+  },
+  "icon": "chara/chr1046/chr_icon_1046_104602",
+  "icon_variants": [
+   "chara/chr1046/chr_icon_1046_104602_01",
+   "chara/chr1046/chr_icon_1046_104602_02"
+  ],
+  "in_tw": true
+ },
+ "104603": {
+  "card_id": 104603,
+  "chara_id": 1046,
+  "name": "[光輝☆舞棒者]醒目飛鷹",
+  "name_jp": "[ルミナス☆トワラー]スマートファルコン",
+  "chara_name": "醒目飛鷹",
+  "dress_id": 104650,
+  "dress_name": "光輝☆舞棒者",
+  "dress_id_by_rarity": {
+   "3": 104650,
+   "4": 104650,
+   "5": 104650
+  },
+  "icon": "chara/chr1046/chr_icon_1046_104650",
+  "icon_variants": [
+   "chara/chr1046/chr_icon_1046_104650_01",
+   "chara/chr1046/chr_icon_1046_104650_02"
+  ],
+  "in_tw": true
+ },
+ "104701": {
+  "card_id": 104701,
+  "chara_id": 1047,
+  "name": "[Heroic Author]荒漠英雄",
+  "name_jp": "[Heroic Author]ゼンノロブロイ",
+  "chara_name": "荒漠英雄",
+  "dress_id": 104701,
+  "dress_name": "Heroic Author",
+  "dress_id_by_rarity": {
+   "3": 104701,
+   "4": 104701,
+   "5": 104701
+  },
+  "icon": "chara/chr1047/chr_icon_1047_104701",
+  "icon_variants": [
+   "chara/chr1047/chr_icon_1047_104701_01",
+   "chara/chr1047/chr_icon_1047_104701_02"
+  ],
+  "in_tw": true
+ },
+ "104702": {
+  "card_id": 104702,
+  "chara_id": 1047,
+  "name": "[Inlaid Stories]荒漠英雄",
+  "name_jp": "[Inlaid Stories]ゼンノロブロイ",
+  "chara_name": "荒漠英雄",
+  "dress_id": 104723,
+  "dress_name": "Inlaid Stories",
+  "dress_id_by_rarity": {
+   "3": 104723,
+   "4": 104723,
+   "5": 104723
+  },
+  "icon": "chara/chr1047/chr_icon_1047_104723",
+  "icon_variants": [
+   "chara/chr1047/chr_icon_1047_104723_01",
+   "chara/chr1047/chr_icon_1047_104723_02"
+  ],
+  "in_tw": true
+ },
+ "104801": {
+  "card_id": 104801,
+  "chara_id": 1048,
+  "name": "[POPS☆JOKER]島川喬登",
+  "name_jp": "[ポップス☆ジョーカー]トーセンジョーダン",
+  "chara_name": "島川喬登",
+  "dress_id": 104801,
+  "dress_name": "POPS☆JOKER",
+  "dress_id_by_rarity": {
+   "3": 104801,
+   "4": 104801,
+   "5": 104801
+  },
+  "icon": "chara/chr1048/chr_icon_1048_104801",
+  "icon_variants": [
+   "chara/chr1048/chr_icon_1048_104801_01",
+   "chara/chr1048/chr_icon_1048_104801_02"
+  ],
+  "in_tw": true
+ },
+ "104802": {
+  "card_id": 104802,
+  "chara_id": 1048,
+  "name": "[Aurore☆Vacances]島川喬登",
+  "name_jp": "[Aurore☆Vacances]トーセンジョーダン",
+  "chara_name": "島川喬登",
+  "dress_id": 104823,
+  "dress_name": "Aurore☆Vacances",
+  "dress_id_by_rarity": {
+   "3": 104823,
+   "4": 104823,
+   "5": 104823
+  },
+  "icon": "chara/chr1048/chr_icon_1048_104823",
+  "icon_variants": [
+   "chara/chr1048/chr_icon_1048_104823_01",
+   "chara/chr1048/chr_icon_1048_104823_02"
+  ],
+  "in_tw": true
+ },
+ "104803": {
+  "card_id": 104803,
+  "chara_id": 1048,
+  "name": "[Highkey☆Hallowed]トーセンジョーダン",
+  "name_jp": "[Highkey☆Hallowed]トーセンジョーダン",
+  "chara_name": "島川喬登",
+  "dress_id": 104840,
+  "dress_name": "Highkey☆Hallowed",
+  "dress_id_by_rarity": {
+   "3": 104840,
+   "4": 104840,
+   "5": 104840
+  },
+  "icon": "chara/chr1048/chr_icon_1048_104840",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "104901": {
+  "card_id": 104901,
+  "chara_id": 1049,
+  "name": "[死中求活]中山慶典",
+  "name_jp": "[死中求活]ナカヤマフェスタ",
+  "chara_name": "中山慶典",
+  "dress_id": 104901,
+  "dress_name": "死中求活",
+  "dress_id_by_rarity": {
+   "3": 104901,
+   "4": 104901,
+   "5": 104901
+  },
+  "icon": "chara/chr1049/chr_icon_1049_104901",
+  "icon_variants": [
+   "chara/chr1049/chr_icon_1049_104901_01",
+   "chara/chr1049/chr_icon_1049_104901_02"
+  ],
+  "in_tw": true
+ },
+ "104902": {
+  "card_id": 104902,
+  "chara_id": 1049,
+  "name": "[祝祭遊戯]ナカヤマフェスタ",
+  "name_jp": "[祝祭遊戯]ナカヤマフェスタ",
+  "chara_name": "中山慶典",
+  "dress_id": 104946,
+  "dress_name": "祝祭遊戯",
+  "dress_id_by_rarity": {
+   "3": 104946,
+   "4": 104946,
+   "5": 104946
+  },
+  "icon": "chara/chr1049/chr_icon_1049_104946",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "105001": {
+  "card_id": 105001,
+  "chara_id": 1050,
+  "name": "[Nevertheless]成田大進",
+  "name_jp": "[Nevertheless]ナリタタイシン",
+  "chara_name": "成田大進",
+  "dress_id": 105001,
+  "dress_name": "Nevertheless",
+  "dress_id_by_rarity": {
+   "3": 105001,
+   "4": 105001,
+   "5": 105001
+  },
+  "icon": "chara/chr1050/chr_icon_1050_105001",
+  "icon_variants": [
+   "chara/chr1050/chr_icon_1050_105001_01",
+   "chara/chr1050/chr_icon_1050_105001_02"
+  ],
+  "in_tw": true
+ },
+ "105002": {
+  "card_id": 105002,
+  "chara_id": 1050,
+  "name": "[與眾不同的技師]成田大進",
+  "name_jp": "[ディファレンス・エンジニア]ナリタタイシン",
+  "chara_name": "成田大進",
+  "dress_id": 105016,
+  "dress_name": "與眾不同的技師",
+  "dress_id_by_rarity": {
+   "3": 105016,
+   "4": 105016,
+   "5": 105016
+  },
+  "icon": "chara/chr1050/chr_icon_1050_105016",
+  "icon_variants": [
+   "chara/chr1050/chr_icon_1050_105016_01",
+   "chara/chr1050/chr_icon_1050_105016_02"
+  ],
+  "in_tw": true
+ },
+ "105003": {
+  "card_id": 105003,
+  "chara_id": 1050,
+  "name": "[迷光追越]成田大進",
+  "name_jp": "[迷光オーヴァライド]ナリタタイシン",
+  "chara_name": "成田大進",
+  "dress_id": 105002,
+  "dress_name": "迷光追越",
+  "dress_id_by_rarity": {
+   "3": 105002,
+   "4": 105002,
+   "5": 105002
+  },
+  "icon": "chara/chr1050/chr_icon_1050_105002",
+  "icon_variants": [
+   "chara/chr1050/chr_icon_1050_105002_01",
+   "chara/chr1050/chr_icon_1050_105002_02"
+  ],
+  "in_tw": true
+ },
+ "105101": {
+  "card_id": 105101,
+  "chara_id": 1051,
+  "name": "[重瓣花朵]西野花",
+  "name_jp": "[ティアード・ペタル]ニシノフラワー",
+  "chara_name": "西野花",
+  "dress_id": 105101,
+  "dress_name": "重瓣花朵",
+  "dress_id_by_rarity": {
+   "3": 105101,
+   "4": 105101,
+   "5": 105101
+  },
+  "icon": "chara/chr1051/chr_icon_1051_105101",
+  "icon_variants": [
+   "chara/chr1051/chr_icon_1051_105101_01",
+   "chara/chr1051/chr_icon_1051_105101_02"
+  ],
+  "in_tw": true
+ },
+ "105102": {
+  "card_id": 105102,
+  "chara_id": 1051,
+  "name": "[Sweet Juneberry]西野花",
+  "name_jp": "[Sweet Juneberry]ニシノフラワー",
+  "chara_name": "西野花",
+  "dress_id": 105126,
+  "dress_name": "Sweet Juneberry",
+  "dress_id_by_rarity": {
+   "3": 105126,
+   "4": 105126,
+   "5": 105126
+  },
+  "icon": "chara/chr1051/chr_icon_1051_105126",
+  "icon_variants": [
+   "chara/chr1051/chr_icon_1051_105126_01",
+   "chara/chr1051/chr_icon_1051_105126_02"
+  ],
+  "in_tw": true
+ },
+ "105201": {
+  "card_id": 105201,
+  "chara_id": 1052,
+  "name": "[烏菈菈得第一♪]春烏菈菈",
+  "name_jp": "[うららん一等賞♪]ハルウララ",
+  "chara_name": "春烏菈菈",
+  "dress_id": 105201,
+  "dress_name": "烏菈菈得第一♪",
+  "dress_id_by_rarity": {
+   "1": 101,
+   "2": 101,
+   "3": 105201,
+   "4": 105201,
+   "5": 105201
+  },
+  "icon": "chara/chr1052/chr_icon_1052_105201",
+  "icon_variants": [
+   "chara/chr1052/chr_icon_1052_105201_01",
+   "chara/chr1052/chr_icon_1052_105201_02"
+  ],
+  "in_tw": true
+ },
+ "105202": {
+  "card_id": 105202,
+  "chara_id": 1052,
+  "name": "[初烏菈菈♪櫻花綻放]春烏菈菈",
+  "name_jp": "[初うらら♪さくさくら]ハルウララ",
+  "chara_name": "春烏菈菈",
+  "dress_id": 105210,
+  "dress_name": "初烏菈菈♪櫻花綻放",
+  "dress_id_by_rarity": {
+   "3": 105210,
+   "4": 105210,
+   "5": 105210
+  },
+  "icon": "chara/chr1052/chr_icon_1052_105210",
+  "icon_variants": [
+   "chara/chr1052/chr_icon_1052_105210_01",
+   "chara/chr1052/chr_icon_1052_105210_02"
+  ],
+  "in_tw": true
+ },
+ "105301": {
+  "card_id": 105301,
+  "chara_id": 1053,
+  "name": "[黑鐵大志]青竹回憶",
+  "name_jp": "[黒鉄の大志]バンブーメモリー",
+  "chara_name": "青竹回憶",
+  "dress_id": 105301,
+  "dress_name": "黑鐵大志",
+  "dress_id_by_rarity": {
+   "3": 105301,
+   "4": 105301,
+   "5": 105301
+  },
+  "icon": "chara/chr1053/chr_icon_1053_105301",
+  "icon_variants": [
+   "chara/chr1053/chr_icon_1053_105301_01",
+   "chara/chr1053/chr_icon_1053_105301_02"
+  ],
+  "in_tw": true
+ },
+ "105302": {
+  "card_id": 105302,
+  "chara_id": 1053,
+  "name": "[Ultra☆Marine]青竹回憶",
+  "name_jp": "[Ultra☆Marine]バンブーメモリー",
+  "chara_name": "青竹回憶",
+  "dress_id": 105323,
+  "dress_name": "Ultra☆Marine",
+  "dress_id_by_rarity": {
+   "3": 105323,
+   "4": 105323,
+   "5": 105323
+  },
+  "icon": "chara/chr1053/chr_icon_1053_105323",
+  "icon_variants": [
+   "chara/chr1053/chr_icon_1053_105323_01",
+   "chara/chr1053/chr_icon_1053_105323_02"
+  ],
+  "in_tw": true
+ },
+ "105401": {
+  "card_id": 105401,
+  "chara_id": 1054,
+  "name": "[疾風飛駒．零式]微光飛駒",
+  "name_jp": "[疾風ペガサス・零式]ビコーペガサス",
+  "chara_name": "微光飛駒",
+  "dress_id": 105401,
+  "dress_name": "疾風飛駒．零式",
+  "dress_id_by_rarity": {
+   "2": 101,
+   "3": 105401,
+   "4": 105401,
+   "5": 105401
+  },
+  "icon": "chara/chr1054/chr_icon_1054_105401",
+  "icon_variants": [
+   "chara/chr1054/chr_icon_1054_105401_01",
+   "chara/chr1054/chr_icon_1054_105401_02"
+  ],
+  "in_tw": true
+ },
+ "105501": {
+  "card_id": 105501,
+  "chara_id": 1055,
+  "name": "[☆閃耀★怦然☆雀躍∞美麗∞]美麗週日",
+  "name_jp": "[☆キラ★ドキ☆ワク∞マベ∞]マーベラスサンデー",
+  "chara_name": "美麗週日",
+  "dress_id": 105501,
+  "dress_name": "☆閃耀★怦然☆雀躍∞美麗∞",
+  "dress_id_by_rarity": {
+   "3": 105501,
+   "4": 105501,
+   "5": 105501
+  },
+  "icon": "chara/chr1055/chr_icon_1055_105501",
+  "icon_variants": [
+   "chara/chr1055/chr_icon_1055_105501_01",
+   "chara/chr1055/chr_icon_1055_105501_02"
+  ],
+  "in_tw": true
+ },
+ "105502": {
+  "card_id": 105502,
+  "chara_id": 1055,
+  "name": "[トリック☆リボネッタ]マーベラスサンデー",
+  "name_jp": "[トリック☆リボネッタ]マーベラスサンデー",
+  "chara_name": "美麗週日",
+  "dress_id": 105540,
+  "dress_name": "トリック☆リボネッタ",
+  "dress_id_by_rarity": {
+   "3": 105540,
+   "4": 105540,
+   "5": 105540
+  },
+  "icon": "chara/chr1055/chr_icon_1055_105540",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "105601": {
+  "card_id": 105601,
+  "chara_id": 1056,
+  "name": "[運勢上升☆好運臨門]待兼福來",
+  "name_jp": "[運気上昇☆幸福万来]マチカネフクキタル",
+  "chara_name": "待兼福來",
+  "dress_id": 105601,
+  "dress_name": "運勢上升☆好運臨門",
+  "dress_id_by_rarity": {
+   "1": 101,
+   "2": 101,
+   "3": 105601,
+   "4": 105601,
+   "5": 105601
+  },
+  "icon": "chara/chr1056/chr_icon_1056_105601",
+  "icon_variants": [
+   "chara/chr1056/chr_icon_1056_105601_01",
+   "chara/chr1056/chr_icon_1056_105601_02"
+  ],
+  "in_tw": true
+ },
+ "105602": {
+  "card_id": 105602,
+  "chara_id": 1056,
+  "name": "[吉兆初現]待兼福來",
+  "name_jp": "[吉兆・初あらし]マチカネフクキタル",
+  "chara_name": "待兼福來",
+  "dress_id": 105623,
+  "dress_name": "吉兆初現",
+  "dress_id_by_rarity": {
+   "3": 105623,
+   "4": 105623,
+   "5": 105623
+  },
+  "icon": "chara/chr1056/chr_icon_1056_105623",
+  "icon_variants": [
+   "chara/chr1056/chr_icon_1056_105623_01",
+   "chara/chr1056/chr_icon_1056_105623_02"
+  ],
+  "in_tw": true
+ },
+ "105701": {
+  "card_id": 105701,
+  "chara_id": 1057,
+  "name": "[Clear Bliss]千明代表",
+  "name_jp": "[Clear Bliss]ミスターシービー",
+  "chara_name": "千明代表",
+  "dress_id": 105701,
+  "dress_name": "Clear Bliss",
+  "dress_id_by_rarity": {
+   "3": 105701,
+   "4": 105701,
+   "5": 105701
+  },
+  "icon": "chara/chr1057/chr_icon_1057_105701",
+  "icon_variants": [
+   "chara/chr1057/chr_icon_1057_105701_01",
+   "chara/chr1057/chr_icon_1057_105701_02"
+  ],
+  "in_tw": true
+ },
+ "105702": {
+  "card_id": 105702,
+  "chara_id": 1057,
+  "name": "[絢爛花道歌舞之人]千明代表",
+  "name_jp": "[絢爛花道歌舞く君]ミスターシービー",
+  "chara_name": "千明代表",
+  "dress_id": 105710,
+  "dress_name": "絢爛花道歌舞之人",
+  "dress_id_by_rarity": {
+   "3": 105710,
+   "4": 105710,
+   "5": 105710
+  },
+  "icon": "chara/chr1057/chr_icon_1057_105710",
+  "icon_variants": [
+   "chara/chr1057/chr_icon_1057_105710_01",
+   "chara/chr1057/chr_icon_1057_105710_02"
+  ],
+  "in_tw": true
+ },
+ "105801": {
+  "card_id": 105801,
+  "chara_id": 1058,
+  "name": "[湛藍/湧濤]名將怒濤",
+  "name_jp": "[ブルー/レイジング]メイショウドトウ",
+  "chara_name": "名將怒濤",
+  "dress_id": 105801,
+  "dress_name": "湛藍/湧濤",
+  "dress_id_by_rarity": {
+   "3": 105801,
+   "4": 105801,
+   "5": 105801
+  },
+  "icon": "chara/chr1058/chr_icon_1058_105801",
+  "icon_variants": [
+   "chara/chr1058/chr_icon_1058_105801_01",
+   "chara/chr1058/chr_icon_1058_105801_02"
+  ],
+  "in_tw": true
+ },
+ "105802": {
+  "card_id": 105802,
+  "chara_id": 1058,
+  "name": "[Dot-o'-Lantern]名將怒濤",
+  "name_jp": "[Dot-o'-Lantern]メイショウドトウ",
+  "chara_name": "名將怒濤",
+  "dress_id": 105840,
+  "dress_name": "Dot-o'-Lantern",
+  "dress_id_by_rarity": {
+   "3": 105840,
+   "4": 105840,
+   "5": 105840
+  },
+  "icon": "chara/chr1058/chr_icon_1058_105840",
+  "icon_variants": [
+   "chara/chr1058/chr_icon_1058_105840_01",
+   "chara/chr1058/chr_icon_1058_105840_02"
+  ],
+  "in_tw": true
+ },
+ "105901": {
+  "card_id": 105901,
+  "chara_id": 1059,
+  "name": "[Twisted Line]目白多伯",
+  "name_jp": "[ツイステッド・ライン]メジロドーベル",
+  "chara_name": "目白多伯",
+  "dress_id": 105901,
+  "dress_name": "Twisted Line",
+  "dress_id_by_rarity": {
+   "3": 105901,
+   "4": 105901,
+   "5": 105901
+  },
+  "icon": "chara/chr1059/chr_icon_1059_105901",
+  "icon_variants": [
+   "chara/chr1059/chr_icon_1059_105901_01",
+   "chara/chr1059/chr_icon_1059_105901_02"
+  ],
+  "in_tw": true
+ },
+ "105902": {
+  "card_id": 105902,
+  "chara_id": 1059,
+  "name": "[藍寶石假期]目白多伯",
+  "name_jp": "[バカンス・サフィール]メジロドーベル",
+  "chara_name": "目白多伯",
+  "dress_id": 105923,
+  "dress_name": "藍寶石假期",
+  "dress_id_by_rarity": {
+   "3": 105923,
+   "4": 105923,
+   "5": 105923
+  },
+  "icon": "chara/chr1059/chr_icon_1059_105923",
+  "icon_variants": [
+   "chara/chr1059/chr_icon_1059_105923_01",
+   "chara/chr1059/chr_icon_1059_105923_02"
+  ],
+  "in_tw": true
+ },
+ "106001": {
+  "card_id": 106001,
+  "chara_id": 1060,
+  "name": "[聖誕紅緞帶]優秀素質",
+  "name_jp": "[ポインセチア・リボン]ナイスネイチャ",
+  "chara_name": "優秀素質",
+  "dress_id": 106001,
+  "dress_name": "聖誕紅緞帶",
+  "dress_id_by_rarity": {
+   "1": 101,
+   "2": 101,
+   "3": 106001,
+   "4": 106001,
+   "5": 106001
+  },
+  "icon": "chara/chr1060/chr_icon_1060_106001",
+  "icon_variants": [
+   "chara/chr1060/chr_icon_1060_106001_01",
+   "chara/chr1060/chr_icon_1060_106001_02"
+  ],
+  "in_tw": true
+ },
+ "106002": {
+  "card_id": 106002,
+  "chara_id": 1060,
+  "name": "[RUN＆WIN]優秀素質",
+  "name_jp": "[RUN＆WIN]ナイスネイチャ",
+  "chara_name": "優秀素質",
+  "dress_id": 106050,
+  "dress_name": "RUN＆WIN",
+  "dress_id_by_rarity": {
+   "3": 106050,
+   "4": 106050,
+   "5": 106050
+  },
+  "icon": "chara/chr1060/chr_icon_1060_106050",
+  "icon_variants": [
+   "chara/chr1060/chr_icon_1060_106050_01",
+   "chara/chr1060/chr_icon_1060_106050_02"
+  ],
+  "in_tw": true
+ },
+ "106003": {
+  "card_id": 106003,
+  "chara_id": 1060,
+  "name": "[萬千祈願]優秀素質",
+  "name_jp": "[ネガイノカサネ]ナイスネイチャ",
+  "chara_name": "優秀素質",
+  "dress_id": 106010,
+  "dress_name": "萬千祈願",
+  "dress_id_by_rarity": {
+   "3": 106010,
+   "4": 106010,
+   "5": 106010
+  },
+  "icon": "chara/chr1060/chr_icon_1060_106010",
+  "icon_variants": [
+   "chara/chr1060/chr_icon_1060_106010_01",
+   "chara/chr1060/chr_icon_1060_106010_02"
+  ],
+  "in_tw": true
+ },
+ "106101": {
+  "card_id": 106101,
+  "chara_id": 1061,
+  "name": "[綠寶石之王]帝王光輝",
+  "name_jp": "[キング・オブ・エメラルド]キングヘイロー",
+  "chara_name": "帝王光輝",
+  "dress_id": 106101,
+  "dress_name": "綠寶石之王",
+  "dress_id_by_rarity": {
+   "1": 101,
+   "2": 101,
+   "3": 106101,
+   "4": 106101,
+   "5": 106101
+  },
+  "icon": "chara/chr1061/chr_icon_1061_106101",
+  "icon_variants": [
+   "chara/chr1061/chr_icon_1061_106101_01",
+   "chara/chr1061/chr_icon_1061_106101_02"
+  ],
+  "in_tw": true
+ },
+ "106102": {
+  "card_id": 106102,
+  "chara_id": 1061,
+  "name": "[潔白高貴的激勵之服]帝王光輝",
+  "name_jp": "[白く気高き激励の装]キングヘイロー",
+  "chara_name": "帝王光輝",
+  "dress_id": 106150,
+  "dress_name": "潔白高貴的激勵之服",
+  "dress_id_by_rarity": {
+   "3": 106150,
+   "4": 106150,
+   "5": 106150
+  },
+  "icon": "chara/chr1061/chr_icon_1061_106150",
+  "icon_variants": [
+   "chara/chr1061/chr_icon_1061_106150_01",
+   "chara/chr1061/chr_icon_1061_106150_02"
+  ],
+  "in_tw": true
+ },
+ "106103": {
+  "card_id": 106103,
+  "chara_id": 1061,
+  "name": "[Evergreen Identity]帝王光輝",
+  "name_jp": "[Evergreen Identity]キングヘイロー",
+  "chara_name": "帝王光輝",
+  "dress_id": 106126,
+  "dress_name": "Evergreen Identity",
+  "dress_id_by_rarity": {
+   "3": 106126,
+   "4": 106126,
+   "5": 106126
+  },
+  "icon": "chara/chr1061/chr_icon_1061_106126",
+  "icon_variants": [
+   "chara/chr1061/chr_icon_1061_106126_01",
+   "chara/chr1061/chr_icon_1061_106126_02"
+  ],
+  "in_tw": true
+ },
+ "106201": {
+  "card_id": 106201,
+  "chara_id": 1062,
+  "name": "[鏘鏘～斜裝登場]待兼唐懷瑟",
+  "name_jp": "[ぱんぱかティルトット]マチカネタンホイザ",
+  "chara_name": "待兼唐懷瑟",
+  "dress_id": 106201,
+  "dress_name": "鏘鏘～斜裝登場",
+  "dress_id_by_rarity": {
+   "2": 101,
+   "3": 106201,
+   "4": 106201,
+   "5": 106201
+  },
+  "icon": "chara/chr1062/chr_icon_1062_106201",
+  "icon_variants": [
+   "chara/chr1062/chr_icon_1062_106201_01",
+   "chara/chr1062/chr_icon_1062_106201_02"
+  ],
+  "in_tw": true
+ },
+ "106202": {
+  "card_id": 106202,
+  "chara_id": 1062,
+  "name": "[藍色‧亂流]待兼唐懷瑟",
+  "name_jp": "[ブルー・タービュランス]マチカネタンホイザ",
+  "chara_name": "待兼唐懷瑟",
+  "dress_id": 106250,
+  "dress_name": "藍色‧亂流",
+  "dress_id_by_rarity": {
+   "3": 106250,
+   "4": 106250,
+   "5": 106250
+  },
+  "icon": "chara/chr1062/chr_icon_1062_106250",
+  "icon_variants": [
+   "chara/chr1062/chr_icon_1062_106250_01",
+   "chara/chr1062/chr_icon_1062_106250_02"
+  ],
+  "in_tw": true
+ },
+ "106301": {
+  "card_id": 106301,
+  "chara_id": 1063,
+  "name": "[Mantle of Steel]生野狄杜斯",
+  "name_jp": "[Mantle of Steel]イクノディクタス",
+  "chara_name": "生野狄杜斯",
+  "dress_id": 106301,
+  "dress_name": "Mantle of Steel",
+  "dress_id_by_rarity": {
+   "2": 101,
+   "3": 106301,
+   "4": 106301,
+   "5": 106301
+  },
+  "icon": "chara/chr1063/chr_icon_1063_106301",
+  "icon_variants": [
+   "chara/chr1063/chr_icon_1063_106301_01",
+   "chara/chr1063/chr_icon_1063_106301_02"
+  ],
+  "in_tw": true
+ },
+ "106302": {
+  "card_id": 106302,
+  "chara_id": 1063,
+  "name": "[逍遥、整然たる路を]イクノディクタス",
+  "name_jp": "[逍遥、整然たる路を]イクノディクタス",
+  "chara_name": "生野狄杜斯",
+  "dress_id": 106310,
+  "dress_name": "逍遥、整然たる路を",
+  "dress_id_by_rarity": {
+   "3": 106310,
+   "4": 106310,
+   "5": 106310
+  },
+  "icon": "chara/chr1063/chr_icon_1063_106310",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "106401": {
+  "card_id": 106401,
+  "chara_id": 1064,
+  "name": "[Line Breakthrough]目白善信",
+  "name_jp": "[Line Breakthrough]メジロパーマー",
+  "chara_name": "目白善信",
+  "dress_id": 106401,
+  "dress_name": "Line Breakthrough",
+  "dress_id_by_rarity": {
+   "3": 106401,
+   "4": 106401,
+   "5": 106401
+  },
+  "icon": "chara/chr1064/chr_icon_1064_106401",
+  "icon_variants": [
+   "chara/chr1064/chr_icon_1064_106401_01",
+   "chara/chr1064/chr_icon_1064_106401_02"
+  ],
+  "in_tw": true
+ },
+ "106402": {
+  "card_id": 106402,
+  "chara_id": 1064,
+  "name": "[飽含真心的馴鹿]目白善信",
+  "name_jp": "[赤心のトナカイさん]メジロパーマー",
+  "chara_name": "目白善信",
+  "dress_id": 106446,
+  "dress_name": "飽含真心的馴鹿",
+  "dress_id_by_rarity": {
+   "3": 106446,
+   "4": 106446,
+   "5": 106446
+  },
+  "icon": "chara/chr1064/chr_icon_1064_106446",
+  "icon_variants": [
+   "chara/chr1064/chr_icon_1064_106446_01",
+   "chara/chr1064/chr_icon_1064_106446_02"
+  ],
+  "in_tw": true
+ },
+ "106501": {
+  "card_id": 106501,
+  "chara_id": 1065,
+  "name": "[Fun☆Fun☆派對夜]大德太陽",
+  "name_jp": "[Fun☆Fun☆ぱりない]ダイタクヘリオス",
+  "chara_name": "大德太陽",
+  "dress_id": 106501,
+  "dress_name": "Fun☆Fun☆派對夜",
+  "dress_id_by_rarity": {
+   "3": 106501,
+   "4": 106501,
+   "5": 106501
+  },
+  "icon": "chara/chr1065/chr_icon_1065_106501",
+  "icon_variants": [
+   "chara/chr1065/chr_icon_1065_106501_01",
+   "chara/chr1065/chr_icon_1065_106501_02"
+  ],
+  "in_tw": true
+ },
+ "106502": {
+  "card_id": 106502,
+  "chara_id": 1065,
+  "name": "[Joyful Jamboree!]大德太陽",
+  "name_jp": "[Joyful Jamboree!]ダイタクヘリオス",
+  "chara_name": "大德太陽",
+  "dress_id": 106520,
+  "dress_name": "Joyful Jamboree!",
+  "dress_id_by_rarity": {
+   "3": 106520,
+   "4": 106520,
+   "5": 106520
+  },
+  "icon": "chara/chr1065/chr_icon_1065_106520",
+  "icon_variants": [
+   "chara/chr1065/chr_icon_1065_106520_01",
+   "chara/chr1065/chr_icon_1065_106520_02"
+  ],
+  "in_tw": true
+ },
+ "106601": {
+  "card_id": 106601,
+  "chara_id": 1066,
+  "name": "[暴衝！渦輪引擎]雙渦輪",
+  "name_jp": "[爆走！ターボエンジン]ツインターボ",
+  "chara_name": "雙渦輪",
+  "dress_id": 106601,
+  "dress_name": "暴衝！渦輪引擎",
+  "dress_id_by_rarity": {
+   "1": 101,
+   "2": 101,
+   "3": 106601,
+   "4": 106601,
+   "5": 106601
+  },
+  "icon": "chara/chr1066/chr_icon_1066_106601",
+  "icon_variants": [
+   "chara/chr1066/chr_icon_1066_106601_01",
+   "chara/chr1066/chr_icon_1066_106601_02"
+  ],
+  "in_tw": true
+ },
+ "106701": {
+  "card_id": 106701,
+  "chara_id": 1067,
+  "name": "[Natural Brilliance]里見光鑽",
+  "name_jp": "[Natural Brilliance]サトノダイヤモンド",
+  "chara_name": "里見光鑽",
+  "dress_id": 106701,
+  "dress_name": "Natural Brilliance",
+  "dress_id_by_rarity": {
+   "3": 106701,
+   "4": 106701,
+   "5": 106701
+  },
+  "icon": "chara/chr1067/chr_icon_1067_106701",
+  "icon_variants": [
+   "chara/chr1067/chr_icon_1067_106701_01",
+   "chara/chr1067/chr_icon_1067_106701_02"
+  ],
+  "in_tw": true
+ },
+ "106702": {
+  "card_id": 106702,
+  "chara_id": 1067,
+  "name": "[當家花旦・彌榮之翠]里見光鑽",
+  "name_jp": "[花形・弥栄之翠]サトノダイヤモンド",
+  "chara_name": "里見光鑽",
+  "dress_id": 106710,
+  "dress_name": "當家花旦・彌榮之翠",
+  "dress_id_by_rarity": {
+   "3": 106710,
+   "4": 106710,
+   "5": 106710
+  },
+  "icon": "chara/chr1067/chr_icon_1067_106710",
+  "icon_variants": [
+   "chara/chr1067/chr_icon_1067_106710_01",
+   "chara/chr1067/chr_icon_1067_106710_02"
+  ],
+  "in_tw": true
+ },
+ "106703": {
+  "card_id": 106703,
+  "chara_id": 1067,
+  "name": "[蒼藍騎士]里見光鑽",
+  "name_jp": "[シュヴァリエ・ブル]サトノダイヤモンド",
+  "chara_name": "里見光鑽",
+  "dress_id": 106702,
+  "dress_name": "蒼藍騎士",
+  "dress_id_by_rarity": {
+   "3": 106702,
+   "4": 106702,
+   "5": 106702
+  },
+  "icon": "chara/chr1067/chr_icon_1067_106702",
+  "icon_variants": [
+   "chara/chr1067/chr_icon_1067_106702_01",
+   "chara/chr1067/chr_icon_1067_106702_02"
+  ],
+  "in_tw": true
+ },
+ "106801": {
+  "card_id": 106801,
+  "chara_id": 1068,
+  "name": "[錦上．大判御輿]北部玄駒",
+  "name_jp": "[錦上・大判御輿]キタサンブラック",
+  "chara_name": "北部玄駒",
+  "dress_id": 106801,
+  "dress_name": "錦上．大判御輿",
+  "dress_id_by_rarity": {
+   "3": 106801,
+   "4": 106801,
+   "5": 106801
+  },
+  "icon": "chara/chr1068/chr_icon_1068_106801",
+  "icon_variants": [
+   "chara/chr1068/chr_icon_1068_106801_01",
+   "chara/chr1068/chr_icon_1068_106801_02"
+  ],
+  "in_tw": true
+ },
+ "106802": {
+  "card_id": 106802,
+  "chara_id": 1068,
+  "name": "[壓軸好戲・慶鶴之志]北部玄駒",
+  "name_jp": "[真打・慶鶴之志]キタサンブラック",
+  "chara_name": "北部玄駒",
+  "dress_id": 106810,
+  "dress_name": "壓軸好戲・慶鶴之志",
+  "dress_id_by_rarity": {
+   "3": 106810,
+   "4": 106810,
+   "5": 106810
+  },
+  "icon": "chara/chr1068/chr_icon_1068_106810",
+  "icon_variants": [
+   "chara/chr1068/chr_icon_1068_106810_01",
+   "chara/chr1068/chr_icon_1068_106810_02"
+  ],
+  "in_tw": true
+ },
+ "106803": {
+  "card_id": 106803,
+  "chara_id": 1068,
+  "name": "[償願謝幕之花]北部玄駒",
+  "name_jp": "[結願のしまい華]キタサンブラック",
+  "chara_name": "北部玄駒",
+  "dress_id": 106802,
+  "dress_name": "償願謝幕之花",
+  "dress_id_by_rarity": {
+   "3": 106802,
+   "4": 106802,
+   "5": 106802
+  },
+  "icon": "chara/chr1068/chr_icon_1068_106802",
+  "icon_variants": [
+   "chara/chr1068/chr_icon_1068_106802_01",
+   "chara/chr1068/chr_icon_1068_106802_02"
+  ],
+  "in_tw": true
+ },
+ "106901": {
+  "card_id": 106901,
+  "chara_id": 1069,
+  "name": "[天下第一花滿天]櫻花千代王",
+  "name_jp": "[日下開山・花あかり]サクラチヨノオー",
+  "chara_name": "櫻花千代王",
+  "dress_id": 106901,
+  "dress_name": "天下第一花滿天",
+  "dress_id_by_rarity": {
+   "3": 106901,
+   "4": 106901,
+   "5": 106901
+  },
+  "icon": "chara/chr1069/chr_icon_1069_106901",
+  "icon_variants": [
+   "chara/chr1069/chr_icon_1069_106901_01",
+   "chara/chr1069/chr_icon_1069_106901_02"
+  ],
+  "in_tw": true
+ },
+ "106902": {
+  "card_id": 106902,
+  "chara_id": 1069,
+  "name": "[Fleur Enneigée]櫻花千代王",
+  "name_jp": "[Fleur Enneigée]サクラチヨノオー",
+  "chara_name": "櫻花千代王",
+  "dress_id": 106920,
+  "dress_name": "Fleur Enneigée",
+  "dress_id_by_rarity": {
+   "3": 106920,
+   "4": 106920,
+   "5": 106920
+  },
+  "icon": "chara/chr1069/chr_icon_1069_106920",
+  "icon_variants": [
+   "chara/chr1069/chr_icon_1069_106920_01",
+   "chara/chr1069/chr_icon_1069_106920_02"
+  ],
+  "in_tw": true
+ },
+ "107001": {
+  "card_id": 107001,
+  "chara_id": 1070,
+  "name": "[Féroce]天狼星象徵",
+  "name_jp": "[Féroce]シリウスシンボリ",
+  "chara_name": "天狼星象徵",
+  "dress_id": 107001,
+  "dress_name": "Féroce",
+  "dress_id_by_rarity": {
+   "3": 107001,
+   "4": 107001,
+   "5": 107001
+  },
+  "icon": "chara/chr1070/chr_icon_1070_107001",
+  "icon_variants": [
+   "chara/chr1070/chr_icon_1070_107001_01",
+   "chara/chr1070/chr_icon_1070_107001_02"
+  ],
+  "in_tw": true
+ },
+ "107002": {
+  "card_id": 107002,
+  "chara_id": 1070,
+  "name": "[Louve stellaire]天狼星象徵",
+  "name_jp": "[Louve stellaire]シリウスシンボリ",
+  "chara_name": "天狼星象徵",
+  "dress_id": 107002,
+  "dress_name": "Louve stellaire",
+  "dress_id_by_rarity": {
+   "3": 107002,
+   "4": 107002,
+   "5": 107002
+  },
+  "icon": "chara/chr1070/chr_icon_1070_107002",
+  "icon_variants": [
+   "chara/chr1070/chr_icon_1070_107002_01",
+   "chara/chr1070/chr_icon_1070_107002_02"
+  ],
+  "in_tw": true
+ },
+ "107101": {
+  "card_id": 107101,
+  "chara_id": 1071,
+  "name": "[Clinochlore Line]目白阿爾丹",
+  "name_jp": "[クリノクロア・ライン]メジロアルダン",
+  "chara_name": "目白阿爾丹",
+  "dress_id": 107101,
+  "dress_name": "Clinochlore Line",
+  "dress_id_by_rarity": {
+   "3": 107101,
+   "4": 107101,
+   "5": 107101
+  },
+  "icon": "chara/chr1071/chr_icon_1071_107101",
+  "icon_variants": [
+   "chara/chr1071/chr_icon_1071_107101_01",
+   "chara/chr1071/chr_icon_1071_107101_02"
+  ],
+  "in_tw": true
+ },
+ "107102": {
+  "card_id": 107102,
+  "chara_id": 1071,
+  "name": "[Neige Émeraude]目白阿爾丹",
+  "name_jp": "[Neige Émeraude]メジロアルダン",
+  "chara_name": "目白阿爾丹",
+  "dress_id": 107120,
+  "dress_name": "Neige Émeraude",
+  "dress_id_by_rarity": {
+   "3": 107120,
+   "4": 107120,
+   "5": 107120
+  },
+  "icon": "chara/chr1071/chr_icon_1071_107120",
+  "icon_variants": [
+   "chara/chr1071/chr_icon_1071_107120_01",
+   "chara/chr1071/chr_icon_1071_107120_02"
+  ],
+  "in_tw": true
+ },
+ "107201": {
+  "card_id": 107201,
+  "chara_id": 1072,
+  "name": "[四白流星襲擊]八重無敵",
+  "name_jp": "[四白流星の襲]ヤエノムテキ",
+  "chara_name": "八重無敵",
+  "dress_id": 107201,
+  "dress_name": "四白流星襲擊",
+  "dress_id_by_rarity": {
+   "3": 107201,
+   "4": 107201,
+   "5": 107201
+  },
+  "icon": "chara/chr1072/chr_icon_1072_107201",
+  "icon_variants": [
+   "chara/chr1072/chr_icon_1072_107201_01",
+   "chara/chr1072/chr_icon_1072_107201_02"
+  ],
+  "in_tw": true
+ },
+ "107202": {
+  "card_id": 107202,
+  "chara_id": 1072,
+  "name": "[黑將Zen]八重無敵",
+  "name_jp": "[黒将Zen]ヤエノムテキ",
+  "chara_name": "八重無敵",
+  "dress_id": 107250,
+  "dress_name": "黑將Zen",
+  "dress_id_by_rarity": {
+   "3": 107250,
+   "4": 107250,
+   "5": 107250
+  },
+  "icon": "chara/chr1072/chr_icon_1072_107250",
+  "icon_variants": [
+   "chara/chr1072/chr_icon_1072_107250_01",
+   "chara/chr1072/chr_icon_1072_107250_02"
+  ],
+  "in_tw": true
+ },
+ "107301": {
+  "card_id": 107301,
+  "chara_id": 1073,
+  "name": "[志向、遠大、堅強！]鶴丸強志",
+  "name_jp": "[志、高し、強し！]ツルマルツヨシ",
+  "chara_name": "鶴丸強志",
+  "dress_id": 107301,
+  "dress_name": "志向、遠大、堅強！",
+  "dress_id_by_rarity": {
+   "2": 101,
+   "3": 107301,
+   "4": 107301,
+   "5": 107301
+  },
+  "icon": "chara/chr1073/chr_icon_1073_107301",
+  "icon_variants": [
+   "chara/chr1073/chr_icon_1073_107301_01",
+   "chara/chr1073/chr_icon_1073_107301_02"
+  ],
+  "in_tw": true
+ },
+ "107401": {
+  "card_id": 107401,
+  "chara_id": 1074,
+  "name": "[Vernissage Line]目白光明",
+  "name_jp": "[ブリュニサージュ・ライン]メジロブライト",
+  "chara_name": "目白光明",
+  "dress_id": 107401,
+  "dress_name": "Vernissage Line",
+  "dress_id_by_rarity": {
+   "3": 107401,
+   "4": 107401,
+   "5": 107401
+  },
+  "icon": "chara/chr1074/chr_icon_1074_107401",
+  "icon_variants": [
+   "chara/chr1074/chr_icon_1074_107401_01",
+   "chara/chr1074/chr_icon_1074_107401_02"
+  ],
+  "in_tw": true
+ },
+ "107402": {
+  "card_id": 107402,
+  "chara_id": 1074,
+  "name": "[絢麗星夜的細雪蘿莉塔]目白光明",
+  "name_jp": "[清らに星澄むスノーロリィタ]メジロブライト",
+  "chara_name": "目白光明",
+  "dress_id": 107446,
+  "dress_name": "絢麗星夜的細雪蘿莉塔",
+  "dress_id_by_rarity": {
+   "3": 107446,
+   "4": 107446,
+   "5": 107446
+  },
+  "icon": "chara/chr1074/chr_icon_1074_107446",
+  "icon_variants": [
+   "chara/chr1074/chr_icon_1074_107446_01",
+   "chara/chr1074/chr_icon_1074_107446_02"
+  ],
+  "in_tw": true
+ },
+ "107403": {
+  "card_id": 107403,
+  "chara_id": 1074,
+  "name": "[海辺のエレガンスシフォン]メジロブライト",
+  "name_jp": "[海辺のエレガンスシフォン]メジロブライト",
+  "chara_name": "目白光明",
+  "dress_id": 107430,
+  "dress_name": "海辺のエレガンスシフォン",
+  "dress_id_by_rarity": {
+   "3": 107430,
+   "4": 107430,
+   "5": 107430
+  },
+  "icon": "chara/chr1074/chr_icon_1074_107430",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "107601": {
+  "card_id": 107601,
+  "chara_id": 1076,
+  "name": "[Saisir le rêve]櫻花桂冠",
+  "name_jp": "[Saisir le rêve]サクラローレル",
+  "chara_name": "櫻花桂冠",
+  "dress_id": 107601,
+  "dress_name": "Saisir le rêve",
+  "dress_id_by_rarity": {
+   "3": 107601,
+   "4": 107601,
+   "5": 107601
+  },
+  "icon": "chara/chr1076/chr_icon_1076_107601",
+  "icon_variants": [
+   "chara/chr1076/chr_icon_1076_107601_01",
+   "chara/chr1076/chr_icon_1076_107601_02"
+  ],
+  "in_tw": true
+ },
+ "107602": {
+  "card_id": 107602,
+  "chara_id": 1076,
+  "name": "[Nouvelle pousse]サクラローレル",
+  "name_jp": "[Nouvelle pousse]サクラローレル",
+  "chara_name": "櫻花桂冠",
+  "dress_id": 107610,
+  "dress_name": "Nouvelle pousse",
+  "dress_id_by_rarity": {
+   "3": 107610,
+   "4": 107610,
+   "5": 107610
+  },
+  "icon": "chara/chr1076/chr_icon_1076_107610",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "107701": {
+  "card_id": 107701,
+  "chara_id": 1077,
+  "name": "[The Proud Road]成田路",
+  "name_jp": "[The Proud Road]ナリタトップロード",
+  "chara_name": "成田路",
+  "dress_id": 107701,
+  "dress_name": "The Proud Road",
+  "dress_id_by_rarity": {
+   "3": 107701,
+   "4": 107701,
+   "5": 107701
+  },
+  "icon": "chara/chr1077/chr_icon_1077_107701",
+  "icon_variants": [
+   "chara/chr1077/chr_icon_1077_107701_01",
+   "chara/chr1077/chr_icon_1077_107701_02"
+  ],
+  "in_tw": true
+ },
+ "107702": {
+  "card_id": 107702,
+  "chara_id": 1077,
+  "name": "[Celestial Road]成田路",
+  "name_jp": "[Celestial Road]ナリタトップロード",
+  "chara_name": "成田路",
+  "dress_id": 107746,
+  "dress_name": "Celestial Road",
+  "dress_id_by_rarity": {
+   "3": 107746,
+   "4": 107746,
+   "5": 107746
+  },
+  "icon": "chara/chr1077/chr_icon_1077_107746",
+  "icon_variants": [
+   "chara/chr1077/chr_icon_1077_107746_01",
+   "chara/chr1077/chr_icon_1077_107746_02"
+  ],
+  "in_tw": true
+ },
+ "107703": {
+  "card_id": 107703,
+  "chara_id": 1077,
+  "name": "[万福龍湯伝・頂]ナリタトップロード",
+  "name_jp": "[万福龍湯伝・頂]ナリタトップロード",
+  "chara_name": "成田路",
+  "dress_id": 107702,
+  "dress_name": "万福龍湯伝・頂",
+  "dress_id_by_rarity": {
+   "3": 107702,
+   "4": 107702,
+   "5": 107702
+  },
+  "icon": "chara/chr1077/chr_icon_1077_107702",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "107801": {
+  "card_id": 107801,
+  "chara_id": 1078,
+  "name": "[Fluttertail Spirit]山人西風",
+  "name_jp": "[Fluttertail Spirit]ヤマニンゼファー",
+  "chara_name": "山人西風",
+  "dress_id": 107801,
+  "dress_name": "Fluttertail Spirit",
+  "dress_id_by_rarity": {
+   "3": 107801,
+   "4": 107801,
+   "5": 107801
+  },
+  "icon": "chara/chr1078/chr_icon_1078_107801",
+  "icon_variants": [
+   "chara/chr1078/chr_icon_1078_107801_01",
+   "chara/chr1078/chr_icon_1078_107801_02"
+  ],
+  "in_tw": true
+ },
+ "107802": {
+  "card_id": 107802,
+  "chara_id": 1078,
+  "name": "[Sugary Wind]山人西風",
+  "name_jp": "[Sugary Wind]ヤマニンゼファー",
+  "chara_name": "山人西風",
+  "dress_id": 107813,
+  "dress_name": "Sugary Wind",
+  "dress_id_by_rarity": {
+   "3": 107813,
+   "4": 107813,
+   "5": 107813
+  },
+  "icon": "chara/chr1078/chr_icon_1078_107813",
+  "icon_variants": [
+   "chara/chr1078/chr_icon_1078_107813_01",
+   "chara/chr1078/chr_icon_1078_107813_02"
+  ],
+  "in_tw": true
+ },
+ "107901": {
+  "card_id": 107901,
+  "chara_id": 1079,
+  "name": "[衣錦還鄉的瑞星]狂熱激昂",
+  "name_jp": "[衣錦還郷の瑞星]フリオーソ",
+  "chara_name": "狂熱激昂",
+  "dress_id": 107901,
+  "dress_name": "衣錦還鄉的瑞星",
+  "dress_id_by_rarity": {
+   "3": 107901,
+   "4": 107901,
+   "5": 107901
+  },
+  "icon": "chara/chr1079/chr_icon_1079_107901",
+  "icon_variants": [
+   "chara/chr1079/chr_icon_1079_107901_01",
+   "chara/chr1079/chr_icon_1079_107901_02"
+  ],
+  "in_tw": true
+ },
+ "108001": {
+  "card_id": 108001,
+  "chara_id": 1080,
+  "name": "[興奮不已GIZMO]創升",
+  "name_jp": "[ZOKU-ZOKU GIZMO]トランセンド",
+  "chara_name": "創升",
+  "dress_id": 108001,
+  "dress_name": "興奮不已GIZMO",
+  "dress_id_by_rarity": {
+   "3": 108001,
+   "4": 108001,
+   "5": 108001
+  },
+  "icon": "chara/chr1080/chr_icon_1080_108001",
+  "icon_variants": [
+   "chara/chr1080/chr_icon_1080_108001_01",
+   "chara/chr1080/chr_icon_1080_108001_02"
+  ],
+  "in_tw": true
+ },
+ "108002": {
+  "card_id": 108002,
+  "chara_id": 1080,
+  "name": "[宵闇ネオカグラ]トランセンド",
+  "name_jp": "[宵闇ネオカグラ]トランセンド",
+  "chara_name": "創升",
+  "dress_id": 108002,
+  "dress_name": "宵闇ネオカグラ",
+  "dress_id_by_rarity": {
+   "3": 108002,
+   "4": 108002,
+   "5": 108002
+  },
+  "icon": "chara/chr1080/chr_icon_1080_108002",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "108101": {
+  "card_id": 108101,
+  "chara_id": 1081,
+  "name": "[Red Devil Gear]希望城市",
+  "name_jp": "[Red Devil Gear]エスポワールシチー",
+  "chara_name": "希望城市",
+  "dress_id": 108101,
+  "dress_name": "Red Devil Gear",
+  "dress_id_by_rarity": {
+   "3": 108101,
+   "4": 108101,
+   "5": 108101
+  },
+  "icon": "chara/chr1081/chr_icon_1081_108101",
+  "icon_variants": [
+   "chara/chr1081/chr_icon_1081_108101_01",
+   "chara/chr1081/chr_icon_1081_108101_02"
+  ],
+  "in_tw": true
+ },
+ "108201": {
+  "card_id": 108201,
+  "chara_id": 1082,
+  "name": "[Looking Fly!]北方飛翔",
+  "name_jp": "[Looking Fly!]ノースフライト",
+  "chara_name": "北方飛翔",
+  "dress_id": 108201,
+  "dress_name": "Looking Fly!",
+  "dress_id_by_rarity": {
+   "3": 108201,
+   "4": 108201,
+   "5": 108201
+  },
+  "icon": "chara/chr1082/chr_icon_1082_108201",
+  "icon_variants": [
+   "chara/chr1082/chr_icon_1082_108201_01",
+   "chara/chr1082/chr_icon_1082_108201_02"
+  ],
+  "in_tw": true
+ },
+ "108202": {
+  "card_id": 108202,
+  "chara_id": 1082,
+  "name": "[水縹の一閃]ノースフライト",
+  "name_jp": "[水縹の一閃]ノースフライト",
+  "chara_name": "北方飛翔",
+  "dress_id": 108220,
+  "dress_name": "水縹の一閃",
+  "dress_id_by_rarity": {
+   "3": 108220,
+   "4": 108220,
+   "5": 108220
+  },
+  "icon": "chara/chr1082/chr_icon_1082_108220",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "108301": {
+  "card_id": 108301,
+  "chara_id": 1083,
+  "name": "[Onyx Soldier]克莉斯耶絲象徵",
+  "name_jp": "[Onyx Soldier]シンボリクリスエス",
+  "chara_name": "克莉斯耶絲象徵",
+  "dress_id": 108301,
+  "dress_name": "Onyx Soldier",
+  "dress_id_by_rarity": {
+   "3": 108301,
+   "4": 108301,
+   "5": 108301
+  },
+  "icon": "chara/chr1083/chr_icon_1083_108301",
+  "icon_variants": [
+   "chara/chr1083/chr_icon_1083_108301_01",
+   "chara/chr1083/chr_icon_1083_108301_02"
+  ],
+  "in_tw": true
+ },
+ "108302": {
+  "card_id": 108302,
+  "chara_id": 1083,
+  "name": "[Jetblack Automaton]克莉斯耶絲象徵",
+  "name_jp": "[Jetblack Automaton]シンボリクリスエス",
+  "chara_name": "克莉斯耶絲象徵",
+  "dress_id": 108340,
+  "dress_name": "Jetblack Automaton",
+  "dress_id_by_rarity": {
+   "3": 108340,
+   "4": 108340,
+   "5": 108340
+  },
+  "icon": "chara/chr1083/chr_icon_1083_108340",
+  "icon_variants": [
+   "chara/chr1083/chr_icon_1083_108340_01",
+   "chara/chr1083/chr_icon_1083_108340_02"
+  ],
+  "in_tw": true
+ },
+ "108401": {
+  "card_id": 108401,
+  "chara_id": 1084,
+  "name": "[雷光纏身]谷水琴蕾",
+  "name_jp": "[身に纏うケラヴノス]タニノギムレット",
+  "chara_name": "谷水琴蕾",
+  "dress_id": 108401,
+  "dress_name": "雷光纏身",
+  "dress_id_by_rarity": {
+   "3": 108401,
+   "4": 108401,
+   "5": 108401
+  },
+  "icon": "chara/chr1084/chr_icon_1084_108401",
+  "icon_variants": [
+   "chara/chr1084/chr_icon_1084_108401_01",
+   "chara/chr1084/chr_icon_1084_108401_02"
+  ],
+  "in_tw": true
+ },
+ "108402": {
+  "card_id": 108402,
+  "chara_id": 1084,
+  "name": "[With a Twist]谷水琴蕾",
+  "name_jp": "[With a Twist]タニノギムレット",
+  "chara_name": "谷水琴蕾",
+  "dress_id": 108420,
+  "dress_name": "With a Twist",
+  "dress_id_by_rarity": {
+   "3": 108420,
+   "4": 108420,
+   "5": 108420
+  },
+  "icon": "chara/chr1084/chr_icon_1084_108420",
+  "icon_variants": [
+   "chara/chr1084/chr_icon_1084_108420_01",
+   "chara/chr1084/chr_icon_1084_108420_02"
+  ],
+  "in_tw": true
+ },
+ "108501": {
+  "card_id": 108501,
+  "chara_id": 1085,
+  "name": "[華麗紅玉]第一紅寶",
+  "name_jp": "[華麗なる紅玉]ダイイチルビー",
+  "chara_name": "第一紅寶",
+  "dress_id": 108501,
+  "dress_name": "華麗紅玉",
+  "dress_id_by_rarity": {
+   "3": 108501,
+   "4": 108501,
+   "5": 108501
+  },
+  "icon": "chara/chr1085/chr_icon_1085_108501",
+  "icon_variants": [
+   "chara/chr1085/chr_icon_1085_108501_01",
+   "chara/chr1085/chr_icon_1085_108501_02"
+  ],
+  "in_tw": true
+ },
+ "108502": {
+  "card_id": 108502,
+  "chara_id": 1085,
+  "name": "[Flowing Blue]第一紅寶",
+  "name_jp": "[Flowing Blue]ダイイチルビー",
+  "chara_name": "第一紅寶",
+  "dress_id": 108520,
+  "dress_name": "Flowing Blue",
+  "dress_id_by_rarity": {
+   "3": 108520,
+   "4": 108520,
+   "5": 108520
+  },
+  "icon": "chara/chr1085/chr_icon_1085_108520",
+  "icon_variants": [
+   "chara/chr1085/chr_icon_1085_108520_01",
+   "chara/chr1085/chr_icon_1085_108520_02"
+  ],
+  "in_tw": true
+ },
+ "108601": {
+  "card_id": 108601,
+  "chara_id": 1086,
+  "name": "[Onyx Line]目白拉茉奴",
+  "name_jp": "[オニキス・ライン]メジロラモーヌ",
+  "chara_name": "目白拉茉奴",
+  "dress_id": 108601,
+  "dress_name": "Onyx Line",
+  "dress_id_by_rarity": {
+   "3": 108601,
+   "4": 108601,
+   "5": 108601
+  },
+  "icon": "chara/chr1086/chr_icon_1086_108601",
+  "icon_variants": [
+   "chara/chr1086/chr_icon_1086_108601_01",
+   "chara/chr1086/chr_icon_1086_108601_02"
+  ],
+  "in_tw": true
+ },
+ "108602": {
+  "card_id": 108602,
+  "chara_id": 1086,
+  "name": "[Untouchable Eden]目白拉茉奴",
+  "name_jp": "[Untouchable Eden]メジロラモーヌ",
+  "chara_name": "目白拉茉奴",
+  "dress_id": 108626,
+  "dress_name": "Untouchable Eden",
+  "dress_id_by_rarity": {
+   "3": 108626,
+   "4": 108626,
+   "5": 108626
+  },
+  "icon": "chara/chr1086/chr_icon_1086_108626",
+  "icon_variants": [
+   "chara/chr1086/chr_icon_1086_108626_01",
+   "chara/chr1086/chr_icon_1086_108626_02"
+  ],
+  "in_tw": true
+ },
+ "108701": {
+  "card_id": 108701,
+  "chara_id": 1087,
+  "name": "[Flare]奧斯頓真弓",
+  "name_jp": "[Flare]アストンマーチャン",
+  "chara_name": "奧斯頓真弓",
+  "dress_id": 108701,
+  "dress_name": "Flare",
+  "dress_id_by_rarity": {
+   "3": 108701,
+   "4": 108701,
+   "5": 108701
+  },
+  "icon": "chara/chr1087/chr_icon_1087_108701",
+  "icon_variants": [
+   "chara/chr1087/chr_icon_1087_108701_01",
+   "chara/chr1087/chr_icon_1087_108701_02"
+  ],
+  "in_tw": true
+ },
+ "108702": {
+  "card_id": 108702,
+  "chara_id": 1087,
+  "name": "[不融的砂糖點心]奧斯頓真弓",
+  "name_jp": "[溶けない砂糖菓子]アストンマーチャン",
+  "chara_name": "奧斯頓真弓",
+  "dress_id": 108713,
+  "dress_name": "不融的砂糖點心 ",
+  "dress_id_by_rarity": {
+   "3": 108713,
+   "4": 108713,
+   "5": 108713
+  },
+  "icon": "chara/chr1087/chr_icon_1087_108713",
+  "icon_variants": [
+   "chara/chr1087/chr_icon_1087_108713_01",
+   "chara/chr1087/chr_icon_1087_108713_02"
+  ],
+  "in_tw": true
+ },
+ "108801": {
+  "card_id": 108801,
+  "chara_id": 1088,
+  "name": "[黑翠千里行]里見皇冠",
+  "name_jp": "[黒翠千里行]サトノクラウン",
+  "chara_name": "里見皇冠",
+  "dress_id": 108801,
+  "dress_name": "黑翠千里行",
+  "dress_id_by_rarity": {
+   "3": 108801,
+   "4": 108801,
+   "5": 108801
+  },
+  "icon": "chara/chr1088/chr_icon_1088_108801",
+  "icon_variants": [
+   "chara/chr1088/chr_icon_1088_108801_01",
+   "chara/chr1088/chr_icon_1088_108801_02"
+  ],
+  "in_tw": true
+ },
+ "108802": {
+  "card_id": 108802,
+  "chara_id": 1088,
+  "name": "[晴島花麗]里見皇冠",
+  "name_jp": "[晴島花麗]サトノクラウン",
+  "chara_name": "里見皇冠",
+  "dress_id": 108830,
+  "dress_name": "晴島花麗",
+  "dress_id_by_rarity": {
+   "3": 108830,
+   "4": 108830,
+   "5": 108830
+  },
+  "icon": "chara/chr1088/chr_icon_1088_108830",
+  "icon_variants": [
+   "chara/chr1088/chr_icon_1088_108830_01",
+   "chara/chr1088/chr_icon_1088_108830_02"
+  ],
+  "in_tw": true
+ },
+ "108901": {
+  "card_id": 108901,
+  "chara_id": 1089,
+  "name": "[Grand itinéraire]高尚駿逸",
+  "name_jp": "[Grand itinéraire]シュヴァルグラン",
+  "chara_name": "高尚駿逸",
+  "dress_id": 108901,
+  "dress_name": "Grand itinéraire",
+  "dress_id_by_rarity": {
+   "3": 108901,
+   "4": 108901,
+   "5": 108901
+  },
+  "icon": "chara/chr1089/chr_icon_1089_108901",
+  "icon_variants": [
+   "chara/chr1089/chr_icon_1089_108901_01",
+   "chara/chr1089/chr_icon_1089_108901_02"
+  ],
+  "in_tw": true
+ },
+ "108902": {
+  "card_id": 108902,
+  "chara_id": 1089,
+  "name": "[夏日靜謐的深藍水滴]高尚駿逸",
+  "name_jp": "[夏凪ネイビードロップ]シュヴァルグラン",
+  "chara_name": "高尚駿逸",
+  "dress_id": 108930,
+  "dress_name": "夏日靜謐的深藍水滴",
+  "dress_id_by_rarity": {
+   "3": 108930,
+   "4": 108930,
+   "5": 108930
+  },
+  "icon": "chara/chr1089/chr_icon_1089_108930",
+  "icon_variants": [
+   "chara/chr1089/chr_icon_1089_108930_01",
+   "chara/chr1089/chr_icon_1089_108930_02"
+  ],
+  "in_tw": true
+ },
+ "109001": {
+  "card_id": 109001,
+  "chara_id": 1090,
+  "name": "[Le beau sommet]極峰",
+  "name_jp": "[Le beau sommet]ヴィルシーナ",
+  "chara_name": "極峰",
+  "dress_id": 109001,
+  "dress_name": "Le beau sommet",
+  "dress_id_by_rarity": {
+   "3": 109001,
+   "4": 109001,
+   "5": 109001
+  },
+  "icon": "chara/chr1090/chr_icon_1090_109001",
+  "icon_variants": [
+   "chara/chr1090/chr_icon_1090_109001_01",
+   "chara/chr1090/chr_icon_1090_109001_02"
+  ],
+  "in_tw": true
+ },
+ "109101": {
+  "card_id": 109101,
+  "chara_id": 1091,
+  "name": "[Voyage étincelant]比布魯斯",
+  "name_jp": "[Voyage étincelant]ヴィブロス",
+  "chara_name": "比布魯斯",
+  "dress_id": 109101,
+  "dress_name": "Voyage étincelant",
+  "dress_id_by_rarity": {
+   "3": 109101,
+   "4": 109101,
+   "5": 109101
+  },
+  "icon": "chara/chr1091/chr_icon_1091_109101",
+  "icon_variants": [
+   "chara/chr1091/chr_icon_1091_109101_01",
+   "chara/chr1091/chr_icon_1091_109101_02"
+  ],
+  "in_tw": true
+ },
+ "109102": {
+  "card_id": 109102,
+  "chara_id": 1091,
+  "name": "[Éclat d'été]比布魯斯",
+  "name_jp": "[Éclat d'été]ヴィブロス",
+  "chara_name": "比布魯斯",
+  "dress_id": 109130,
+  "dress_name": "Éclat d'été",
+  "dress_id_by_rarity": {
+   "3": 109130,
+   "4": 109130,
+   "5": 109130
+  },
+  "icon": "chara/chr1091/chr_icon_1091_109130",
+  "icon_variants": [
+   "chara/chr1091/chr_icon_1091_109130_01",
+   "chara/chr1091/chr_icon_1091_109130_02"
+  ],
+  "in_tw": true
+ },
+ "109201": {
+  "card_id": 109201,
+  "chara_id": 1092,
+  "name": "[まんなか◎スポットライト]ダンツフレーム",
+  "name_jp": "[まんなか◎スポットライト]ダンツフレーム",
+  "chara_name": "緞通烈焰",
+  "dress_id": 109201,
+  "dress_name": "決勝服（緞通烈焰）",
+  "dress_id_by_rarity": {
+   "3": 109201,
+   "4": 109201,
+   "5": 109201
+  },
+  "icon": "chara/chr1092/chr_icon_1092_109201",
+  "icon_variants": [
+   "chara/chr1092/chr_icon_1092_109201_01"
+  ],
+  "in_tw": false
+ },
+ "109301": {
+  "card_id": 109301,
+  "chara_id": 1093,
+  "name": "[Prism]喜嘉奇蹟",
+  "name_jp": "[Prism]ケイエスミラクル",
+  "chara_name": "喜嘉奇蹟",
+  "dress_id": 109301,
+  "dress_name": "Prism",
+  "dress_id_by_rarity": {
+   "3": 109301,
+   "4": 109301,
+   "5": 109301
+  },
+  "icon": "chara/chr1093/chr_icon_1093_109301",
+  "icon_variants": [
+   "chara/chr1093/chr_icon_1093_109301_01",
+   "chara/chr1093/chr_icon_1093_109301_02"
+  ],
+  "in_tw": true
+ },
+ "109302": {
+  "card_id": 109302,
+  "chara_id": 1093,
+  "name": "[秋日暖調行板節奏]喜嘉奇蹟",
+  "name_jp": "[秋日色アンダンテ]ケイエスミラクル",
+  "chara_name": "喜嘉奇蹟",
+  "dress_id": 109323,
+  "dress_name": "秋日暖調行板節奏",
+  "dress_id_by_rarity": {
+   "3": 109323,
+   "4": 109323,
+   "5": 109323
+  },
+  "icon": "chara/chr1093/chr_icon_1093_109323",
+  "icon_variants": [
+   "chara/chr1093/chr_icon_1093_109323_01",
+   "chara/chr1093/chr_icon_1093_109323_02"
+  ],
+  "in_tw": true
+ },
+ "109401": {
+  "card_id": 109401,
+  "chara_id": 1094,
+  "name": "[王者的吶喊]叢林口袋",
+  "name_jp": "[王者の喊声]ジャングルポケット",
+  "chara_name": "叢林口袋",
+  "dress_id": 109401,
+  "dress_name": "王者的吶喊",
+  "dress_id_by_rarity": {
+   "3": 109401,
+   "4": 109401,
+   "5": 109401
+  },
+  "icon": "chara/chr1094/chr_icon_1094_109401",
+  "icon_variants": [
+   "chara/chr1094/chr_icon_1094_109401_01",
+   "chara/chr1094/chr_icon_1094_109401_02"
+  ],
+  "in_tw": true
+ },
+ "109402": {
+  "card_id": 109402,
+  "chara_id": 1094,
+  "name": "[ヴァーミリオン・ヘッド]ジャングルポケット",
+  "name_jp": "[ヴァーミリオン・ヘッド]ジャングルポケット",
+  "chara_name": "叢林口袋",
+  "dress_id": 109450,
+  "dress_name": "ヴァーミリオン・ヘッド",
+  "dress_id_by_rarity": {
+   "3": 109450,
+   "4": 109450,
+   "5": 109450
+  },
+  "icon": "chara/chr1094/chr_icon_1094_109450",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "109501": {
+  "card_id": 109501,
+  "chara_id": 1095,
+  "name": "[精粋]ビリーヴ",
+  "name_jp": "[精粋]ビリーヴ",
+  "chara_name": "信念",
+  "dress_id": 109501,
+  "dress_name": "決勝服（信念）",
+  "dress_id_by_rarity": {
+   "3": 109501,
+   "4": 109501,
+   "5": 109501
+  },
+  "icon": "chara/chr1095/chr_icon_1095_109501",
+  "icon_variants": [
+   "chara/chr1095/chr_icon_1095_109501_01"
+  ],
+  "in_tw": false
+ },
+ "109601": {
+  "card_id": 109601,
+  "chara_id": 1096,
+  "name": "[赤紅漆疾馳甲冑]無需理由",
+  "name_jp": "[紅色塗早駆具足]ノーリーズン",
+  "chara_name": "無需理由",
+  "dress_id": 109601,
+  "dress_name": "赤紅漆疾馳甲冑",
+  "dress_id_by_rarity": {
+   "3": 109601,
+   "4": 109601,
+   "5": 109601
+  },
+  "icon": "chara/chr1096/chr_icon_1096_109601",
+  "icon_variants": [
+   "chara/chr1096/chr_icon_1096_109601_01",
+   "chara/chr1096/chr_icon_1096_109601_02"
+  ],
+  "in_tw": true
+ },
+ "109701": {
+  "card_id": 109701,
+  "chara_id": 1097,
+  "name": "[緋念誓衣]愛如往昔",
+  "name_jp": "[緋想の誓衣]スティルインラブ",
+  "chara_name": "愛如往昔",
+  "dress_id": 109701,
+  "dress_name": "緋念誓衣",
+  "dress_id_by_rarity": {
+   "3": 109701,
+   "4": 109701,
+   "5": 109701
+  },
+  "icon": "chara/chr1097/chr_icon_1097_109701",
+  "icon_variants": [
+   "chara/chr1097/chr_icon_1097_109701_01",
+   "chara/chr1097/chr_icon_1097_109701_02"
+  ],
+  "in_tw": true
+ },
+ "109801": {
+  "card_id": 109801,
+  "chara_id": 1098,
+  "name": "[陰陽八卦☆開運衣]小林歷奇",
+  "name_jp": "[陰陽八卦☆開運衣]コパノリッキー",
+  "chara_name": "小林歷奇",
+  "dress_id": 109801,
+  "dress_name": "陰陽八卦☆開運衣",
+  "dress_id_by_rarity": {
+   "3": 109801,
+   "4": 109801,
+   "5": 109801
+  },
+  "icon": "chara/chr1098/chr_icon_1098_109801",
+  "icon_variants": [
+   "chara/chr1098/chr_icon_1098_109801_01",
+   "chara/chr1098/chr_icon_1098_109801_02"
+  ],
+  "in_tw": true
+ },
+ "109802": {
+  "card_id": 109802,
+  "chara_id": 1098,
+  "name": "[光彩奪目☆招福衣]小林歷奇",
+  "name_jp": "[光彩陸離☆招福衣]コパノリッキー",
+  "chara_name": "小林歷奇",
+  "dress_id": 109850,
+  "dress_name": "光彩奪目☆招福衣",
+  "dress_id_by_rarity": {
+   "3": 109850,
+   "4": 109850,
+   "5": 109850
+  },
+  "icon": "chara/chr1098/chr_icon_1098_109850",
+  "icon_variants": [
+   "chara/chr1098/chr_icon_1098_109850_01",
+   "chara/chr1098/chr_icon_1098_109850_02"
+  ],
+  "in_tw": true
+ },
+ "109901": {
+  "card_id": 109901,
+  "chara_id": 1099,
+  "name": "[繁星．光華．船隻]北幸樽前",
+  "name_jp": "[スター・ライト・シップ]ホッコータルマエ",
+  "chara_name": "北幸樽前",
+  "dress_id": 109901,
+  "dress_name": "繁星．光華．船隻",
+  "dress_id_by_rarity": {
+   "3": 109901,
+   "4": 109901,
+   "5": 109901
+  },
+  "icon": "chara/chr1099/chr_icon_1099_109901",
+  "icon_variants": [
+   "chara/chr1099/chr_icon_1099_109901_01",
+   "chara/chr1099/chr_icon_1099_109901_02"
+  ],
+  "in_tw": true
+ },
+ "109902": {
+  "card_id": 109902,
+  "chara_id": 1099,
+  "name": "[粉藍海洋．地方偶像]北幸樽前",
+  "name_jp": "[パステルマリン・ロコドル]ホッコータルマエ",
+  "chara_name": "北幸樽前",
+  "dress_id": 109930,
+  "dress_name": "粉藍海洋．地方偶像",
+  "dress_id_by_rarity": {
+   "3": 109930,
+   "4": 109930,
+   "5": 109930
+  },
+  "icon": "chara/chr1099/chr_icon_1099_109930",
+  "icon_variants": [
+   "chara/chr1099/chr_icon_1099_109930_01",
+   "chara/chr1099/chr_icon_1099_109930_02"
+  ],
+  "in_tw": true
+ },
+ "110001": {
+  "card_id": 110001,
+  "chara_id": 1100,
+  "name": "[Butterfly Sting]奇銳駿",
+  "name_jp": "[Butterfly Sting]ワンダーアキュート",
+  "chara_name": "奇銳駿",
+  "dress_id": 110001,
+  "dress_name": "Butterfly Sting",
+  "dress_id_by_rarity": {
+   "3": 110001,
+   "4": 110001,
+   "5": 110001
+  },
+  "icon": "chara/chr1100/chr_icon_1100_110001",
+  "icon_variants": [
+   "chara/chr1100/chr_icon_1100_110001_01",
+   "chara/chr1100/chr_icon_1100_110001_02"
+  ],
+  "in_tw": true
+ },
+ "110002": {
+  "card_id": 110002,
+  "chara_id": 1100,
+  "name": "[柔灯・湯の香の装い]ワンダーアキュート",
+  "name_jp": "[柔灯・湯の香の装い]ワンダーアキュート",
+  "chara_name": "奇銳駿",
+  "dress_id": 110002,
+  "dress_name": "柔灯・湯の香の装い",
+  "dress_id_by_rarity": {
+   "3": 110002,
+   "4": 110002,
+   "5": 110002
+  },
+  "icon": "chara/chr1100/chr_icon_1100_110002",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "110201": {
+  "card_id": 110201,
+  "chara_id": 1102,
+  "name": "[地球的節奏]萬籟爭鳴",
+  "name_jp": "[リトモ・デッラ・テッラ]サウンズオブアース",
+  "chara_name": "萬籟爭鳴",
+  "dress_id": 110201,
+  "dress_name": "地球的節奏",
+  "dress_id_by_rarity": {
+   "3": 110201,
+   "4": 110201,
+   "5": 110201
+  },
+  "icon": "chara/chr1102/chr_icon_1102_110201",
+  "icon_variants": [
+   "chara/chr1102/chr_icon_1102_110201_01",
+   "chara/chr1102/chr_icon_1102_110201_02"
+  ],
+  "in_tw": true
+ },
+ "110202": {
+  "card_id": 110202,
+  "chara_id": 1102,
+  "name": "[ソナタ・アッラ・メンタ]サウンズオブアース",
+  "name_jp": "[ソナタ・アッラ・メンタ]サウンズオブアース",
+  "chara_name": "萬籟爭鳴",
+  "dress_id": 110213,
+  "dress_name": "ソナタ・アッラ・メンタ",
+  "dress_id_by_rarity": {
+   "3": 110213,
+   "4": 110213,
+   "5": 110213
+  },
+  "icon": "chara/chr1102/chr_icon_1102_110213",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "110301": {
+  "card_id": 110301,
+  "chara_id": 1103,
+  "name": "[Inspiring Genius]ロイスアンドロイス",
+  "name_jp": "[Inspiring Genius]ロイスアンドロイス",
+  "chara_name": "萊斯萊斯",
+  "dress_id": 110301,
+  "dress_name": "決勝服（萊斯萊斯）",
+  "dress_id_by_rarity": {
+   "2": 101,
+   "3": 110301,
+   "4": 110301,
+   "5": 110301
+  },
+  "icon": "chara/chr1103/chr_icon_1103_110301",
+  "icon_variants": [
+   "chara/chr1103/chr_icon_1103_110301_01"
+  ],
+  "in_tw": false
+ },
+ "110401": {
+  "card_id": 110401,
+  "chara_id": 1104,
+  "name": "[登龍之頂]葛城榮主",
+  "name_jp": "[登竜之頂]カツラギエース",
+  "chara_name": "葛城榮主",
+  "dress_id": 110401,
+  "dress_name": "登龍之頂",
+  "dress_id_by_rarity": {
+   "3": 110401,
+   "4": 110401,
+   "5": 110401
+  },
+  "icon": "chara/chr1104/chr_icon_1104_110401",
+  "icon_variants": [
+   "chara/chr1104/chr_icon_1104_110401_01",
+   "chara/chr1104/chr_icon_1104_110401_02"
+  ],
+  "in_tw": true
+ },
+ "110402": {
+  "card_id": 110402,
+  "chara_id": 1104,
+  "name": "[雅號．墨龍]葛城榮主",
+  "name_jp": "[雅号・墨龍]カツラギエース",
+  "chara_name": "葛城榮主",
+  "dress_id": 110410,
+  "dress_name": "雅號．墨龍",
+  "dress_id_by_rarity": {
+   "3": 110410,
+   "4": 110410,
+   "5": 110410
+  },
+  "icon": "chara/chr1104/chr_icon_1104_110410",
+  "icon_variants": [
+   "chara/chr1104/chr_icon_1104_110410_01",
+   "chara/chr1104/chr_icon_1104_110410_02"
+  ],
+  "in_tw": true
+ },
+ "110501": {
+  "card_id": 110501,
+  "chara_id": 1105,
+  "name": "[Universe-Naut]新宇宙",
+  "name_jp": "[Universe-Naut]ネオユニヴァース",
+  "chara_name": "新宇宙",
+  "dress_id": 110501,
+  "dress_name": "Universe-Naut",
+  "dress_id_by_rarity": {
+   "3": 110501,
+   "4": 110501,
+   "5": 110501
+  },
+  "icon": "chara/chr1105/chr_icon_1105_110501",
+  "icon_variants": [
+   "chara/chr1105/chr_icon_1105_110501_01",
+   "chara/chr1105/chr_icon_1105_110501_02"
+  ],
+  "in_tw": true
+ },
+ "110502": {
+  "card_id": 110502,
+  "chara_id": 1105,
+  "name": "[Like “ZEER”]新宇宙",
+  "name_jp": "[Like “ZEER”]ネオユニヴァース",
+  "chara_name": "新宇宙",
+  "dress_id": 110523,
+  "dress_name": "Like “ZEER”",
+  "dress_id_by_rarity": {
+   "3": 110523,
+   "4": 110523,
+   "5": 110523
+  },
+  "icon": "chara/chr1105/chr_icon_1105_110523",
+  "icon_variants": [
+   "chara/chr1105/chr_icon_1105_110523_01",
+   "chara/chr1105/chr_icon_1105_110523_02"
+  ],
+  "in_tw": true
+ },
+ "110601": {
+  "card_id": 110601,
+  "chara_id": 1106,
+  "name": "[點綴奇蹟！]菱奇蹟",
+  "name_jp": "[みらくるめーくあっぷ！]ヒシミラクル",
+  "chara_name": "菱奇蹟",
+  "dress_id": 110601,
+  "dress_name": "點綴奇蹟！",
+  "dress_id_by_rarity": {
+   "3": 110601,
+   "4": 110601,
+   "5": 110601
+  },
+  "icon": "chara/chr1106/chr_icon_1106_110601",
+  "icon_variants": [
+   "chara/chr1106/chr_icon_1106_110601_01",
+   "chara/chr1106/chr_icon_1106_110601_02"
+  ],
+  "in_tw": true
+ },
+ "110602": {
+  "card_id": 110602,
+  "chara_id": 1106,
+  "name": "[快樂小音符]菱奇蹟",
+  "name_jp": "[ハッピー・リトル・ノーツ]ヒシミラクル",
+  "chara_name": "菱奇蹟",
+  "dress_id": 110623,
+  "dress_name": "快樂小音符",
+  "dress_id_by_rarity": {
+   "3": 110623,
+   "4": 110623,
+   "5": 110623
+  },
+  "icon": "chara/chr1106/chr_icon_1106_110623",
+  "icon_variants": [
+   "chara/chr1106/chr_icon_1106_110623_01",
+   "chara/chr1106/chr_icon_1106_110623_02"
+  ],
+  "in_tw": true
+ },
+ "110701": {
+  "card_id": 110701,
+  "chara_id": 1107,
+  "name": "[GLITTER!]踢踏城市",
+  "name_jp": "[GLITTER!]タップダンスシチー",
+  "chara_name": "踢踏城市",
+  "dress_id": 110701,
+  "dress_name": "GLITTER!",
+  "dress_id_by_rarity": {
+   "3": 110701,
+   "4": 110701,
+   "5": 110701
+  },
+  "icon": "chara/chr1107/chr_icon_1107_110701",
+  "icon_variants": [
+   "chara/chr1107/chr_icon_1107_110701_01",
+   "chara/chr1107/chr_icon_1107_110701_02"
+  ],
+  "in_tw": true
+ },
+ "110702": {
+  "card_id": 110702,
+  "chara_id": 1107,
+  "name": "[Tap! Tap! Tap!]踢踏城市",
+  "name_jp": "[Tap! Tap! Tap!]タップダンスシチー",
+  "chara_name": "踢踏城市",
+  "dress_id": 110720,
+  "dress_name": "Tap! Tap! Tap!",
+  "dress_id_by_rarity": {
+   "3": 110720,
+   "4": 110720,
+   "5": 110720
+  },
+  "icon": "chara/chr1107/chr_icon_1107_110720",
+  "icon_variants": [
+   "chara/chr1107/chr_icon_1107_110720_01",
+   "chara/chr1107/chr_icon_1107_110720_02"
+  ],
+  "in_tw": true
+ },
+ "110801": {
+  "card_id": 110801,
+  "chara_id": 1108,
+  "name": "[Red in Black]大鳴大放",
+  "name_jp": "[Red in Black]ドゥラメンテ",
+  "chara_name": "大鳴大放",
+  "dress_id": 110801,
+  "dress_name": "Red in Black",
+  "dress_id_by_rarity": {
+   "3": 110801,
+   "4": 110801,
+   "5": 110801
+  },
+  "icon": "chara/chr1108/chr_icon_1108_110801",
+  "icon_variants": [
+   "chara/chr1108/chr_icon_1108_110801_01",
+   "chara/chr1108/chr_icon_1108_110801_02"
+  ],
+  "in_tw": true
+ },
+ "110901": {
+  "card_id": 110901,
+  "chara_id": 1109,
+  "name": "[Dream Successor]萊茵實力",
+  "name_jp": "[Dream Successor]ラインクラフト",
+  "chara_name": "萊茵實力",
+  "dress_id": 110901,
+  "dress_name": "Dream Successor",
+  "dress_id_by_rarity": {
+   "3": 110901,
+   "4": 110901,
+   "5": 110901
+  },
+  "icon": "chara/chr1109/chr_icon_1109_110901",
+  "icon_variants": [
+   "chara/chr1109/chr_icon_1109_110901_01",
+   "chara/chr1109/chr_icon_1109_110901_02"
+  ],
+  "in_tw": true
+ },
+ "110902": {
+  "card_id": 110902,
+  "chara_id": 1109,
+  "name": "[Eternal Fairytale]萊茵實力",
+  "name_jp": "[Eternal Fairytale]ラインクラフト",
+  "chara_name": "萊茵實力",
+  "dress_id": 110902,
+  "dress_name": "Eternal Fairytale",
+  "dress_id_by_rarity": {
+   "3": 110902,
+   "4": 110902,
+   "5": 110902
+  },
+  "icon": "chara/chr1109/chr_icon_1109_110902",
+  "icon_variants": [
+   "chara/chr1109/chr_icon_1109_110902_01",
+   "chara/chr1109/chr_icon_1109_110902_02"
+  ],
+  "in_tw": true
+ },
+ "111001": {
+  "card_id": 111001,
+  "chara_id": 1110,
+  "name": "[Future Weaver]西薩里奧",
+  "name_jp": "[Future Weaver]シーザリオ",
+  "chara_name": "西薩里奧",
+  "dress_id": 111001,
+  "dress_name": "Future Weaver",
+  "dress_id_by_rarity": {
+   "3": 111001,
+   "4": 111001,
+   "5": 111001
+  },
+  "icon": "chara/chr1110/chr_icon_1110_111001",
+  "icon_variants": [
+   "chara/chr1110/chr_icon_1110_111001_01",
+   "chara/chr1110/chr_icon_1110_111001_02"
+  ],
+  "in_tw": true
+ },
+ "111002": {
+  "card_id": 111002,
+  "chara_id": 1110,
+  "name": "[Twinbell Queen]西薩里奧",
+  "name_jp": "[Twinbell Queen]シーザリオ",
+  "chara_name": "西薩里奧",
+  "dress_id": 111026,
+  "dress_name": "Twinbell Queen",
+  "dress_id_by_rarity": {
+   "3": 111026,
+   "4": 111026,
+   "5": 111026
+  },
+  "icon": "chara/chr1110/chr_icon_1110_111026",
+  "icon_variants": [
+   "chara/chr1110/chr_icon_1110_111026_01",
+   "chara/chr1110/chr_icon_1110_111026_02"
+  ],
+  "in_tw": true
+ },
+ "111101": {
+  "card_id": 111101,
+  "chara_id": 1111,
+  "name": "[Inherited Hope]空中彌賽亞",
+  "name_jp": "[Inherited Hope]エアメサイア",
+  "chara_name": "空中彌賽亞",
+  "dress_id": 111101,
+  "dress_name": "Inherited Hope",
+  "dress_id_by_rarity": {
+   "3": 111101,
+   "4": 111101,
+   "5": 111101
+  },
+  "icon": "chara/chr1111/chr_icon_1111_111101",
+  "icon_variants": [
+   "chara/chr1111/chr_icon_1111_111101_01",
+   "chara/chr1111/chr_icon_1111_111101_02"
+  ],
+  "in_tw": true
+ },
+ "111201": {
+  "card_id": 111201,
+  "chara_id": 1112,
+  "name": "[Daring Darling!]デアリングハート",
+  "name_jp": "[Daring Darling!]デアリングハート",
+  "chara_name": "勇敢之心",
+  "dress_id": 111201,
+  "dress_name": "決勝服（勇敢之心）",
+  "dress_id_by_rarity": {
+   "3": 111201,
+   "4": 111201,
+   "5": 111201
+  },
+  "icon": "chara/chr1112/chr_icon_1112_111201",
+  "icon_variants": [
+   "chara/chr1112/chr_icon_1112_111201_01"
+  ],
+  "in_tw": false
+ },
+ "111301": {
+  "card_id": 111301,
+  "chara_id": 1113,
+  "name": "[Assorted Cuteness♡]房一潘朵拉",
+  "name_jp": "[Assorted Cuteness♡]フサイチパンドラ",
+  "chara_name": "房一潘朵拉",
+  "dress_id": 111301,
+  "dress_name": "Assorted Cuteness♡",
+  "dress_id_by_rarity": {
+   "3": 111301,
+   "4": 111301,
+   "5": 111301
+  },
+  "icon": "chara/chr1113/chr_icon_1113_111301",
+  "icon_variants": [
+   "chara/chr1113/chr_icon_1113_111301_01",
+   "chara/chr1113/chr_icon_1113_111301_02"
+  ],
+  "in_tw": true
+ },
+ "111401": {
+  "card_id": 111401,
+  "chara_id": 1114,
+  "name": "[Heroína Inocente]ブエナビスタ",
+  "name_jp": "[Heroína Inocente]ブエナビスタ",
+  "chara_name": "迷人景致",
+  "dress_id": 111401,
+  "dress_name": "決勝服（迷人景致）",
+  "dress_id_by_rarity": {
+   "3": 111401,
+   "4": 111401,
+   "5": 111401
+  },
+  "icon": "chara/chr1114/chr_icon_1114_111401",
+  "icon_variants": [
+   "chara/chr1114/chr_icon_1114_111401_01"
+  ],
+  "in_tw": false
+ },
+ "111501": {
+  "card_id": 111501,
+  "chara_id": 1115,
+  "name": "[總攬]黃金巨匠",
+  "name_jp": "[総攬]オルフェーヴル",
+  "chara_name": "黃金巨匠",
+  "dress_id": 111501,
+  "dress_name": "總攬",
+  "dress_id_by_rarity": {
+   "3": 111501,
+   "4": 111501,
+   "5": 111501
+  },
+  "icon": "chara/chr1115/chr_icon_1115_111501",
+  "icon_variants": [
+   "chara/chr1115/chr_icon_1115_111501_01",
+   "chara/chr1115/chr_icon_1115_111501_02"
+  ],
+  "in_tw": true
+ },
+ "111601": {
+  "card_id": 111601,
+  "chara_id": 1116,
+  "name": "[Regina dei fiori]貴婦人",
+  "name_jp": "[Regina dei fiori]ジェンティルドンナ",
+  "chara_name": "貴婦人",
+  "dress_id": 111601,
+  "dress_name": "Regina dei fiori",
+  "dress_id_by_rarity": {
+   "3": 111601,
+   "4": 111601,
+   "5": 111601
+  },
+  "icon": "chara/chr1116/chr_icon_1116_111601",
+  "icon_variants": [
+   "chara/chr1116/chr_icon_1116_111601_01",
+   "chara/chr1116/chr_icon_1116_111601_02"
+  ],
+  "in_tw": true
+ },
+ "111602": {
+  "card_id": 111602,
+  "chara_id": 1116,
+  "name": "[La dama perfetta]ジェンティルドンナ",
+  "name_jp": "[La dama perfetta]ジェンティルドンナ",
+  "chara_name": "貴婦人",
+  "dress_id": 111626,
+  "dress_name": "La dama perfetta",
+  "dress_id_by_rarity": {
+   "3": 111626,
+   "4": 111626,
+   "5": 111626
+  },
+  "icon": "chara/chr1116/chr_icon_1116_111626",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "111701": {
+  "card_id": 111701,
+  "chara_id": 1117,
+  "name": "[戲夢芭蕾裙]凱旋芭蕾",
+  "name_jp": "[ドラマティック・チュチュ]ウインバリアシオン",
+  "chara_name": "凱旋芭蕾",
+  "dress_id": 111701,
+  "dress_name": "戲夢芭蕾裙",
+  "dress_id_by_rarity": {
+   "3": 111701,
+   "4": 111701,
+   "5": 111701
+  },
+  "icon": "chara/chr1117/chr_icon_1117_111701",
+  "icon_variants": [
+   "chara/chr1117/chr_icon_1117_111701_01",
+   "chara/chr1117/chr_icon_1117_111701_02"
+  ],
+  "in_tw": true
+ },
+ "111801": {
+  "card_id": 111801,
+  "chara_id": 1118,
+  "name": "[Glacial Queen]アドマイヤグルーヴ",
+  "name_jp": "[Glacial Queen]アドマイヤグルーヴ",
+  "chara_name": "愛慕律動",
+  "dress_id": 111801,
+  "dress_name": "決勝服（愛慕律動）",
+  "dress_id_by_rarity": {
+   "3": 111801,
+   "4": 111801,
+   "5": 111801
+  },
+  "icon": "chara/chr1118/chr_icon_1118_111801",
+  "icon_variants": [
+   "chara/chr1118/chr_icon_1118_111801_01"
+  ],
+  "in_tw": false
+ },
+ "111901": {
+  "card_id": 111901,
+  "chara_id": 1119,
+  "name": "[夢之所歸]夢之旅",
+  "name_jp": "[夢路のよすが]ドリームジャーニー",
+  "chara_name": "夢之旅",
+  "dress_id": 111901,
+  "dress_name": "夢之所歸",
+  "dress_id_by_rarity": {
+   "3": 111901,
+   "4": 111901,
+   "5": 111901
+  },
+  "icon": "chara/chr1119/chr_icon_1119_111901",
+  "icon_variants": [
+   "chara/chr1119/chr_icon_1119_111901_01",
+   "chara/chr1119/chr_icon_1119_111901_02"
+  ],
+  "in_tw": true
+ },
+ "111902": {
+  "card_id": 111902,
+  "chara_id": 1119,
+  "name": "[雪白の夢路]ドリームジャーニー",
+  "name_jp": "[雪白の夢路]ドリームジャーニー",
+  "chara_name": "夢之旅",
+  "dress_id": 111946,
+  "dress_name": "雪白の夢路",
+  "dress_id_by_rarity": {
+   "3": 111946,
+   "4": 111946,
+   "5": 111946
+  },
+  "icon": "chara/chr1119/chr_icon_1119_111946",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "112001": {
+  "card_id": 112001,
+  "chara_id": 1120,
+  "name": "[一心求真]浮岩光王",
+  "name_jp": "[真実一路]カルストンライトオ",
+  "chara_name": "浮岩光王",
+  "dress_id": 112001,
+  "dress_name": "一心求真",
+  "dress_id_by_rarity": {
+   "3": 112001,
+   "4": 112001,
+   "5": 112001
+  },
+  "icon": "chara/chr1120/chr_icon_1120_112001",
+  "icon_variants": [
+   "chara/chr1120/chr_icon_1120_112001_01",
+   "chara/chr1120/chr_icon_1120_112001_02"
+  ],
+  "in_tw": true
+ },
+ "112101": {
+  "card_id": 112101,
+  "chara_id": 1121,
+  "name": "[Chevalier fidèle]杜蘭達爾",
+  "name_jp": "[Chevalier fidèle]デュランダル",
+  "chara_name": "杜蘭達爾",
+  "dress_id": 112101,
+  "dress_name": "Chevalier fidèle",
+  "dress_id_by_rarity": {
+   "3": 112101,
+   "4": 112101,
+   "5": 112101
+  },
+  "icon": "chara/chr1121/chr_icon_1121_112101",
+  "icon_variants": [
+   "chara/chr1121/chr_icon_1121_112101_01",
+   "chara/chr1121/chr_icon_1121_112101_02"
+  ],
+  "in_tw": true
+ },
+ "112401": {
+  "card_id": 112401,
+  "chara_id": 1124,
+  "name": "[POPPING!]泡泡糖小子",
+  "name_jp": "[POPPING!]バブルガムフェロー",
+  "chara_name": "泡泡糖小子",
+  "dress_id": 112401,
+  "dress_name": "POPPING!",
+  "dress_id_by_rarity": {
+   "3": 112401,
+   "4": 112401,
+   "5": 112401
+  },
+  "icon": "chara/chr1124/chr_icon_1124_112401",
+  "icon_variants": [
+   "chara/chr1124/chr_icon_1124_112401_01",
+   "chara/chr1124/chr_icon_1124_112401_02"
+  ],
+  "in_tw": true
+ },
+ "112402": {
+  "card_id": 112402,
+  "chara_id": 1124,
+  "name": "[暁光]バブルガムフェロー",
+  "name_jp": "[暁光]バブルガムフェロー",
+  "chara_name": "泡泡糖小子",
+  "dress_id": 112410,
+  "dress_name": "暁光",
+  "dress_id_by_rarity": {
+   "3": 112410,
+   "4": 112410,
+   "5": 112410
+  },
+  "icon": "chara/chr1124/chr_icon_1124_112410",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "112701": {
+  "card_id": 112701,
+  "chara_id": 1127,
+  "name": "[義心黑焰]超常駿驥",
+  "name_jp": "[義心の黒焔]フェノーメノ",
+  "chara_name": "超常駿驥",
+  "dress_id": 112701,
+  "dress_name": "義心黑焰",
+  "dress_id_by_rarity": {
+   "3": 112701,
+   "4": 112701,
+   "5": 112701
+  },
+  "icon": "chara/chr1127/chr_icon_1127_112701",
+  "icon_variants": [
+   "chara/chr1127/chr_icon_1127_112701_01",
+   "chara/chr1127/chr_icon_1127_112701_02"
+  ],
+  "in_tw": true
+ },
+ "112901": {
+  "card_id": 112901,
+  "chara_id": 1129,
+  "name": "[The Changer]アーモンドアイ",
+  "name_jp": "[The Changer]アーモンドアイ",
+  "chara_name": "杏目",
+  "dress_id": 112901,
+  "dress_name": "決勝服（杏目）",
+  "dress_id_by_rarity": {
+   "3": 112901,
+   "4": 112901,
+   "5": 112901
+  },
+  "icon": "chara/chr1129/chr_icon_1129_112901",
+  "icon_variants": [
+   "chara/chr1129/chr_icon_1129_112901_01"
+  ],
+  "in_tw": false
+ },
+ "113001": {
+  "card_id": 113001,
+  "chara_id": 1130,
+  "name": "[万折不撓の纏]ラッキーライラック",
+  "name_jp": "[万折不撓の纏]ラッキーライラック",
+  "chara_name": "幸運歐丁香",
+  "dress_id": 113001,
+  "dress_name": "決勝服（幸運歐丁香）",
+  "dress_id_by_rarity": {
+   "3": 113001,
+   "4": 113001,
+   "5": 113001
+  },
+  "icon": "chara/chr1130/chr_icon_1130_113001",
+  "icon_variants": [
+   "chara/chr1130/chr_icon_1130_113001_01"
+  ],
+  "in_tw": false
+ },
+ "113101": {
+  "card_id": 113101,
+  "chara_id": 1131,
+  "name": "[微笑哩有我的路！]放聲歡呼",
+  "name_jp": "[すまいる・まい・うぇい！]グランアレグリア",
+  "chara_name": "放聲歡呼",
+  "dress_id": 113101,
+  "dress_name": "微笑哩有我的路！",
+  "dress_id_by_rarity": {
+   "3": 113101,
+   "4": 113101,
+   "5": 113101
+  },
+  "icon": "chara/chr1131/chr_icon_1131_113101",
+  "icon_variants": [
+   "chara/chr1131/chr_icon_1131_113101_01",
+   "chara/chr1131/chr_icon_1131_113101_02"
+  ],
+  "in_tw": true
+ },
+ "113201": {
+  "card_id": 113201,
+  "chara_id": 1132,
+  "name": "[9927 Wishes]唯獨愛你",
+  "name_jp": "[9927 Wishes]ラヴズオンリーユー",
+  "chara_name": "唯獨愛你",
+  "dress_id": 113201,
+  "dress_name": "9927 Wishes",
+  "dress_id_by_rarity": {
+   "3": 113201,
+   "4": 113201,
+   "5": 113201
+  },
+  "icon": "chara/chr1132/chr_icon_1132_113201",
+  "icon_variants": [
+   "chara/chr1132/chr_icon_1132_113201_01",
+   "chara/chr1132/chr_icon_1132_113201_02"
+  ],
+  "in_tw": true
+ },
+ "113202": {
+  "card_id": 113202,
+  "chara_id": 1132,
+  "name": "[Love-Linked Aster]ラヴズオンリーユー",
+  "name_jp": "[Love-Linked Aster]ラヴズオンリーユー",
+  "chara_name": "唯獨愛你",
+  "dress_id": 113202,
+  "dress_name": "Love-Linked Aster",
+  "dress_id_by_rarity": {
+   "3": 113202,
+   "4": 113202,
+   "5": 113202
+  },
+  "icon": "chara/chr1132/chr_icon_1132_113202",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "113301": {
+  "card_id": 113301,
+  "chara_id": 1133,
+  "name": "[璀璨的編篡者]時代創世",
+  "name_jp": "[陸離の編纂者]クロノジェネシス",
+  "chara_name": "時代創世",
+  "dress_id": 113301,
+  "dress_name": "璀璨的編篡者",
+  "dress_id_by_rarity": {
+   "3": 113301,
+   "4": 113301,
+   "5": 113301
+  },
+  "icon": "chara/chr1133/chr_icon_1133_113301",
+  "icon_variants": [
+   "chara/chr1133/chr_icon_1133_113301_01",
+   "chara/chr1133/chr_icon_1133_113301_02"
+  ],
+  "in_tw": true
+ },
+ "113401": {
+  "card_id": 113401,
+  "chara_id": 1134,
+  "name": "[花宿しのクチュール]カレンブーケドール",
+  "name_jp": "[花宿しのクチュール]カレンブーケドール",
+  "chara_name": "機伶金花",
+  "dress_id": 113401,
+  "dress_name": "決勝服（機伶金花）",
+  "dress_id_by_rarity": {
+   "3": 113401,
+   "4": 113401,
+   "5": 113401
+  },
+  "icon": "chara/chr1134/chr_icon_1134_113401",
+  "icon_variants": [
+   "chara/chr1134/chr_icon_1134_113401_01"
+  ],
+  "in_tw": false
+ },
+ "113501": {
+  "card_id": 113501,
+  "chara_id": 1135,
+  "name": "[Sunlit Outsider]ステイゴールド",
+  "name_jp": "[Sunlit Outsider]ステイゴールド",
+  "chara_name": "黃金旅程",
+  "dress_id": 113501,
+  "dress_name": "決勝服（黃金旅程）",
+  "dress_id_by_rarity": {
+   "3": 113501,
+   "4": 113501,
+   "5": 113501
+  },
+  "icon": "chara/chr1135/chr_icon_1135_113501",
+  "icon_variants": [
+   "chara/chr1135/chr_icon_1135_113501_01"
+  ],
+  "in_tw": false
+ },
+ "113601": {
+  "card_id": 113601,
+  "chara_id": 1136,
+  "name": "[Divine Raiment]レッドディザイア",
+  "name_jp": "[Divine Raiment]レッドディザイア",
+  "chara_name": "レッドディザイア",
+  "dress_id": 113601,
+  "dress_name": "Divine Raiment",
+  "dress_id_by_rarity": {
+   "3": 113601,
+   "4": 113601,
+   "5": 113601
+  },
+  "icon": "chara/chr1136/chr_icon_1136_113601",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "113701": {
+  "card_id": 113701,
+  "chara_id": 1137,
+  "name": "[Miracle Author]キセキ",
+  "name_jp": "[Miracle Author]キセキ",
+  "chara_name": "キセキ",
+  "dress_id": 113701,
+  "dress_name": "Miracle Author",
+  "dress_id_by_rarity": {
+   "3": 113701,
+   "4": 113701,
+   "5": 113701
+  },
+  "icon": "chara/chr1137/chr_icon_1137_113701",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "114301": {
+  "card_id": 114301,
+  "chara_id": 1143,
+  "name": "[Lueur Angélique]ヴィクトワールピサ",
+  "name_jp": "[Lueur Angélique]ヴィクトワールピサ",
+  "chara_name": "ヴィクトワールピサ",
+  "dress_id": 114301,
+  "dress_name": "Lueur Angélique",
+  "dress_id_by_rarity": {
+   "3": 114301,
+   "4": 114301,
+   "5": 114301
+  },
+  "icon": "chara/chr1143/chr_icon_1143_114301",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "114501": {
+  "card_id": 114501,
+  "chara_id": 1145,
+  "name": "[Monochrome GM]ルーラーシップ",
+  "name_jp": "[Monochrome GM]ルーラーシップ",
+  "chara_name": "ルーラーシップ",
+  "dress_id": 114501,
+  "dress_name": "Monochrome GM",
+  "dress_id_by_rarity": {
+   "3": 114501,
+   "4": 114501,
+   "5": 114501
+  },
+  "icon": "chara/chr1145/chr_icon_1145_114501",
+  "icon_variants": [],
+  "in_tw": false
+ },
+ "9100101": {
+  "card_id": 9100101,
+  "chara_id": 1001,
+  "name": "[特別夢想家]特別週",
+  "name_jp": "[スペシャルドリーマー]スペシャルウィーク",
+  "chara_name": "特別週",
+  "dress_id": null,
+  "dress_name": null,
+  "dress_id_by_rarity": {},
+  "icon": null,
+  "icon_variants": [],
+  "in_tw": true
+ },
+ "9101101": {
+  "card_id": 9101101,
+  "chara_id": 1011,
+  "name": "[穿岩之青]草上飛",
+  "name_jp": "[岩穿つ青]グラスワンダー",
+  "chara_name": "草上飛",
+  "dress_id": null,
+  "dress_name": null,
+  "dress_id_by_rarity": {},
+  "icon": null,
+  "icon_variants": [],
+  "in_tw": true
+ }
+}

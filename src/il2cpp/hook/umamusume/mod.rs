@@ -57,6 +57,9 @@ pub mod CySpringController;
 pub mod SceneDefine;
 
 #[cfg(target_os = "windows")]
+pub mod HomeCharacterCreator;
+
+#[cfg(target_os = "windows")]
 pub mod SceneManager;
 
 #[cfg(target_os = "windows")]
@@ -130,6 +133,7 @@ pub fn init() {
     #[cfg(target_os = "windows")]
     {
         SceneManager::init(image);
+        HomeCharacterCreator::init(image);
         PaymentUtility::init(image);
     }
 }

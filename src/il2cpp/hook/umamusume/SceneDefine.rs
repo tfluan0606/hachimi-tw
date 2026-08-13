@@ -21,15 +21,17 @@ pub mod view_id {
 pub struct Scene {
     pub group: &'static str,
     pub detail: Option<&'static str>,
-    pub asset_key: &'static str
+    pub asset_key: &'static str,
+    /// 站在首頁——只有這時候拿代表馬娘當主圖才對得上畫面。
+    pub is_home: bool
 }
 
 const fn s(group: &'static str, asset_key: &'static str) -> Scene {
-    Scene { group, detail: None, asset_key }
+    Scene { group, detail: None, asset_key, is_home: false }
 }
 
 const fn sd(group: &'static str, detail: &'static str, asset_key: &'static str) -> Scene {
-    Scene { group, detail: Some(detail), asset_key }
+    Scene { group, detail: Some(detail), asset_key, is_home: false }
 }
 
 pub fn describe(view_id: i32) -> Scene {
@@ -38,7 +40,7 @@ pub fn describe(view_id: i32) -> Scene {
         0..=99 => s("啟動中", "loading"),
 
         // 100+ 首頁
-        100..=199 => s("首頁", "home"),
+        100..=199 => Scene { is_home: true, ..s("首頁", "home") },
 
         // 200+ 演唱會（從首頁直接播的）
         200..=299 => s("觀看演唱會", "live"),
@@ -86,7 +88,7 @@ pub fn describe(view_id: i32) -> Scene {
         6200..=6299 => s("練習賽", "race"),
         6300..=6399 => s("訓練挑戰賽", "arena"),
         6450..=6499 => s("打工", "menu"),
-        6500..=6599 => s("行程表", "menu"),
+        6500..=6599 => s("訓練員記事本", "menu"),
         6600..=6699 => s("育成", "training"),
 
         // 7000+ 夾娃娃機（新版）
