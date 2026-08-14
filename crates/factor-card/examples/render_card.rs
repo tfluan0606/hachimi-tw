@@ -41,7 +41,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     let maps = Maps::bundled();
-    let extras = Extras { follower_num: find_follower_num(std::path::Path::new(&cap)) };
+    // ..Default::default() 是刻意的：Extras 之後再加欄位時這裡不用跟著改
+    let extras = Extras {
+        follower_num: find_follower_num(std::path::Path::new(&cap)),
+        ..Default::default()
+    };
     let data = CardData::from_trained_chara_with(entry, &maps, extras);
     let fonts = Fonts::system()?;
 

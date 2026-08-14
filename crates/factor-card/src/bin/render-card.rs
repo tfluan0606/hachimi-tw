@@ -13,6 +13,7 @@
 //! {
 //!   "card": { ...trained_chara 形狀... },
 //!   "portraits": { "<card_id>": "/path/to/portrait.png" },
+//!   "support_card": { "card_id": 30207, "label": "SSR | 持久力 | […]空中神宮", "limit_break": 4 },
 //!   "watermark": "/path/to/logo.png",
 //!   "fonts": { "regular": [["/path/font.ttc", 0]], "bold": [["/path/bold.ttc", 0]] },
 //!   "maps":  { "factor": "/path/factor_map.json", "card": "...", "race": "..." },
@@ -25,7 +26,7 @@
 //! `watermark` / `maps` / `g1_wins` / `follower_num` 可省略；`maps` 省略時用 crate
 //! 內建的 `assets/`（會跟網站的 `static/*.json` 漂移，正式跑建議明確指定）。
 
-use factor_card::{data::CardData, data::Extras, render::Portrait, Fonts, Maps, Theme};
+use factor_card::{data::CardData, data::Extras, render::Portrait, Fonts, Maps, SupportCard, Theme};
 use serde_json::Value;
 use std::collections::HashMap;
 use std::io::{Read, Write};
@@ -85,9 +86,19 @@ fn run() -> Result<(), Err> {
         None => None,
     };
 
+    // 支援卡那行。圖示走 portraits 表（支援卡 id 跟馬娘 card_id 範圍不重疊）。
+    let support_card = req.get("support_card").filter(|v| !v.is_null()).and_then(|s| {
+        Some(SupportCard {
+            card_id: s["card_id"].as_i64()?,
+            label: s["label"].as_str()?.to_owned(),
+            limit_break: s["limit_break"].as_i64().unwrap_or(0),
+        })
+    });
+
     let extras = Extras {
         follower_num: req["follower_num"].as_i64(),
         g1_wins: req["g1_wins"].as_i64(),
+        support_card,
     };
     let scale = req["scale"].as_f64().unwrap_or(2.0) as f32;
     let theme = match req["theme"].as_str() {

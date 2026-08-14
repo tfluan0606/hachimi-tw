@@ -192,8 +192,26 @@ pub struct Stat {
     pub tone: Tone,
 }
 
+/// 玩家帶的支援卡（顯示在標題列下面那行）
+///
+/// 網站 /stallion 的詳細卡有這行，遊戲內的卡片沒有（在遊戲裡自己看得到，不必畫）。
+/// 所以做成 Option：網站端餵、hachimi 不餵，兩邊的卡片各自維持原樣。
+#[derive(Clone)]
+pub struct SupportCard {
+    /// 支援卡 id，同時是 `render` 那份 portraits 表的 key（支援卡 id 20001–30270、
+    /// 馬娘 card_id 100101–113301，範圍不重疊所以可以共用同一張表）
+    pub card_id: i64,
+    /// 已經組好的說明，例：`SSR | 持久力 | [Cocoon]空中神宮`
+    pub label: String,
+    /// 突破數（4 就是 4 凸）；0 不顯示
+    pub limit_break: i64,
+}
+
 /// trained_chara 本身沒有、但要顯示在卡片上的額外資訊（來自其他 API）
-#[derive(Default, Clone, Copy)]
+///
+/// 注意這裡**不是** `Copy`（`SupportCard` 帶 String）。新增欄位時建議呼叫端寫
+/// `Extras { .., ..Default::default() }`，免得每加一個欄位就得改所有建構點。
+#[derive(Default, Clone)]
 pub struct Extras {
     /// 玩家的追蹤者數（`follower_num`，來自好友頁 API）
     pub follower_num: Option<i64>,
@@ -203,6 +221,8 @@ pub struct Extras {
     /// `race_result_list`，祖輩更是完全沒這個欄位，所以舊演算法在那條資料流上
     /// 一定得 0。從網站餵資料進來時務必給這個值。
     pub g1_wins: Option<i64>,
+    /// 支援卡那行。`None` 就不畫，標題列高度也不會變。
+    pub support_card: Option<SupportCard>,
 }
 
 pub struct CardData {
@@ -212,6 +232,8 @@ pub struct CardData {
     pub viewer_id: i64,
     /// 玩家追蹤者數（顯示在標題列 UID 旁邊）
     pub follower_num: Option<i64>,
+    /// 支援卡那行（標題列下方）；`None` 就整行不畫
+    pub support: Option<SupportCard>,
     pub card_id: i64,
     pub stats: Vec<Stat>,
     pub resonance: Vec<Resonance>,
@@ -477,6 +499,7 @@ impl CardData {
             trained_chara_id: entry["trained_chara_id"].as_i64().unwrap_or(0),
             viewer_id: entry["viewer_id"].as_i64().unwrap_or(0),
             follower_num: extras.follower_num,
+            support: extras.support_card,
             card_id,
             stats,
             resonance,

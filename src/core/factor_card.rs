@@ -157,6 +157,8 @@ pub fn capture(trained_chara_id: Option<i64>) -> Result<PathBuf, Error> {
         // 遊戲內這條路攔到的是完整的 trained_chara（含 race_result_list），
         // 交給 factor-card 自己算即可。網站那條資料流沒有勝鞍資訊才需要外面算好餵進來。
         g1_wins: None,
+        // 支援卡那行是網站詳細卡才有的東西；在遊戲裡本來就看得到，卡片不畫。
+        ..Default::default()
     };
     let data = CardData::from_trained_chara_with(&entry, &MAPS, extras);
 

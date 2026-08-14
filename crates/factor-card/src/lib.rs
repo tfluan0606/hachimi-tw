@@ -11,7 +11,7 @@ pub mod maps;
 pub mod render;
 pub mod text;
 
-pub use data::{CardData, Extras};
+pub use data::{CardData, Extras, SupportCard};
 pub use maps::Maps;
 pub use render::{render, Portrait, Theme};
 pub use text::Fonts;

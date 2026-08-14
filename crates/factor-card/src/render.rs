@@ -103,6 +103,9 @@ const COL_GAP: f32 = 12.0;
 const BLOCK_PAD_X: f32 = 14.0;
 const BLOCK_PAD_Y: f32 = 12.0;
 const PORTRAIT: f32 = 56.0;
+/// 支援卡那行：圖示邊長，以及整行佔的高度（圖示 + 跟標題列的間距）
+const SUPPORT_ICON: f32 = 30.0;
+const SUPPORT_ROW_H: f32 = SUPPORT_ICON + 8.0;
 
 const BADGE_H: f32 = 27.0;
 const BADGE_PAD_X: f32 = 10.0;
@@ -494,7 +497,7 @@ pub fn render(
     let res_h = 12.0 * 2.0 + 24.0 + 8.0 + BADGE_H;
     let row_h = res_h;
 
-    let header_h = 28.0;
+    let header_h = 28.0 + if data.support.is_some() { SUPPORT_ROW_H } else { 0.0 };
     let card_h = PAD_Y * 2.0
         + header_h
         + SECTION_GAP
@@ -526,6 +529,21 @@ pub fn render(
     }
     if let Some(n) = data.follower_num {
         canvas.text(&format!("追蹤 {n}"), 14.0, hx + 14.0, baseline, t.ink_soft, true);
+    }
+
+    // ── 支援卡那行（只有網站端會餵，遊戲內卡片沒有這行）──
+    if let Some(sc) = &data.support {
+        let iy = y + 28.0 + 4.0;
+        match portraits.get(&sc.card_id) {
+            Some(p) => canvas.image(p, x0, iy, SUPPORT_ICON, 6.0),
+            // 圖抓不到就留一個同尺寸的底，文字才不會整行往左跳
+            None => canvas.box_(x0, iy, SUPPORT_ICON, SUPPORT_ICON, 6.0, rgb(t.block_bg), None),
+        }
+        let bl = iy + SUPPORT_ICON * 0.5 + 5.0;
+        let end = canvas.text(&sc.label, 14.5, x0 + SUPPORT_ICON + 10.0, bl, t.ink_soft, false);
+        if sc.limit_break > 0 {
+            canvas.text(&format!("{}凸", sc.limit_break), 14.5, end + 10.0, bl, t.ink_mute, true);
+        }
     }
     y += header_h + SECTION_GAP;
 
