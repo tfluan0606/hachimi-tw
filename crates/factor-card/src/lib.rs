@@ -13,5 +13,5 @@ pub mod text;
 
 pub use data::{CardData, Extras, SupportCard};
 pub use maps::Maps;
-pub use render::{render, Portrait, Theme};
+pub use render::{render, render_sized, Portrait, Theme, DEFAULT_CARD_W};
 pub use text::Fonts;

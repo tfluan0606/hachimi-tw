@@ -18,6 +18,7 @@
 //!   "fonts": { "regular": [["/path/font.ttc", 0]], "bold": [["/path/bold.ttc", 0]] },
 //!   "maps":  { "factor": "/path/factor_map.json", "card": "...", "race": "..." },
 //!   "scale": 2.0,
+//!   "card_w": 1040,
 //!   "theme": "dark",
 //!   "g1_wins": 12,
 //!   "follower_num": 34
@@ -106,8 +107,13 @@ fn run() -> Result<(), Err> {
         _ => Theme::Dark,
     };
 
+    // card_w 是字級相對大小的旋鈕：字級都是絕對 pt，卡越窄字就越大。
+    // 想「字放大 k 倍、輸出解析度不變」就 card_w ÷ k 且 scale × k。
+    let card_w = req["card_w"].as_f64().unwrap_or(factor_card::DEFAULT_CARD_W as f64) as f32;
+
     let data = CardData::from_trained_chara_with(entry, &maps, extras);
-    let pixmap = factor_card::render(&data, &portraits, &fonts, scale, theme, watermark.as_ref());
+    let pixmap =
+        factor_card::render_sized(&data, &portraits, &fonts, scale, theme, watermark.as_ref(), card_w);
     let png = pixmap.encode_png()?;
 
     let stdout = std::io::stdout();

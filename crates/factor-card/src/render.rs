@@ -87,7 +87,15 @@ impl Palette {
 }
 
 // ── 版面尺寸 ────────────────────────────────────────────────
-const CARD_W: f32 = 1040.0;
+/// 卡片寬度（pt）預設值。
+///
+/// **這同時是「字級相對大小」的旋鈕**：其他所有尺寸（字級、padding、badge 高度）
+/// 都是絕對 pt，所以卡片越窄，字看起來就越大。想要「字放大 k 倍但輸出解析度不變」，
+/// 就把 card_w 除以 k、`scale` 乘以 k——`輸出寬 = card_w × scale`、
+/// `字的像素 = 字級 pt × scale`，兩者一除一乘剛好達成。
+///
+/// 這樣調不會有字撐破 badge 外框的風險（所有東西等比），比逐一改字級常數安全。
+pub const DEFAULT_CARD_W: f32 = 1040.0;
 const PAGE_MARGIN: f32 = 0.0;
 const PAD_X: f32 = 30.0;
 const PAD_Y: f32 = 26.0;
@@ -455,6 +463,7 @@ fn draw_badges(canvas: &mut Canvas, rows: &[Vec<BadgeLayout>], x0: f32, y0: f32)
 const WATERMARK_RATIO: f32 = 0.34;
 const WATERMARK_OPACITY: f32 = 0.10;
 
+/// 用預設寬度畫（[`DEFAULT_CARD_W`]）。
 pub fn render(
     data: &CardData,
     portraits: &HashMap<i64, Portrait>,
@@ -463,8 +472,22 @@ pub fn render(
     theme: Theme,
     watermark: Option<&Portrait>,
 ) -> Pixmap {
+    render_sized(data, portraits, fonts, scale, theme, watermark, DEFAULT_CARD_W)
+}
+
+/// 指定卡片寬度畫。`card_w` 的意義見 [`DEFAULT_CARD_W`]——它同時是字級相對大小的旋鈕。
+pub fn render_sized(
+    data: &CardData,
+    portraits: &HashMap<i64, Portrait>,
+    fonts: &Fonts,
+    scale: f32,
+    theme: Theme,
+    watermark: Option<&Portrait>,
+    card_w: f32,
+) -> Pixmap {
+    let card_w = if card_w.is_finite() && card_w > 200.0 { card_w } else { DEFAULT_CARD_W };
     let t = theme.palette();
-    let content_w = CARD_W - PAD_X * 2.0;
+    let content_w = card_w - PAD_X * 2.0;
     let col_w = (content_w - COL_GAP * 2.0) / 3.0;
     let block_content_w = col_w - BLOCK_PAD_X * 2.0;
 
@@ -506,7 +529,7 @@ pub fn render(
         + if res_chips.is_empty() { 0.0 } else { row_h + SECTION_GAP }
         + blocks_h;
 
-    let img_w = ((CARD_W + PAGE_MARGIN * 2.0) * scale).ceil() as u32;
+    let img_w = ((card_w + PAGE_MARGIN * 2.0) * scale).ceil() as u32;
     let img_h = ((card_h + PAGE_MARGIN * 2.0) * scale).ceil() as u32;
     let mut pixmap = Pixmap::new(img_w, img_h).unwrap();
     pixmap.fill(rgb(t.card_bg));
@@ -514,7 +537,7 @@ pub fn render(
 
     // ── 卡片底 ──
     let (cx, cy) = (PAGE_MARGIN, PAGE_MARGIN);
-    canvas.box_(cx, cy, CARD_W, card_h, 0.0, rgb(t.card_bg), None);
+    canvas.box_(cx, cy, card_w, card_h, 0.0, rgb(t.card_bg), None);
 
     let x0 = cx + PAD_X;
     let mut y = cy + PAD_Y;
