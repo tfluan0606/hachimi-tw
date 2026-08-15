@@ -169,6 +169,10 @@ struct Canvas<'a> {
     pixmap: Pixmap,
     fonts: &'a Fonts,
     scale: f32,
+    /// 字級倍率。**只放大文字與「裝文字的盒子」**（badge 高度、行距、標題列高…），
+    /// 立繪、卡片寬度、區塊間距都不受影響——也就是「字相對於圖片和留白變大」。
+    /// 1.0 時所有計算都乘 1，輸出與沒有這個參數時逐像素相同。
+    fs: f32,
     t: Palette,
 }
 
@@ -232,7 +236,7 @@ impl<'a> Canvas<'a> {
         self.fonts.draw(
             &mut self.pixmap,
             s,
-            size * self.scale,
+            size * self.fs * self.scale,
             x * self.scale,
             baseline * self.scale,
             color,
@@ -241,7 +245,29 @@ impl<'a> Canvas<'a> {
     }
 
     fn measure(&self, s: &str, size: f32, bold: bool) -> f32 {
-        self.fonts.measure(s, size * self.scale, bold) / self.scale
+        self.fonts.measure(s, size * self.fs * self.scale, bold) / self.scale
+    }
+
+    // ── 隨字級一起縮放的「裝文字的盒子」 ──
+    /// badge 外框高度
+    fn badge_h(&self) -> f32 {
+        BADGE_H * self.fs
+    }
+    /// badge 內部左右留白
+    fn badge_pad_x(&self) -> f32 {
+        BADGE_PAD_X * self.fs
+    }
+    /// 統計格裡「本體／父／母」三行的行距
+    fn stat_line_h(&self) -> f32 {
+        STAT_LINE_H * self.fs
+    }
+    /// 統計格總高
+    fn stat_tall_h(&self) -> f32 {
+        (12.0 + 17.0 + 8.0 + 10.0) * self.fs + self.stat_line_h() * 3.0
+    }
+    /// 小標題（「本體」「三方共鳴白因」等 17pt 那級）佔的行高
+    fn tag_h(&self) -> f32 {
+        24.0 * self.fs
     }
 
     /// 在 (x,y,size) 的圓角框裡畫一張圖（等比 cover）
@@ -410,7 +436,7 @@ fn wrap_badges<'a>(canvas: &Canvas, badges: &'a [Badge], max_w: f32) -> Vec<Vec<
         let stars = stars_text(b.stars);
         let text_w = canvas.measure(&b.name, FS_BADGE, false);
         let star_w = if stars.is_empty() { 0.0 } else { canvas.measure(&stars, FS_STAR, false) + 4.0 };
-        let w = BADGE_PAD_X * 2.0 + text_w + star_w;
+        let w = canvas.badge_pad_x() * 2.0 + text_w + star_w;
         if !row.is_empty() && x + w > max_w {
             rows.push(std::mem::take(&mut row));
             x = 0.0;
@@ -424,30 +450,32 @@ fn wrap_badges<'a>(canvas: &Canvas, badges: &'a [Badge], max_w: f32) -> Vec<Vec<
     rows
 }
 
-fn badge_rows_height(rows: usize) -> f32 {
+fn badge_rows_height(canvas: &Canvas, rows: usize) -> f32 {
     if rows == 0 {
         0.0
     } else {
-        rows as f32 * BADGE_H + (rows - 1) as f32 * BADGE_ROW_GAP
+        rows as f32 * canvas.badge_h() + (rows - 1) as f32 * BADGE_ROW_GAP
     }
 }
 
 fn draw_badges(canvas: &mut Canvas, rows: &[Vec<BadgeLayout>], x0: f32, y0: f32) {
     let t = canvas.t;
+    let (bh, pad) = (canvas.badge_h(), canvas.badge_pad_x());
+    let fs = canvas.fs;
     for (ri, row) in rows.iter().enumerate() {
-        let y = y0 + ri as f32 * (BADGE_H + BADGE_ROW_GAP);
+        let y = y0 + ri as f32 * (bh + BADGE_ROW_GAP);
         for b in row {
             let (bg, fg, border) = badge_colors(&t, b.badge.class);
-            canvas.box_(x0 + b.x, y, b.w, BADGE_H, 6.0, rgba(bg), border.map(rgba));
+            canvas.box_(x0 + b.x, y, b.w, bh, 6.0, rgba(bg), border.map(rgba));
             // 文字垂直置中（以視覺基線微調）
-            let baseline = y + BADGE_H / 2.0 + FS_BADGE * 0.36;
-            canvas.text(&b.badge.name, FS_BADGE, x0 + b.x + BADGE_PAD_X, baseline, fg, false);
+            let baseline = y + bh / 2.0 + FS_BADGE * fs * 0.36;
+            canvas.text(&b.badge.name, FS_BADGE, x0 + b.x + pad, baseline, fg, false);
             if !b.stars.is_empty() {
                 canvas.text(
                     &b.stars,
                     FS_STAR,
-                    x0 + b.x + BADGE_PAD_X + b.text_w + 4.0,
-                    y + BADGE_H / 2.0 + FS_STAR * 0.36,
+                    x0 + b.x + pad + b.text_w + 4.0,
+                    y + bh / 2.0 + FS_STAR * fs * 0.36,
                     fg,
                     false,
                 );
@@ -472,10 +500,16 @@ pub fn render(
     theme: Theme,
     watermark: Option<&Portrait>,
 ) -> Pixmap {
-    render_sized(data, portraits, fonts, scale, theme, watermark, DEFAULT_CARD_W)
+    render_sized(data, portraits, fonts, scale, theme, watermark, DEFAULT_CARD_W, 1.0)
 }
 
-/// 指定卡片寬度畫。`card_w` 的意義見 [`DEFAULT_CARD_W`]——它同時是字級相對大小的旋鈕。
+/// 指定卡片寬度與字級倍率畫。
+///
+/// * `card_w` — 見 [`DEFAULT_CARD_W`]。整張等比縮放（字、立繪、留白一起變）。
+/// * `font_scale` — **只放大文字與裝文字的盒子**（badge 高度、行距、標題列高），
+///   立繪和區塊留白不動，所以是「字相對於圖片變大」。1.0 = 與沒有這參數時逐像素相同。
+///
+/// 兩者是不同的旋鈕：想整張變大用 `card_w`，覺得「圖太大字太小」用 `font_scale`。
 pub fn render_sized(
     data: &CardData,
     portraits: &HashMap<i64, Portrait>,
@@ -484,24 +518,26 @@ pub fn render_sized(
     theme: Theme,
     watermark: Option<&Portrait>,
     card_w: f32,
+    font_scale: f32,
 ) -> Pixmap {
     let card_w = if card_w.is_finite() && card_w > 200.0 { card_w } else { DEFAULT_CARD_W };
+    let fs = if font_scale.is_finite() && font_scale > 0.2 { font_scale } else { 1.0 };
     let t = theme.palette();
     let content_w = card_w - PAD_X * 2.0;
     let col_w = (content_w - COL_GAP * 2.0) / 3.0;
     let block_content_w = col_w - BLOCK_PAD_X * 2.0;
 
     // ── 先量測，算出總高度 ──
-    let probe = Canvas { pixmap: Pixmap::new(1, 1).unwrap(), fonts, scale, t };
+    let probe = Canvas { pixmap: Pixmap::new(1, 1).unwrap(), fonts, scale, fs, t };
 
     let block_rows: Vec<Vec<Vec<BadgeLayout>>> = data
         .blocks
         .iter()
         .map(|b| wrap_badges(&probe, &b.badges, block_content_w))
         .collect();
-    // tag(14) + 6 + 立繪列(48) + 8 + badges
+    // tag + 6 + 立繪列 + 8 + badges（tag 與 badge 高度隨字級，立繪不隨）
     let block_body_h = |rows: &Vec<Vec<BadgeLayout>>| -> f32 {
-        BLOCK_PAD_Y * 2.0 + 24.0 + 6.0 + PORTRAIT + 8.0 + badge_rows_height(rows.len())
+        BLOCK_PAD_Y * 2.0 + probe.tag_h() + 6.0 + PORTRAIT + 8.0 + badge_rows_height(&probe, rows.len())
     };
     let blocks_h = block_rows.iter().map(block_body_h).fold(0.0f32, f32::max);
 
@@ -517,14 +553,14 @@ pub fn render_sized(
         })
         .collect();
     // 這一列一定會出現（至少有遺傳子分布那格）
-    let res_h = 12.0 * 2.0 + 24.0 + 8.0 + BADGE_H;
+    let res_h = 12.0 * 2.0 + probe.tag_h() + 8.0 + probe.badge_h();
     let row_h = res_h;
 
-    let header_h = 28.0 + if data.support.is_some() { SUPPORT_ROW_H } else { 0.0 };
+    let header_h = 28.0 * fs + if data.support.is_some() { SUPPORT_ROW_H } else { 0.0 };
     let card_h = PAD_Y * 2.0
         + header_h
         + SECTION_GAP
-        + STAT_TALL_H
+        + probe.stat_tall_h()
         + SECTION_GAP
         + if res_chips.is_empty() { 0.0 } else { row_h + SECTION_GAP }
         + blocks_h;
@@ -533,7 +569,7 @@ pub fn render_sized(
     let img_h = ((card_h + PAGE_MARGIN * 2.0) * scale).ceil() as u32;
     let mut pixmap = Pixmap::new(img_w, img_h).unwrap();
     pixmap.fill(rgb(t.card_bg));
-    let mut canvas = Canvas { pixmap, fonts, scale, t };
+    let mut canvas = Canvas { pixmap, fonts, scale, fs, t };
 
     // ── 卡片底 ──
     let (cx, cy) = (PAGE_MARGIN, PAGE_MARGIN);
@@ -544,7 +580,7 @@ pub fn render_sized(
 
     // ── 標題列 ──
     let name_size = 19.0;
-    let baseline = y + 20.0;
+    let baseline = y + 20.0 * fs;
     let end = canvas.text(&data.name, name_size, x0, baseline, t.ink, true);
     let mut hx = end + 10.0;
     if data.viewer_id != 0 {
@@ -556,7 +592,7 @@ pub fn render_sized(
 
     // ── 支援卡那行（只有網站端會餵，遊戲內卡片沒有這行）──
     if let Some(sc) = &data.support {
-        let iy = y + 28.0 + 4.0;
+        let iy = y + 28.0 * fs + 4.0;
         match portraits.get(&sc.card_id) {
             Some(p) => canvas.image(p, x0, iy, SUPPORT_ICON, 6.0),
             // 圖抓不到就留一個同尺寸的底，文字才不會整行往左跳
@@ -592,7 +628,7 @@ pub fn render_sized(
             draw_stat_cell(&mut canvas, s, sx, y, *w);
             sx += w + STAT_GAP;
         }
-        y += STAT_TALL_H + SECTION_GAP;
+        y += canvas.stat_tall_h() + SECTION_GAP;
     }
 
     // ── 三方共鳴（整列）──
@@ -606,20 +642,21 @@ pub fn render_sized(
             rgba(t.res_bg),
             Some(rgba(t.res_border)),
         );
-        canvas.text("三方共鳴白因", 17.0, x0 + 14.0, y + 12.0 + 17.0, t.amber_ink, true);
+        canvas.text("三方共鳴白因", 17.0, x0 + 14.0, y + 12.0 + 17.0 * fs, t.amber_ink, true);
         let mut chip_x = x0 + 14.0;
-        let chip_y = y + 12.0 + 24.0 + 8.0;
+        let chip_y = y + 12.0 + canvas.tag_h() + 8.0;
+        let (bh, pad) = (canvas.badge_h(), canvas.badge_pad_x());
         for (name, stars, class, nw, sw) in &res_chips {
-            let w = BADGE_PAD_X * 2.0 + nw + 10.0 + sw;
+            let w = pad * 2.0 + nw + 10.0 + sw;
             let (bg, fg, border) = badge_colors(&t, *class);
-            canvas.box_(chip_x, chip_y, w, BADGE_H, 6.0, rgba(bg), border.map(rgba));
-            canvas.text(name, FS_BADGE, chip_x + BADGE_PAD_X,
-                        chip_y + BADGE_H / 2.0 + FS_BADGE * 0.36, fg, false);
-            let sep_x = chip_x + BADGE_PAD_X + nw + 5.0;
-            canvas.fill_rect_px(sep_x, chip_y + 4.0, 1.0, BADGE_H - 8.0,
+            canvas.box_(chip_x, chip_y, w, bh, 6.0, rgba(bg), border.map(rgba));
+            canvas.text(name, FS_BADGE, chip_x + pad,
+                        chip_y + bh / 2.0 + FS_BADGE * fs * 0.36, fg, false);
+            let sep_x = chip_x + pad + nw + 5.0;
+            canvas.fill_rect_px(sep_x, chip_y + 4.0, 1.0, bh - 8.0,
                                 Color::from_rgba8(fg[0], fg[1], fg[2], 110));
             canvas.text(stars, FS_STAR, sep_x + 5.0,
-                        chip_y + BADGE_H / 2.0 + FS_STAR * 0.36, fg, true);
+                        chip_y + bh / 2.0 + FS_STAR * fs * 0.36, fg, true);
             chip_x += w + 6.0;
         }
         y += row_h + SECTION_GAP;
@@ -631,8 +668,8 @@ pub fn render_sized(
         canvas.box_(bx, y, col_w, blocks_h, 10.0, rgb(t.block_bg), Some(rgba(t.line)));
         let ix = bx + BLOCK_PAD_X;
         let mut iy = y + BLOCK_PAD_Y;
-        canvas.text(block.label, 17.0, ix, iy + 17.0, t.ink, true);
-        iy += 24.0 + 6.0;
+        canvas.text(block.label, 17.0, ix, iy + 17.0 * fs, t.ink, true);
+        iy += canvas.tag_h() + 6.0;
 
         match (&block.name, block.card_id) {
             (Some(name), Some(cid)) => {
@@ -640,10 +677,10 @@ pub fn render_sized(
                     Some(p) => canvas.image(p, ix, iy, PORTRAIT, 10.0),
                     None => canvas.box_(ix, iy, PORTRAIT, PORTRAIT, 10.0, rgba(t.line), None),
                 }
-                canvas.text(name, 15.0, ix + PORTRAIT + 10.0, iy + PORTRAIT / 2.0 + 5.5, t.ink, true);
+                canvas.text(name, 15.0, ix + PORTRAIT + 10.0, iy + PORTRAIT / 2.0 + 5.5 * fs, t.ink, true);
             }
             _ => {
-                canvas.text("無資料", 14.0, ix, iy + 16.0, t.ink_mute, false);
+                canvas.text("無資料", 14.0, ix, iy + 16.0 * fs, t.ink_mute, false);
             }
         }
         iy += PORTRAIT + 8.0;
@@ -675,17 +712,19 @@ fn stat_cell_width(canvas: &Canvas, stat: &Stat) -> f32 {
 /// 只畫統計格的文字（不畫外框）
 fn draw_stat_lines(canvas: &mut Canvas, stat: &Stat, x: f32, y: f32) {
     let t = canvas.t;
-    canvas.text(stat.key, 14.0, x + 14.0, y + 12.0 + 17.0, t.ink_soft, true);
+    let fs = canvas.fs;
+    let line_h = canvas.stat_line_h();
+    canvas.text(stat.key, 14.0, x + 14.0, y + 12.0 + 17.0 * fs, t.ink_soft, true);
     let color = t.tone(stat.tone);
     match &stat.value {
         StatValue::Single(v) => {
-            canvas.text(v, 17.0, x + 14.0, y + 12.0 + 17.0 + 8.0 + 16.0, color, true);
+            canvas.text(v, 17.0, x + 14.0, y + 12.0 + (17.0 + 8.0 + 16.0) * fs, color, true);
         }
         StatValue::PerSide(vals) => {
             let side_w =
                 SIDE_LABELS.iter().map(|s| canvas.measure(s, 14.0, true)).fold(0.0f32, f32::max);
             for (i, (side, segs)) in SIDE_LABELS.iter().zip(vals.iter()).enumerate() {
-                let baseline = y + 12.0 + 17.0 + 8.0 + STAT_LINE_H * i as f32 + 16.0;
+                let baseline = y + 12.0 + (17.0 + 8.0 + 16.0) * fs + line_h * i as f32;
                 canvas.text(side, 14.0, x + 14.0, baseline, t.ink_soft, true);
                 let mut vx = x + 14.0 + side_w + 10.0;
                 for (j, seg) in segs.iter().enumerate() {
@@ -709,7 +748,8 @@ fn segs_width(canvas: &Canvas, segs: &[crate::data::Seg]) -> f32 {
 
 fn draw_stat_cell(canvas: &mut Canvas, stat: &Stat, x: f32, y: f32, w: f32) {
     let t = canvas.t;
-    canvas.box_(x, y, w, STAT_TALL_H, 8.0, rgb(t.block_bg), Some(rgba(t.line)));
+    let h = canvas.stat_tall_h();
+    canvas.box_(x, y, w, h, 8.0, rgb(t.block_bg), Some(rgba(t.line)));
     draw_stat_lines(canvas, stat, x, y);
 }
 
@@ -720,7 +760,7 @@ fn res_chips_width(canvas: &Canvas, chips: &[(String, String, FbClass, f32, f32)
     }
     let chips_w: f32 = chips
         .iter()
-        .map(|(_, _, _, nw, sw)| BADGE_PAD_X * 2.0 + nw + 10.0 + sw + 6.0)
+        .map(|(_, _, _, nw, sw)| canvas.badge_pad_x() * 2.0 + nw + 10.0 + sw + 6.0)
         .sum::<f32>()
         - 6.0;
     chips_w.max(canvas.measure("三方共鳴白因", 17.0, true)) + 28.0
