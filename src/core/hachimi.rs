@@ -281,6 +281,10 @@ pub struct Config {
     pub factor_card_light_theme: bool,
     /// 因子卡片輸出資料夾（未設定＝`<data>/factor_card`）
     pub factor_card_output_dir: Option<String>,
+    /// 把每個遊戲 API response 解出來的 JSON 全量落檔到 `<data>/api_capture/`。
+    /// 撈 API 資料用，會產生大量檔案（單檔可到十幾 MB），預設關。
+    #[serde(default)]
+    pub api_capture: bool,
     #[serde(default = "Config::default_ui_scale")]
     pub ui_scale: f32,
     /// Hachimi 自己這層介面的縮放（不是遊戲畫面）。高解析度螢幕上選單會太小，這個放大它。

@@ -11,7 +11,10 @@
 //! 離線 wire pipeline（b64→AES→LZ4→msgpack）與其常數僅供測試用（`out/pc_cap` 封包端到端驗證），
 //! 以 `#[cfg(test)]` 隔開，不進執行期。
 
-use std::sync::atomic::{AtomicUsize, Ordering};
+use std::path::PathBuf;
+use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
+
+use once_cell::sync::Lazy;
 
 use super::{Error, Hachimi};
 
@@ -79,6 +82,68 @@ pub fn decode_plaintext(plaintext: &[u8]) -> Result<serde_json::Value, Error> {
 
 static CAPTURE_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
+/// 全量落檔開關。初值取自 config 的 `api_capture`，選單切換立即生效並寫回 config。
+///
+/// 早期版本是拿「使用者有沒有自己建 api_capture 資料夾」當開關，會讓人以為外掛在自己抓封包。
+/// 現在資料夾由我們建，開關只有這一個。
+static CAPTURE_ENABLED: Lazy<AtomicBool> = Lazy::new(|| {
+    let on = Hachimi::instance().config.load().api_capture;
+    if on {
+        // 上次開著就啟動的情況，一樣要接續編號，不然開一次遊戲就蓋掉一次。
+        CAPTURE_COUNTER.store(next_index(), Ordering::Relaxed);
+    }
+    AtomicBool::new(on)
+});
+
+/// 落檔位置：`<data>/api_capture/`
+pub fn capture_dir() -> PathBuf {
+    Hachimi::instance().get_data_path("api_capture")
+}
+
+pub fn capture_enabled() -> bool {
+    CAPTURE_ENABLED.load(Ordering::Relaxed)
+}
+
+/// 下一個檔案的編號，也就是資料夾裡累計抓了幾筆（顯示在選單上，讓人知道它真的在動）。
+pub fn capture_count() -> usize {
+    CAPTURE_COUNTER.load(Ordering::Relaxed)
+}
+
+pub fn set_capture_enabled(on: bool) {
+    if on {
+        // 從資料夾裡既有的編號接下去。不這樣做的話，關掉再開會從 0000 開始把先前抓的蓋掉。
+        CAPTURE_COUNTER.store(next_index(), Ordering::Relaxed);
+    }
+    CAPTURE_ENABLED.store(on, Ordering::Relaxed);
+    update_config(|c| c.api_capture = on);
+}
+
+/// 掃資料夾裡的 `NNNN_*.json`，回傳最大編號 +1；沒有就從 0 開始。
+fn next_index() -> usize {
+    let Ok(entries) = std::fs::read_dir(capture_dir()) else {
+        return 0;
+    };
+    entries
+        .flatten()
+        .filter_map(|e| {
+            let name = e.file_name().into_string().ok()?;
+            let (num, _) = name.split_once('_')?;
+            num.parse::<usize>().ok()
+        })
+        .max()
+        .map_or(0, |n| n + 1)
+}
+
+/// 改一項設定並寫回 config.json
+fn update_config(f: impl FnOnce(&mut super::hachimi::Config)) {
+    let hachimi = Hachimi::instance();
+    let mut config = (**hachimi.config.load()).clone();
+    f(&mut config);
+    if let Err(e) = hachimi.save_config(&config) {
+        warn!("[api_capture] 設定寫入失敗：{e}");
+    }
+}
+
 /// 從 top-level `data` 物件的 key 組出檔名標籤（辨識是哪個 endpoint）。
 fn label_from_json(json: &serde_json::Value) -> String {
     let keys: Vec<&str> = json
@@ -94,10 +159,8 @@ fn label_from_json(json: &serde_json::Value) -> String {
     }
 }
 
-/// 攔到一個 response 的 msgpack 明文：解碼後把整包 JSON 落檔到 `<data>/api_capture/`，
-/// 並 log 一行摘要（供辨識因子 response）。解不出來的（非遊戲 API msgpack）安靜跳過。
-///
-/// 這是「先全部抓下來、之後再挑因子 endpoint」的測試階段行為。
+/// 攔到一個 response 的 msgpack 明文。因子卡片需要的資料一律會收，全量落檔則要開關打開
+/// （選單「API 擷取」或 config 的 `api_capture`）。解不出來的（非遊戲 API msgpack）安靜跳過。
 pub fn capture_response(bytes: &[u8]) {
     let json = match decode_plaintext(bytes) {
         Ok(j) => j,
@@ -112,9 +175,13 @@ pub fn capture_response(bytes: &[u8]) {
     #[cfg(target_os = "windows")]
     super::factor_card::store_response(&json);
 
-    // 全量落檔只在「使用者自己建了 api_capture 資料夾」時啟用（調查 endpoint 用）
-    let dir = Hachimi::instance().get_data_path("api_capture");
-    if !dir.is_dir() {
+    if !capture_enabled() {
+        return;
+    }
+
+    let dir = capture_dir();
+    if let Err(e) = std::fs::create_dir_all(&dir) {
+        warn!("[api_capture] 建立資料夾失敗：{e}");
         return;
     }
 

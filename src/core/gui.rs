@@ -347,6 +347,32 @@ impl Gui {
                         ui.separator();
                     }
 
+                    {
+                        use crate::core::api_packet;
+
+                        ui.heading("API 擷取");
+                        let mut on = api_packet::capture_enabled();
+                        if ui.checkbox(&mut on, "把 API 回傳的 JSON 全部存檔").changed() {
+                            api_packet::set_capture_enabled(on);
+                            show_notification = Some(if on {
+                                "API 擷取已開啟".into()
+                            } else {
+                                "API 擷取已關閉".into()
+                            });
+                        }
+                        if on {
+                            ui.label(format!(r"已抓 {} 筆 → hachimi\api_capture", api_packet::capture_count()));
+                            ui.label("檔案很大而且含帳號明文資料，用完記得關");
+                        }
+                        #[cfg(target_os = "windows")]
+                        if ui.button("開啟擷取資料夾").clicked() {
+                            let dir = api_packet::capture_dir();
+                            _ = std::fs::create_dir_all(&dir);
+                            _ = std::process::Command::new("explorer").arg(&dir).spawn();
+                        }
+                        ui.separator();
+                    }
+
                     ui.heading(t!("menu.graphics_heading"));
                     ui.horizontal(|ui| {
                         ui.label(t!("menu.fps_label"));
