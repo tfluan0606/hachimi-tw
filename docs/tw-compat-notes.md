@@ -183,6 +183,28 @@ Edge 的 updater（`src/core/updater.rs`）跟舊版**機制完全相同**：
 下載後比對雜湊，避免半截檔案覆蓋掉能用的版本）。Codeberg 鏡像可跳過 ——
 它只鏡像「檢查更新」，實際下載仍走 GitHub。
 
+### 繁中服的視窗 hook 跑在 render thread —— 別在那裡呼叫 SendMessage 類的 API
+
+承上：因為 `FindWindowW` 查不到，`wnd_hook::ensure_installed` **一定**是從 render_hook 的
+首次 Present 被呼叫的，也就是**在 render thread 上**。此時遊戲主執行緒正等著 render thread
+交件。所以在那個函式（以及任何從 GUI／Present 呼叫的程式碼）裡，只要碰到會 SendMessage
+的 Win32 API，就是死鎖：
+
+| API | 內部行為 |
+|---|---|
+| `GetWindowTextW` / `GetWindowTextLengthW` | `WM_GETTEXT` / `WM_GETTEXTLENGTH` |
+| `SetWindowTextW` | `WM_SETTEXT` |
+| `SetWindowPos`（含 always-on-top） | `WM_WINDOWPOSCHANGING` |
+
+2026-09-01 實際踩到：`3b8c21a` 把 `GetWindowTextW`/`SetWindowTextW` 直接寫在
+`ensure_installed` 尾巴，遊戲一開就沒有回應，log 停在 `Adding CBT hook` 之後、無任何錯誤。
+日服／國際服 `FindWindowW` 找得到視窗，`ensure_installed` 在載入早期就跑完，所以上游和
+Edge 都不會踩到——**又一個「他們沒事不代表我們沒事」的例子**。
+
+解法：post 一個 `WM_APP+n` 給視窗，實際動作在我們自己的 wndproc 裡做，那本來就跑在擁有
+視窗的執行緒上。`PostMessageW` 不等回應，從哪條執行緒呼叫都安全。
+（選單裡的切換點若已包在 `Thread::main_thread().schedule` 裡則本來就安全。）
+
 ### 視窗標題查找在繁中服是失效的
 
 ```
