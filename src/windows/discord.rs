@@ -257,6 +257,8 @@ fn worker(rx: mpsc::Receiver<()>) {
 
         match c.set_activity(activity) {
             Ok(()) => {
+                debug!("Discord RPC: activity sent, details={} state={:?} image={}",
+                    scene.group, chara_name.map(|s| s.as_str()).or(scene.detail), image);
                 sent_state = Some((scene, card_id));
                 last_sent_at = Some(now);
             },
