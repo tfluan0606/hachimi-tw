@@ -31,14 +31,15 @@ repo 的 code 和你實際裝的 DLL **不是同一個東西**，這點最容易
 | tag | commit | 對應成品 |
 |---|---|---|
 | `dist-20260722` | `bfe8996` | `dist/ASKR-因子卡片-Hachimi-TW-20260722.zip` |
-| `dist-20260729` | `76140b8` | `dist/ASKR-Hachimi-TW-完整版-20260729.zip`、`dist/pkg/version.dll` ← **目前安裝的就是這個** |
+| `dist-20260729` | `76140b8` | `dist/ASKR-Hachimi-TW-完整版-20260729.zip`、`dist/pkg/version.dll` |
 
-也就是說：**8/09 之後做的東西都還沒進到遊戲裡**——Discord RPC、GUI 縮放／視窗標題／熱鍵改鍵、
-Windows IME、ChangeView hook 修正、Live 播放速度與進度滑桿、Transform/Camera 綁定，
-以及 8/15 那批 factor-card 出圖調整。回來要用這些功能，得先重新 build 再打包。
+**注意：`dist/` 裡最新的那包不等於遊戲裡裝的那個。** 兩者是分開的——`dist/` 是打包給人用的
+成品，遊戲裡的則常常是隨手 build 上去的本機版本。判斷實際裝了哪一版，最快的方法是看
+`<遊戲目錄>\hachimi\config.json` 有哪些鍵：config 會依當時的 `Config` struct 補齊欄位，
+所以有 `enable_discord_rpc` 就代表至少含 `13c46c4`，有 `gui_scale` 就代表含 `3b8c21a`，依此類推。
 
-`target/release/hachimi.dll` 是 2026-08-14 建的（對應 `8719f80`），比 `dist/pkg` 新但比
-`main` 舊，而且沒打包也沒安裝。**不要把它當作最新成品。**
+2026-09-01 起遊戲裡裝的是 `f7362ce`（＝當時的 `main`），舊的那顆備份在同目錄的
+`version.dll.bak-20260901`（8/12 build，只到 Discord RPC 那批）。
 
 ## 進度
 
@@ -51,6 +52,7 @@ Windows IME、ChangeView hook 修正、Live 播放速度與進度滑桿、Transf
 | 解析度縮放 | ✅ 本來就有（走 `get_Width`/`get_Height`，不是 Edge 的 `SetResolution`） |
 | Free Camera 階段 1–2：播放速度、進度滑桿 | ✅ `960657e` |
 | 因子卡片（遊戲內 + 網站端 `render-card`） | ✅ |
+| API 擷取開關（config `api_capture` + 選單「API 擷取」） | ✅ `f7362ce` |
 | **Free Camera 階段 3：鍵盤自由視角** | 🔶 **停在這**。`8719f80` 只加了 Transform/Camera 綁定，還沒有 `free_camera.rs` |
 | 階段 4 返回鍵、階段 5 手把 | ❌ 未動 |
 
