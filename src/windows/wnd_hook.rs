@@ -9,14 +9,19 @@ use windows::{core::{w, PCWSTR}, Win32::{
     UI::Input::KeyboardAndMouse::{GetKeyNameTextW, MapVirtualKeyW, MAPVK_VK_TO_VSC},
     UI::WindowsAndMessaging::{
         CallNextHookEx, DefWindowProcW, FindWindowW, GetWindowLongPtrW, GetWindowTextLengthW, GetWindowTextW,
-        SetWindowsHookExW, SetWindowTextW, UnhookWindowsHookEx, GWLP_WNDPROC, HCBT_MINMAX, HHOOK, SW_RESTORE,
-        WH_CBT, WM_CLOSE, WM_KEYDOWN, WM_SYSKEYDOWN, WM_SIZE, WNDPROC
+        PostMessageW, SetWindowsHookExW, SetWindowTextW, UnhookWindowsHookEx, GWLP_WNDPROC, HCBT_MINMAX, HHOOK,
+        SW_RESTORE, WH_CBT, WM_APP, WM_CLOSE, WM_KEYDOWN, WM_SYSKEYDOWN, WM_SIZE, WNDPROC
     }
 }};
 
 use crate::{core::{game::Region, Gui, Hachimi}, il2cpp::{hook::UnityEngine_CoreModule, symbols::Thread}, windows::utils};
 
 use super::gui_impl::input;
+
+/// 自訂訊息：請擁有視窗的執行緒去套用視窗標題。
+const WM_HACHIMI_APPLY_TITLE: c_uint = WM_APP + 1;
+/// 同上，套用「視窗置頂」。`wparam` 非 0 ＝置頂。
+const WM_HACHIMI_APPLY_TOPMOST: c_uint = WM_APP + 2;
 
 struct WndProcCall {
     hwnd: HWND,
@@ -122,6 +127,18 @@ extern "system" fn wnd_proc(hwnd: HWND, umsg: c_uint, wparam: WPARAM, lparam: LP
                 gui.toggle_menu();
                 return LRESULT(0);
             }
+        },
+        // 視窗標題的實際讀寫。GetWindowTextW / SetWindowTextW 都是 SendMessage，跨執行緒呼叫會
+        // 卡住等對方抽訊息；我們的呼叫端（Present、GUI）都在 render thread，所以一律 post 過來，
+        // 在擁有視窗的這條執行緒上做。詳見 apply_custom_title。
+        WM_HACHIMI_APPLY_TITLE => {
+            apply_custom_title_now(hwnd);
+            return LRESULT(0);
+        },
+        // SetWindowPos 同樣會往擁有視窗的執行緒送 WM_WINDOWPOSCHANGING。
+        WM_HACHIMI_APPLY_TOPMOST => {
+            unsafe { _ = utils::set_window_topmost(hwnd, wparam.0 != 0); }
+            return LRESULT(0);
         },
         WM_CLOSE => {
             if let Some(hook) = Hachimi::instance().interceptor.unhook(wnd_proc as _) {
@@ -260,13 +277,14 @@ pub fn ensure_installed(hwnd: HWND) {
             HCBTHOOK = hhook;
         }
 
-        // Apply always on top
+        // Apply always on top（同樣不能在這條執行緒上直接做，見 apply_custom_title）
         if hachimi.window_always_on_top.load(atomic::Ordering::Relaxed) {
-            _ = utils::set_window_topmost(hwnd, true);
+            _ = PostMessageW(hwnd, WM_HACHIMI_APPLY_TOPMOST, WPARAM(1), LPARAM(0));
         }
     }
 
-    *ORIGINAL_TITLE.lock() = read_window_title(hwnd);
+    // 標題不在這裡讀寫——這個函式通常是從 Present 裡（render thread）呼叫的，
+    // 而視窗屬於主執行緒。丟訊息過去讓它自己做。
     apply_custom_title();
 }
 
@@ -286,11 +304,33 @@ fn read_window_title(hwnd: HWND) -> Option<String> {
 }
 
 /// 套用自訂視窗標題。設定改動時也會呼叫，所以不用重開遊戲。
-/// 清空設定會還原成遊戲原本的標題，而不是留著上一次設的。
+///
+/// **從任何執行緒呼叫都安全**：只 post 一個訊息，實際動作在 [`apply_custom_title_now`]，
+/// 由擁有視窗的執行緒在 wndproc 裡執行。
+///
+/// 一開始是直接在這裡呼叫 GetWindowTextW / SetWindowTextW 的，結果遊戲一開就沒有回應——
+/// 那兩個 API 是 SendMessage，跨執行緒會阻塞到對方抽訊息為止。我們的呼叫點（首次 Present
+/// 補裝 hook、選單改設定）都在 render thread，而此時主執行緒正等著 render thread 交件，
+/// 兩邊互等就是死鎖。繁中服的 FindWindowW 查不到視窗（見 docs/tw-compat-notes.md），
+/// 所以裝 hook 一定走 Present 那條路，一定會踩到。
 pub fn apply_custom_title() {
     let hwnd = get_target_hwnd();
     if hwnd.0 == 0 {
         return;
+    }
+    unsafe {
+        _ = PostMessageW(hwnd, WM_HACHIMI_APPLY_TITLE, WPARAM(0), LPARAM(0));
+    }
+}
+
+/// 實際讀寫視窗標題。**只能在擁有視窗的執行緒上呼叫**（我們的 wndproc 裡）。
+/// 清空設定會還原成遊戲原本的標題，而不是留著上一次設的，所以第一次先把原標題記下來。
+fn apply_custom_title_now(hwnd: HWND) {
+    {
+        let mut original = ORIGINAL_TITLE.lock();
+        if original.is_none() {
+            *original = read_window_title(hwnd);
+        }
     }
 
     let custom = Hachimi::instance().config.load().windows.custom_title_name.clone();
