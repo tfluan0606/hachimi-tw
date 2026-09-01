@@ -285,6 +285,12 @@ overlay 能出來完全是靠 `76140b8` 的 fallback —— render_hook 首次 P
 1. ~~Discord Rich Presence~~ — 2026-08-09 完成，比原本規劃的 A 類大：
    除了「正在玩」還會顯示目前畫面（首頁／育成／競技場…），資料來自修好的 `ChangeView` hook。
    自己的 Application ID `1535642752665260093`，預設**關閉**（Edge 是預設開啟）。
+   > **presence 沒顯示時，先查 Discord 客戶端，不要查我們的程式。** 2026-09-01 花了幾輪才發現
+   > 是**線上狀態設成「隱形」**——隱形模式下活動不對外顯示，但 `set_activity` 照樣回傳成功。
+   > 同類的還有「設定 → 活動隱私 →『將目前的活動顯示為狀態訊息』」被關掉。
+   > 判斷方法：log 裡的 `Discord RPC: activity sent` 有出現就代表我們這邊做完了，
+   > 剩下的都在 Discord 那端。
+
    實作要點見 `src/windows/discord.rs` 的檔頭：hook 跑在遊戲主執行緒，只寫 atomic，
    named pipe 通訊全在 worker；Discord 的 `SET_ACTIVITY` 約 15 秒節流，期間變化合併成最後一筆。
 
