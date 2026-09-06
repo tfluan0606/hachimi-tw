@@ -41,6 +41,11 @@ repo 的 code 和你實際裝的 DLL **不是同一個東西**，這點最容易
 2026-09-01 起遊戲裡裝的是 `f7362ce`（＝當時的 `main`），舊的那顆備份在同目錄的
 `version.dll.bak-20260901`（8/12 build，只到 Discord RPC 那批）。
 
+2026-09-07 起遊戲裡裝的是 `fd6f81c`（分支 `feat/practice-race-capture`，＝練習賽擷取
+＋datamine gate＋log 固定一份那批的預設完整版 build），覆蓋前那顆備份在
+`version.dll.bak-20260907`。log 檔名這版起改成每個 exe 固定一份
+`hachimi_tw_<exe>.log`、每次啟動 truncate 覆寫，不再累積帶 pid 的舊檔。
+
 ## 進度
 
 | 項目 | 狀態 |
