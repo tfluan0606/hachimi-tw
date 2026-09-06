@@ -347,6 +347,8 @@ impl Gui {
                         ui.separator();
                     }
 
+                    // 全量 API 擷取（datamine）：分享版不編入，選單看不到。
+                    #[cfg(feature = "datamine")]
                     {
                         use crate::core::api_packet;
 

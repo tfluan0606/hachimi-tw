@@ -11,9 +11,12 @@
 //! 離線 wire pipeline（b64→AES→LZ4→msgpack）與其常數僅供測試用（`out/pc_cap` 封包端到端驗證），
 //! 以 `#[cfg(test)]` 隔開，不進執行期。
 
+// 這些只被 datamine（api_capture 全量擷取）用；practice_race 模組有自己的 imports。
+#[cfg(feature = "datamine")]
 use std::path::PathBuf;
+#[cfg(feature = "datamine")]
 use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
-
+#[cfg(feature = "datamine")]
 use once_cell::sync::Lazy;
 
 use super::{Error, Hachimi};
@@ -80,12 +83,15 @@ pub fn decode_plaintext(plaintext: &[u8]) -> Result<serde_json::Value, Error> {
     Ok(rmpv_to_json(value))
 }
 
+// —— 以下 api_capture（全量原始封包 datamine）整套只在 `datamine` feature 下編入。分享版不帶。——
+#[cfg(feature = "datamine")]
 static CAPTURE_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
 /// 全量落檔開關。初值取自 config 的 `api_capture`，選單切換立即生效並寫回 config。
 ///
 /// 早期版本是拿「使用者有沒有自己建 api_capture 資料夾」當開關，會讓人以為外掛在自己抓封包。
 /// 現在資料夾由我們建，開關只有這一個。
+#[cfg(feature = "datamine")]
 static CAPTURE_ENABLED: Lazy<AtomicBool> = Lazy::new(|| {
     let on = Hachimi::instance().config.load().api_capture;
     if on {
@@ -96,19 +102,23 @@ static CAPTURE_ENABLED: Lazy<AtomicBool> = Lazy::new(|| {
 });
 
 /// 落檔位置：`<data>/api_capture/`
+#[cfg(feature = "datamine")]
 pub fn capture_dir() -> PathBuf {
     Hachimi::instance().get_data_path("api_capture")
 }
 
+#[cfg(feature = "datamine")]
 pub fn capture_enabled() -> bool {
     CAPTURE_ENABLED.load(Ordering::Relaxed)
 }
 
 /// 下一個檔案的編號，也就是資料夾裡累計抓了幾筆（顯示在選單上，讓人知道它真的在動）。
+#[cfg(feature = "datamine")]
 pub fn capture_count() -> usize {
     CAPTURE_COUNTER.load(Ordering::Relaxed)
 }
 
+#[cfg(feature = "datamine")]
 pub fn set_capture_enabled(on: bool) {
     if on {
         // 從資料夾裡既有的編號接下去。不這樣做的話，關掉再開會從 0000 開始把先前抓的蓋掉。
@@ -119,6 +129,7 @@ pub fn set_capture_enabled(on: bool) {
 }
 
 /// 掃資料夾裡的 `NNNN_*.json`，回傳最大編號 +1；沒有就從 0 開始。
+#[cfg(feature = "datamine")]
 fn next_index() -> usize {
     let Ok(entries) = std::fs::read_dir(capture_dir()) else {
         return 0;
@@ -146,6 +157,7 @@ fn update_config(f: impl FnOnce(&mut super::hachimi::Config)) {
 
 /// 從 top-level `data` 物件的 key 組出檔名標籤（辨識是哪個 endpoint）。
 /// response 有 `data`；request 沒有，就退回用根物件的 key。
+#[cfg(feature = "datamine")]
 fn label_from_json(json: &serde_json::Value) -> String {
     let obj = json
         .get("data")
@@ -183,39 +195,38 @@ pub fn capture_response(bytes: &[u8]) {
 
     #[cfg(not(feature = "capture-only"))]
     {
-    // 因子卡片要用的練成角色資料
-    #[cfg(target_os = "windows")]
-    super::factor_card::store_response(&json);
+        // 因子卡片要用的練成角色資料
+        #[cfg(target_os = "windows")]
+        super::factor_card::store_response(&json);
 
-    // 練習賽擷取（獨立開關，與下面的全量 API 擷取互不影響）：命中練習賽結果就落一份
-    // 好命名的檔到 race_capture/。
-    if practice_race::capture_enabled() {
-        practice_race::capture(&json);
-    }
+        // 練習賽擷取（獨立開關）：命中練習賽結果就落一份好命名的檔到 race_capture/。
+        if practice_race::capture_enabled() {
+            practice_race::capture(&json);
+        }
 
-    if !capture_enabled() {
-        return;
-    }
+        // 全量 API 擷取（datamine）：分享版不編入。
+        #[cfg(feature = "datamine")]
+        if capture_enabled() {
+            let dir = capture_dir();
+            if let Err(e) = std::fs::create_dir_all(&dir) {
+                warn!("[api_capture] 建立資料夾失敗：{e}");
+                return;
+            }
 
-    let dir = capture_dir();
-    if let Err(e) = std::fs::create_dir_all(&dir) {
-        warn!("[api_capture] 建立資料夾失敗：{e}");
-        return;
-    }
+            let n = CAPTURE_COUNTER.fetch_add(1, Ordering::Relaxed);
+            let label = label_from_json(&json);
+            info!("[api_capture] #{n:04} data=[{label}] ({} bytes msgpack)", bytes.len());
 
-    let n = CAPTURE_COUNTER.fetch_add(1, Ordering::Relaxed);
-    let label = label_from_json(&json);
-    info!("[api_capture] #{n:04} data=[{label}] ({} bytes msgpack)", bytes.len());
-
-    let path = dir.join(format!("{n:04}_{label}.json"));
-    match serde_json::to_string_pretty(&json) {
-        Ok(s) => {
-            if let Err(e) = std::fs::write(&path, s) {
-                warn!("[api_capture] write failed: {e}");
+            let path = dir.join(format!("{n:04}_{label}.json"));
+            match serde_json::to_string_pretty(&json) {
+                Ok(s) => {
+                    if let Err(e) = std::fs::write(&path, s) {
+                        warn!("[api_capture] write failed: {e}");
+                    }
+                }
+                Err(e) => warn!("[api_capture] serialize failed: {e}"),
             }
         }
-        Err(e) => warn!("[api_capture] serialize failed: {e}"),
-    }
     } // end #[cfg(not(feature = "capture-only"))]
 }
 

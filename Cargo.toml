@@ -15,6 +15,9 @@ crate-type = ["cdylib"]
 # 精簡獨立 DLL：只 hook HttpHelper::DecompressResponse、練習賽擷取強制開、砍掉 GUI 與其餘所有
 # il2cpp hook。給「只想要練習賽擷取」的人。見 src/core/api_packet.rs。
 capture-only = []
+# 原始封包 datamine 工具（全量 API 擷取＋選單「API 擷取」，本機分支另含 request 側擷取）。
+# 預設關；分享版不帶（選單看不到、build 裡也沒有）。本機 datamine：`--features datamine`。
+datamine = []
 
 [profile.release]
 strip = true
