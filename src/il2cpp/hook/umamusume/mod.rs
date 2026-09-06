@@ -75,9 +75,14 @@ pub mod HttpHelper;
 pub fn init() {
     get_assembly_image_or_return!(image, "umamusume.dll");
 
+    // 封包擷取的唯一 choke point，capture-only 建置也只裝這一個。
+    HttpHelper::init(image);
+
+    // 以下全是翻譯／劇情／UI 等遊戲改動 hook，capture-only 建置一律不裝。
+    #[cfg(not(feature = "capture-only"))]
+    {
     #[cfg(target_os = "windows")]
     DialogTrainedCharacterDetail::init(image);
-    HttpHelper::init(image);
     Localize::init(image);
     TextId::init(image);
     StoryRaceTextAsset::init(image);
@@ -139,4 +144,5 @@ pub fn init() {
         HomeCharacterCreator::init(image);
         PaymentUtility::init(image);
     }
+    } // end #[cfg(not(feature = "capture-only"))]
 }

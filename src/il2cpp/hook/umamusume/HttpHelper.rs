@@ -4,8 +4,7 @@
 //! ＝已解密（Coneshell native）＋已解壓的 msgpack 明文。我們讀回傳的 byte[] 交給
 //! [`api_packet::capture_response`] 解碼＋落檔。單一 static 方法涵蓋所有 endpoint。
 //!
-//! 測試階段：先把每個 response 解出來的 JSON 全部 dump 到 `<data>/api_capture/`，用來辨識
-//! 「點角色 → 因子資料」是哪個 endpoint；之後再收斂成專門的因子擷取。
+//! response 端同時餵給因子卡片與「練習賽擷取」，另有全量 API 擷取（皆在 `api_packet`）。
 
 use crate::{
     core::api_packet,
@@ -27,6 +26,5 @@ pub fn init(umamusume: *const Il2CppImage) {
     get_class_or_return!(umamusume, Gallop, HttpHelper);
 
     let DecompressResponse_addr = get_method_addr(HttpHelper, c"DecompressResponse", 1);
-
     new_hook!(DecompressResponse_addr, DecompressResponse);
 }

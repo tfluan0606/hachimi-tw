@@ -373,6 +373,35 @@ impl Gui {
                         ui.separator();
                     }
 
+                    {
+                        use crate::core::api_packet::practice_race;
+
+                        ui.heading("練習賽擷取");
+                        let mut on = practice_race::capture_enabled();
+                        if ui.checkbox(&mut on, "跑練習賽時自動存下該場結果封包").changed() {
+                            practice_race::set_capture_enabled(on);
+                            show_notification = Some(if on {
+                                "練習賽擷取已開啟".into()
+                            } else {
+                                "練習賽擷取已關閉".into()
+                            });
+                        }
+                        if on {
+                            ui.label(format!(
+                                r"本次已存 {} 場 → hachimi\race_capture",
+                                practice_race::capture_count()
+                            ));
+                            ui.label("檔名帶時間與場地距離；只存練習賽結果，其他封包不理");
+                        }
+                        #[cfg(target_os = "windows")]
+                        if ui.button("開啟練習賽資料夾").clicked() {
+                            let dir = practice_race::capture_dir();
+                            _ = std::fs::create_dir_all(&dir);
+                            _ = std::process::Command::new("explorer").arg(&dir).spawn();
+                        }
+                        ui.separator();
+                    }
+
                     ui.heading(t!("menu.graphics_heading"));
                     ui.horizontal(|ui| {
                         ui.label(t!("menu.fps_label"));

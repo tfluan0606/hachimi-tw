@@ -90,28 +90,38 @@ mod Cute_Core_Assembly;
 pub fn init() {
     info!("Initializing il2cpp hooks");
 
-    // C# / .NET
-    mscorlib::init();
+    // capture-only 建置只需要 umamusume 的 HttpHelper（在 umamusume::init 內），
+    // 其餘 assembly 的 hook 全部不裝。
+    #[cfg(not(feature = "capture-only"))]
+    {
+        // C# / .NET
+        mscorlib::init();
 
-    // Unity
-    UnityEngine_AssetBundleModule::init();
-    UnityEngine_CoreModule::init();
-    UnityEngine_TextRenderingModule::init();
-    UnityEngine_ImageConversionModule::init();
-    UnityEngine_UI::init();
-    UnityEngine_UIModule::init();
-    Unity_TextMeshPro::init();
+        // Unity
+        UnityEngine_AssetBundleModule::init();
+        UnityEngine_CoreModule::init();
+        UnityEngine_TextRenderingModule::init();
+        UnityEngine_ImageConversionModule::init();
+        UnityEngine_UI::init();
+        UnityEngine_UIModule::init();
+        Unity_TextMeshPro::init();
 
-    // Umamusume
-    LibNative_Runtime::init();
+        LibNative_Runtime::init();
+    }
+
+    // Umamusume（capture-only 時 umamusume::init 內部只裝 HttpHelper）
     umamusume::init();
-    Cute_UI_Assembly::init();
-    Plugins::init();
-    Cute_Cri_Assembly::init();
-    DOTween::init();
 
-    #[cfg(any(target_os = "android", target_os = "windows"))]
-    Cute_Core_Assembly::init();
+    #[cfg(not(feature = "capture-only"))]
+    {
+        Cute_UI_Assembly::init();
+        Plugins::init();
+        Cute_Cri_Assembly::init();
+        DOTween::init();
+
+        #[cfg(any(target_os = "android", target_os = "windows"))]
+        Cute_Core_Assembly::init();
+    }
 
     info!("Hooking finished");
 }

@@ -203,16 +203,21 @@ impl Hachimi {
         il2cpp::symbols::init();
         il2cpp::hook::init();
 
-        // By the time it finished hooking the game will have already finished initializing
-        GameSystem::on_game_initialized();
+        // capture-only 建置：不做遊戲端初始化（UI scale）、不起 GUI、不起 IPC。
+        // 這些依賴的 hook 在 capture-only 都沒裝，呼叫會踩空。
+        #[cfg(not(feature = "capture-only"))]
+        {
+            // By the time it finished hooking the game will have already finished initializing
+            GameSystem::on_game_initialized();
 
-        let config = self.config.load();
-        if !config.disable_gui {
-            gui_impl::init();
-        }
+            let config = self.config.load();
+            if !config.disable_gui {
+                gui_impl::init();
+            }
 
-        if config.enable_ipc {
-            ipc::start_http(config.ipc_listen_all);
+            if config.enable_ipc {
+                ipc::start_http(config.ipc_listen_all);
+            }
         }
 
         hachimi_impl::on_hooking_finished(self);
@@ -285,6 +290,10 @@ pub struct Config {
     /// 撈 API 資料用，會產生大量檔案（單檔可到十幾 MB），預設關。
     #[serde(default)]
     pub api_capture: bool,
+    /// 只把「練習賽結果」的 response 落檔到 `<data>/race_capture/`，檔名帶本機時間與場地距離
+    /// （例 `20260906_231914_大井_ダート2000m.json`）。與 `api_capture` 獨立，預設關。
+    #[serde(default)]
+    pub practice_race_capture: bool,
     #[serde(default = "Config::default_ui_scale")]
     pub ui_scale: f32,
     /// Hachimi 自己這層介面的縮放（不是遊戲畫面）。高解析度螢幕上選單會太小，這個放大它。

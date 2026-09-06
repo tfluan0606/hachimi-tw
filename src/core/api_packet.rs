@@ -145,10 +145,13 @@ fn update_config(f: impl FnOnce(&mut super::hachimi::Config)) {
 }
 
 /// 從 top-level `data` 物件的 key 組出檔名標籤（辨識是哪個 endpoint）。
+/// response 有 `data`；request 沒有，就退回用根物件的 key。
 fn label_from_json(json: &serde_json::Value) -> String {
-    let keys: Vec<&str> = json
+    let obj = json
         .get("data")
         .and_then(|d| d.as_object())
+        .or_else(|| json.as_object());
+    let keys: Vec<&str> = obj
         .map(|o| o.keys().map(|s| s.as_str()).collect())
         .unwrap_or_default();
     if keys.is_empty() {
@@ -171,9 +174,24 @@ pub fn capture_response(bytes: &[u8]) {
         return;
     }
 
+    // capture-only 建置：只撈練習賽結果，不碰因子卡片、不做全量落檔。
+    #[cfg(feature = "capture-only")]
+    {
+        practice_race::capture(&json);
+        return;
+    }
+
+    #[cfg(not(feature = "capture-only"))]
+    {
     // 因子卡片要用的練成角色資料
     #[cfg(target_os = "windows")]
     super::factor_card::store_response(&json);
+
+    // 練習賽擷取（獨立開關，與下面的全量 API 擷取互不影響）：命中練習賽結果就落一份
+    // 好命名的檔到 race_capture/。
+    if practice_race::capture_enabled() {
+        practice_race::capture(&json);
+    }
 
     if !capture_enabled() {
         return;
@@ -197,6 +215,119 @@ pub fn capture_response(bytes: &[u8]) {
             }
         }
         Err(e) => warn!("[api_capture] serialize failed: {e}"),
+    }
+    } // end #[cfg(not(feature = "capture-only"))]
+}
+
+/// 練習賽擷取：命中「練習賽結果」的 response 就落一份好命名的檔到 `<data>/race_capture/`。
+/// 由選單「練習賽擷取」或 config 的 `practice_race_capture` 開關，跟全量 API 擷取互相獨立。
+pub mod practice_race {
+    use super::update_config;
+    use crate::core::Hachimi;
+    use once_cell::sync::Lazy;
+    use std::collections::HashMap;
+    use std::path::PathBuf;
+    use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
+
+    /// `race_instance_id → "場地_距離"`，離線由 master.mdb × course_data2.json 生成（214 筆練習賽課程）。
+    /// 查不到的 id 在檔名退回 `raceNNNNNN`。
+    static PRACTICE_RACE_MAP: Lazy<HashMap<String, String>> = Lazy::new(|| {
+        serde_json::from_str(include_str!("../../assets/practice_race_map.json")).unwrap_or_default()
+    });
+
+    static ENABLED: Lazy<AtomicBool> =
+        Lazy::new(|| AtomicBool::new(Hachimi::instance().config.load().practice_race_capture));
+    /// 本次啟動已存幾場（選單顯示用）。
+    static COUNTER: AtomicUsize = AtomicUsize::new(0);
+
+    pub fn capture_enabled() -> bool {
+        // 精簡獨立 DLL：無選單、無 config，練習賽擷取一律開著。
+        #[cfg(feature = "capture-only")]
+        {
+            return true;
+        }
+        #[cfg(not(feature = "capture-only"))]
+        ENABLED.load(Ordering::Relaxed)
+    }
+
+    pub fn capture_count() -> usize {
+        COUNTER.load(Ordering::Relaxed)
+    }
+
+    pub fn set_capture_enabled(on: bool) {
+        ENABLED.store(on, Ordering::Relaxed);
+        update_config(|c| c.practice_race_capture = on);
+    }
+
+    /// 落檔位置：`<data>/race_capture/`（跟 api_capture 同一層）。
+    pub fn capture_dir() -> PathBuf {
+        Hachimi::instance().get_data_path("race_capture")
+    }
+
+    /// 本機時間戳 `YYYYMMDD_HHMMSS`。Windows 用 GetLocalTime（本機時區，不解伺服器時間）；
+    /// 其他平台退回 epoch 秒（僅為唯一命名，此功能主要用於 PC）。
+    #[cfg(target_os = "windows")]
+    fn local_timestamp() -> String {
+        use windows::Win32::System::SystemInformation::GetLocalTime;
+        let st = unsafe { GetLocalTime() };
+        format!(
+            "{:04}{:02}{:02}_{:02}{:02}{:02}",
+            st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond
+        )
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    fn local_timestamp() -> String {
+        let secs = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map(|d| d.as_secs())
+            .unwrap_or(0);
+        format!("t{secs}")
+    }
+
+    /// 命中練習賽結果指紋才落檔：
+    /// - `data.race_result_info` && `data.practice_race_id` 同時存在 → 練習賽結果
+    /// - `data` 含任何 `before_*` 欄位 → 賽後重看重送的同一場，跳過
+    /// 其餘所有 response 一律忽略（呼叫端已先確認 `capture_enabled()`）。
+    pub fn capture(json: &serde_json::Value) {
+        let Some(data) = json.get("data").and_then(|d| d.as_object()) else {
+            return;
+        };
+        if !data.contains_key("race_result_info") || !data.contains_key("practice_race_id") {
+            return;
+        }
+        // 賽後重看重送：多帶 before_* 快照，seed 與 scenario 與首播相同 → 多餘，跳過。
+        if data.keys().any(|k| k.starts_with("before_")) {
+            return;
+        }
+
+        let race_instance_id = data
+            .get("race_result_info")
+            .and_then(|r| r.get("race_instance_id"))
+            .and_then(|v| v.as_u64());
+        let label = race_instance_id
+            .and_then(|id| PRACTICE_RACE_MAP.get(&id.to_string()).cloned())
+            .unwrap_or_else(|| match race_instance_id {
+                Some(id) => format!("race{id}"),
+                None => "race_unknown".to_string(),
+            });
+
+        let dir = capture_dir();
+        if let Err(e) = std::fs::create_dir_all(&dir) {
+            warn!("[race_capture] 建立資料夾失敗：{e}");
+            return;
+        }
+        let path = dir.join(format!("{}_{}.json", local_timestamp(), label));
+        match serde_json::to_string_pretty(json) {
+            Ok(s) => match std::fs::write(&path, s) {
+                Ok(_) => {
+                    COUNTER.fetch_add(1, Ordering::Relaxed);
+                    info!("[race_capture] 已存 {}", path.display());
+                }
+                Err(e) => warn!("[race_capture] 寫檔失敗：{e}"),
+            },
+            Err(e) => warn!("[race_capture] serialize 失敗：{e}"),
+        }
     }
 }
 

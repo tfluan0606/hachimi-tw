@@ -11,6 +11,11 @@ edition = "2021"
 name = "hachimi"
 crate-type = ["cdylib"]
 
+[features]
+# 精簡獨立 DLL：只 hook HttpHelper::DecompressResponse、練習賽擷取強制開、砍掉 GUI 與其餘所有
+# il2cpp hook。給「只想要練習賽擷取」的人。見 src/core/api_packet.rs。
+capture-only = []
+
 [profile.release]
 strip = true
 
