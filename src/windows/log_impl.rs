@@ -31,13 +31,15 @@ pub fn init(filter_level: log::LevelFilter) {
     let Some(level) = filter_level.to_level() else { return };
     // 檔名帶 exe 名，避免 launcher(komoemumamusume) 與遊戲本體(komoeumamusume) 共寫同一 log。
     //
-    // 再帶上 pid：同一個 exe 同時跑兩份時（實際發生過），兩邊都用 truncate 開同一個檔，
-    // 後啟動的那個會把先啟動的內容清掉，而先啟動的還在自己的舊 offset 上寫——最後留下
-    // 一份看起來「寫到一半就停了」的 log，實際上程式一直好好的。
+    // 每個 exe 固定一份檔、每次啟動用 truncate 清空重寫（見下方 open flags），這樣不會愈積愈多
+    // 垃圾檔，有人回報問題就丟這份最新的即可。
+    //
+    // 取捨：不再帶 pid。代價是同一個 exe 同時跑兩份時（罕見），兩邊都 truncate 開同一個檔，
+    // 後啟動的會把先啟動的內容清掉、而先啟動的還在舊 offset 上寫，留下一份看似「寫到一半就停」
+    // 的 log（程式其實好好的）。一般玩家不會同時開兩份，用這風險換乾淨的檔案數量。
     let exe = crate::windows::utils::get_exec_path();
     let stem = exe.file_stem().and_then(|s| s.to_str()).unwrap_or("unknown");
-    let pid = std::process::id();
-    let path = crate::windows::utils::get_game_dir().join(format!("hachimi_tw_{stem}_{pid}.log"));
+    let path = crate::windows::utils::get_game_dir().join(format!("hachimi_tw_{stem}.log"));
     if let Ok(file) = OpenOptions::new().create(true).write(true).truncate(true).open(path) {
         if log::set_boxed_logger(Box::new(FileLogger { file: Mutex::new(file), level })).is_ok() {
             log::set_max_level(filter_level);
