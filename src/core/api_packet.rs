@@ -328,8 +328,48 @@ pub mod practice_race {
             warn!("[race_capture] 建立資料夾失敗：{e}");
             return;
         }
-        let path = dir.join(format!("{}_{}.json", local_timestamp(), label));
-        match serde_json::to_string_pretty(json) {
+        let stem = format!("{}_{}", local_timestamp(), label);
+
+        // 逐幀資料藏在 race_result_info.race_scenario（base64 + gzip 字串）。先解出：
+        //   - 原始二進位另存一份 <stem>.scenario.bin（保留）
+        //   - 逐幀物件待會塞回 JSON 裡取代那串亂碼
+        let mut decoded_scenario: Option<serde_json::Value> = None;
+        if let Some(b64) = data
+            .get("race_result_info")
+            .and_then(|r| r.get("race_scenario"))
+            .and_then(|v| v.as_str())
+        {
+            match decode_scenario(b64) {
+                Ok(raw) => {
+                    let bin = dir.join(format!("{stem}.scenario.bin"));
+                    if let Err(e) = std::fs::write(&bin, &raw) {
+                        warn!("[race_capture] scenario .bin 寫檔失敗：{e}");
+                    } else {
+                        info!("[race_capture] scenario 已解 {} bytes → {}", raw.len(), bin.display());
+                    }
+                    match parse_scenario_json(&raw) {
+                        Ok(v) => decoded_scenario = Some(v),
+                        Err(e) => warn!("[race_capture] scenario 解析失敗（JSON 保留原字串）：{e}"),
+                    }
+                }
+                Err(e) => warn!("[race_capture] scenario 解碼失敗（JSON 保留原字串）：{e}"),
+            }
+        }
+
+        // 單一輸出檔：完整封包（有哪些馬／參數／技能／賽道設定），且把 race_result_info.race_scenario
+        // 從壓縮字串換成解好的逐幀物件（frames／results／events，id 原樣）。解不出來才退回原字串。
+        let path = dir.join(format!("{stem}.json"));
+        let serialized = if let Some(v) = decoded_scenario {
+            let mut merged = json.clone();
+            match merged.pointer_mut("/data/race_result_info/race_scenario") {
+                Some(slot) => *slot = v,
+                None => merged["data"]["race_scenario_decoded"] = v,
+            }
+            serde_json::to_string_pretty(&merged)
+        } else {
+            serde_json::to_string_pretty(json)
+        };
+        match serialized {
             Ok(s) => match std::fs::write(&path, s) {
                 Ok(_) => {
                     COUNTER.fetch_add(1, Ordering::Relaxed);
@@ -340,12 +380,159 @@ pub mod practice_race {
             Err(e) => warn!("[race_capture] serialize 失敗：{e}"),
         }
     }
+
+    /// race_scenario 字串 → 逐幀二進位：先 base64 解碼，再 gunzip（gzip frame，magic 1f 8b）。
+    fn decode_scenario(b64: &str) -> Result<Vec<u8>, String> {
+        use base64::Engine as _;
+        use std::io::Read as _;
+        let cleaned: String = b64.chars().filter(|c| !c.is_whitespace()).collect();
+        let gz = base64::engine::general_purpose::STANDARD
+            .decode(cleaned.as_bytes())
+            .map_err(|e| format!("base64: {e}"))?;
+        let mut out = Vec::new();
+        flate2::read::GzDecoder::new(&gz[..])
+            .read_to_end(&mut out)
+            .map_err(|e| format!("gzip: {e}"))?;
+        Ok(out)
+    }
+
+    // —— RaceSimulateData 逐幀解析（1:1 port 自 race_replay/race_scenario.py，
+    //    後者又 port 自 hakuraku src/data/RaceDataParser.ts）。全部小端、無對齊 padding。——
+    const SCENARIO_VERSION: i32 = 100_000_002;
+
+    fn s_i32(b: &[u8], o: usize) -> Result<i32, String> {
+        b.get(o..o + 4).ok_or_else(|| format!("truncated i32@{o}"))
+            .map(|s| i32::from_le_bytes(s.try_into().unwrap()))
+    }
+    fn s_i16(b: &[u8], o: usize) -> Result<i16, String> {
+        b.get(o..o + 2).ok_or_else(|| format!("truncated i16@{o}"))
+            .map(|s| i16::from_le_bytes(s.try_into().unwrap()))
+    }
+    fn s_u16(b: &[u8], o: usize) -> Result<u16, String> {
+        b.get(o..o + 2).ok_or_else(|| format!("truncated u16@{o}"))
+            .map(|s| u16::from_le_bytes(s.try_into().unwrap()))
+    }
+    fn s_u8(b: &[u8], o: usize) -> Result<u8, String> {
+        b.get(o).copied().ok_or_else(|| format!("truncated u8@{o}"))
+    }
+    fn s_i8(b: &[u8], o: usize) -> Result<i8, String> {
+        b.get(o).map(|v| *v as i8).ok_or_else(|| format!("truncated i8@{o}"))
+    }
+    fn s_f32(b: &[u8], o: usize) -> Result<f32, String> {
+        b.get(o..o + 4).ok_or_else(|| format!("truncated f32@{o}"))
+            .map(|s| f32::from_le_bytes(s.try_into().unwrap()))
+    }
+    /// f32 → JSON number（widening 到 f64 是精確的；非有限值退回 null）。
+    fn jf(x: f32) -> serde_json::Value {
+        serde_json::Number::from_f64(x as f64)
+            .map(serde_json::Value::Number)
+            .unwrap_or(serde_json::Value::Null)
+    }
+
+    /// 已 gunzip 的 scenario 二進位 → 逐幀 JSON。欄位/結構對齊 race_scenario.py 的輸出。
+    fn parse_scenario_json(b: &[u8]) -> Result<serde_json::Value, String> {
+        use serde_json::json;
+
+        let max_length = s_i32(b, 0)?;
+        let version = s_i32(b, 4)?;
+        if version != SCENARIO_VERSION {
+            return Err(format!("unsupported version {version}（want {SCENARIO_VERSION}）"));
+        }
+        let mut off = 4usize + max_length as usize;
+
+        let distance_diff_max = s_f32(b, off)?;
+        let horse_num = s_i32(b, off + 4)? as usize;
+        let horse_frame_size = s_i32(b, off + 8)? as usize;
+        let horse_result_size = s_i32(b, off + 12)? as usize;
+        off += 16;
+
+        let pad1 = s_i32(b, off)? as usize;
+        off += 4 + pad1;
+
+        let frame_count = s_i32(b, off)? as usize;
+        let frame_size = s_i32(b, off + 4)? as usize;
+        off += 8;
+
+        let mut frames = Vec::with_capacity(frame_count);
+        for _ in 0..frame_count {
+            let t = s_f32(b, off)?;
+            let mut horses = Vec::with_capacity(horse_num);
+            for i in 0..horse_num {
+                let base = off + 4 + i * horse_frame_size;
+                horses.push(json!({
+                    "distance": jf(s_f32(b, base)?),
+                    "lane_position": s_u16(b, base + 4)?,
+                    "speed": s_u16(b, base + 6)?,
+                    "hp": s_u16(b, base + 8)?,
+                    "temptation_mode": s_i8(b, base + 10)?,
+                    "block_front_horse_index": s_i8(b, base + 11)?,
+                }));
+            }
+            frames.push(json!({ "time": jf(t), "horse": horses }));
+            off += frame_size;
+        }
+
+        let pad2 = s_i32(b, off)? as usize;
+        off += 4 + pad2;
+
+        let mut results = Vec::with_capacity(horse_num);
+        for i in 0..horse_num {
+            let base = off + i * horse_result_size;
+            results.push(json!({
+                "finish_order": s_i32(b, base)?,
+                "finish_time": jf(s_f32(b, base + 4)?),
+                "finish_diff_time": jf(s_f32(b, base + 8)?),
+                "start_delay_time": jf(s_f32(b, base + 12)?),
+                "guts_order": s_u8(b, base + 16)?,
+                "wiz_order": s_u8(b, base + 17)?,
+                "last_spurt_start_distance": jf(s_f32(b, base + 18)?),
+                "running_style": s_u8(b, base + 22)?,
+                "defeat": s_i32(b, base + 23)?,
+                "finish_time_raw": jf(s_f32(b, base + 27)?),
+            }));
+        }
+        off += horse_num * horse_result_size;
+
+        let pad3 = s_i32(b, off)? as usize;
+        off += 4 + pad3;
+
+        let event_count = s_i32(b, off)? as usize;
+        off += 4;
+
+        let mut events = Vec::with_capacity(event_count);
+        for _ in 0..event_count {
+            let ev_size = s_i16(b, off)? as usize;
+            off += 2;
+            let ft = s_f32(b, off)?;
+            let etype = s_i8(b, off + 4)?;
+            let pcount = s_i8(b, off + 5)? as usize;
+            let mut params = Vec::with_capacity(pcount);
+            for j in 0..pcount {
+                params.push(s_i32(b, off + 6 + j * 4)?);
+            }
+            events.push(json!({ "frame_time": jf(ft), "type": etype, "param": params }));
+            off += ev_size;
+        }
+
+        Ok(json!({
+            "version": version,
+            "distance_diff_max": jf(distance_diff_max),
+            "horse_num": horse_num,
+            "frame_count": frame_count,
+            "frames": frames,
+            "results": results,
+            "events": events,
+            "bytes_consumed": off,
+            "bytes_total": b.len(),
+        }))
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use base64::Engine as _;
+
     use cbc::cipher::{block_padding::NoPadding, BlockDecryptMut, KeyIvInit};
     use md5::{Digest, Md5};
     use std::path::PathBuf;

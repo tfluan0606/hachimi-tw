@@ -739,6 +739,7 @@ dependencies = [
  "egui_extras",
  "egui_glow",
  "factor-card",
+ "flate2",
  "fnv",
  "glow",
  "image",

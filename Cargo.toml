@@ -53,6 +53,10 @@ rust-i18n = "3.1"
 # 遊戲 API 封包解碼執行期所需（見 src/core/api_packet.rs）
 lz4_flex = { version = "0.11", features = ["frame"] }
 rmpv = "1.3"
+# 練習賽擷取：把 race_scenario（base64 + gzip）就地解成逐幀 .bin。flate2 走 miniz_oxide
+# 純 Rust 後端，不需 C toolchain（本機 vcvars 壞掉，見 handoff）。
+base64 = "0.22"
+flate2 = "1.0"
 
 [target.'cfg(target_os = "android")'.dependencies]
 libc = "0.2"
@@ -96,8 +100,7 @@ features = [
 ]
 
 [dev-dependencies]
-# 僅供 api_packet 離線 wire pipeline 測試（不進執行期 DLL）
-base64 = "0.22"
+# 僅供 api_packet 離線 wire pipeline 測試（不進執行期 DLL）。base64 已在正式相依。
 md-5 = "0.10"
 aes = "0.8"
 cbc = "0.1"
