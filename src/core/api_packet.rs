@@ -330,29 +330,17 @@ pub mod practice_race {
         }
         let stem = format!("{}_{}", local_timestamp(), label);
 
-        // 逐幀資料藏在 race_result_info.race_scenario（base64 + gzip 字串）。先解出：
-        //   - 原始二進位另存一份 <stem>.scenario.bin（保留）
-        //   - 逐幀物件待會塞回 JSON 裡取代那串亂碼
+        // 逐幀資料藏在 race_result_info.race_scenario（base64 + gzip 字串）。解出後拆成逐幀
+        // 物件，待會塞回 JSON 取代那串亂碼。只輸出 JSON，不另存二進位。
         let mut decoded_scenario: Option<serde_json::Value> = None;
         if let Some(b64) = data
             .get("race_result_info")
             .and_then(|r| r.get("race_scenario"))
             .and_then(|v| v.as_str())
         {
-            match decode_scenario(b64) {
-                Ok(raw) => {
-                    let bin = dir.join(format!("{stem}.scenario.bin"));
-                    if let Err(e) = std::fs::write(&bin, &raw) {
-                        warn!("[race_capture] scenario .bin 寫檔失敗：{e}");
-                    } else {
-                        info!("[race_capture] scenario 已解 {} bytes → {}", raw.len(), bin.display());
-                    }
-                    match parse_scenario_json(&raw) {
-                        Ok(v) => decoded_scenario = Some(v),
-                        Err(e) => warn!("[race_capture] scenario 解析失敗（JSON 保留原字串）：{e}"),
-                    }
-                }
-                Err(e) => warn!("[race_capture] scenario 解碼失敗（JSON 保留原字串）：{e}"),
+            match decode_scenario(b64).and_then(|raw| parse_scenario_json(&raw)) {
+                Ok(v) => decoded_scenario = Some(v),
+                Err(e) => warn!("[race_capture] scenario 解碼/解析失敗（JSON 保留原字串）：{e}"),
             }
         }
 
