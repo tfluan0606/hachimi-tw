@@ -240,9 +240,9 @@ pub mod practice_race {
     use std::path::PathBuf;
     use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 
-    /// `race_instance_id → "場地_距離"`，離線由 master.mdb × course_data2.json 生成（214 筆練習賽課程）。
-    /// 查不到的 id 在檔名退回 `raceNNNNNN`。
-    static PRACTICE_RACE_MAP: Lazy<HashMap<String, String>> = Lazy::new(|| {
+    /// `race_instance_id → "場地_距離"`，離線由 master.mdb × course_data2.json 生成（全 2828 筆
+    /// race_instance，涵蓋練習賽 5xxxxx 與自訂配對賽 8xxxxx 等）。查不到的 id 退回 `raceNNNNNN`。
+    static RACE_COURSE_MAP: Lazy<HashMap<String, String>> = Lazy::new(|| {
         serde_json::from_str(include_str!("../../assets/practice_race_map.json")).unwrap_or_default()
     });
 
@@ -250,6 +250,10 @@ pub mod practice_race {
         Lazy::new(|| AtomicBool::new(Hachimi::instance().config.load().practice_race_capture));
     /// 本次啟動已存幾場（選單顯示用）。
     static COUNTER: AtomicUsize = AtomicUsize::new(0);
+    /// 自訂配對賽的 race_start 封包不帶課程；課程只在賽前的 room_info 封包出現，這裡記住最近一次
+    /// 看到的房間 `race_instance_id`，等 race_start 來時查表當檔名。0 = 尚未看到。
+    static LAST_ROOM_RACE_INSTANCE: std::sync::atomic::AtomicU64 =
+        std::sync::atomic::AtomicU64::new(0);
 
     pub fn capture_enabled() -> bool {
         // 精簡獨立 DLL：無選單、無 config，練習賽擷取一律開著。
@@ -309,32 +313,54 @@ pub mod practice_race {
         let Some(data) = json.get("data").and_then(|d| d.as_object()) else {
             return;
         };
+
+        // 先記住最近一次房間的 race_instance_id（自訂配對賽的 race_start 不帶課程，得靠賽前的
+        // room_info 封包補）。room_info_array[0] 或 room_info 皆看，有值才更新。
+        if let Some(id) = data
+            .get("room_info_array")
+            .and_then(|a| a.as_array())
+            .and_then(|a| a.first())
+            .and_then(|r| r.get("race_instance_id"))
+            .and_then(|v| v.as_u64())
+            .or_else(|| {
+                data.get("room_info")
+                    .and_then(|r| r.get("race_instance_id"))
+                    .and_then(|v| v.as_u64())
+            })
+        {
+            LAST_ROOM_RACE_INSTANCE.store(id, Ordering::Relaxed);
+        }
+
         // 賽後重看重送：多帶 before_* 快照 → 多餘，跳過。
         if data.keys().any(|k| k.starts_with("before_")) {
             return;
         }
 
-        // 分類並定出：race_scenario 在 JSON 裡的位置（pointer）＋檔名 label。
-        let (scenario_ptr, label): (&str, String) =
+        // 分類並定出：race_scenario 在 JSON 裡的位置（pointer）、檔名 kind 前綴、course label。
+        let course_label = |id: u64| -> String {
+            RACE_COURSE_MAP
+                .get(&id.to_string())
+                .cloned()
+                .unwrap_or_else(|| format!("race{id}"))
+        };
+        let (scenario_ptr, kind, label): (&str, &str, String) =
             if data.contains_key("race_result_info") && data.contains_key("practice_race_id") {
-                let race_instance_id = data
+                let label = data
                     .get("race_result_info")
                     .and_then(|r| r.get("race_instance_id"))
-                    .and_then(|v| v.as_u64());
-                let label = race_instance_id
-                    .and_then(|id| PRACTICE_RACE_MAP.get(&id.to_string()).cloned())
-                    .unwrap_or_else(|| match race_instance_id {
-                        Some(id) => format!("race{id}"),
-                        None => "race_unknown".to_string(),
-                    });
-                ("/data/race_result_info/race_scenario", label)
+                    .and_then(|v| v.as_u64())
+                    .map(course_label)
+                    .unwrap_or_else(|| "race_unknown".to_string());
+                ("/data/race_result_info/race_scenario", "練習", label)
             } else if data.get("race_scenario").map_or(false, |v| v.is_string())
                 && data.contains_key("race_horse_data_array")
                 && data.contains_key("random_seed")
                 && !data.contains_key("legend_data_set")
                 && !data.contains_key("race_start_info")
             {
-                ("/data/race_scenario", "roommatch".to_string())
+                let id = LAST_ROOM_RACE_INSTANCE.load(Ordering::Relaxed);
+                let label = if id != 0 { course_label(id) } else { "roommatch".to_string() };
+                ("/data/race_scenario", "自訂", label)
             } else {
                 return; // 單人劇本 career 等其餘 response 一律忽略
             };
@@ -344,7 +370,7 @@ pub mod practice_race {
             warn!("[race_capture] 建立資料夾失敗：{e}");
             return;
         }
-        let stem = format!("{}_{}", local_timestamp(), label);
+        let stem = format!("{}_{}_{}", kind, local_timestamp(), label);
 
         // race_scenario 是 base64 + gzip 壓縮字串。解出後拆成逐幀物件，待會塞回原位取代那串亂碼。
         // 只輸出 JSON，不另存二進位。
