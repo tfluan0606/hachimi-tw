@@ -378,14 +378,14 @@ impl Gui {
                     {
                         use crate::core::api_packet::practice_race;
 
-                        ui.heading("練習賽擷取");
+                        ui.heading("比賽擷取");
                         let mut on = practice_race::capture_enabled();
-                        if ui.checkbox(&mut on, "跑練習賽時自動存下該場結果封包").changed() {
+                        if ui.checkbox(&mut on, "跑練習賽／自訂配對賽時自動存下該場封包").changed() {
                             practice_race::set_capture_enabled(on);
                             show_notification = Some(if on {
-                                "練習賽擷取已開啟".into()
+                                "比賽擷取已開啟".into()
                             } else {
-                                "練習賽擷取已關閉".into()
+                                "比賽擷取已關閉".into()
                             });
                         }
                         if on {
@@ -393,7 +393,7 @@ impl Gui {
                                 r"本次已存 {} 場 → hachimi\race_capture",
                                 practice_race::capture_count()
                             ));
-                            ui.label("檔名帶時間與場地距離；只存練習賽結果，其他封包不理");
+                            ui.label("練習賽＋自訂配對賽；逐幀資料已解好塞進 JSON，其他封包不理");
                         }
                         #[cfg(target_os = "windows")]
                         if ui.button("開啟練習賽資料夾").clicked() {

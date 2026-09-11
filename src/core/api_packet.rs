@@ -296,32 +296,48 @@ pub mod practice_race {
         format!("t{secs}")
     }
 
-    /// 命中練習賽結果指紋才落檔：
-    /// - `data.race_result_info` && `data.practice_race_id` 同時存在 → 練習賽結果
-    /// - `data` 含任何 `before_*` 欄位 → 賽後重看重送的同一場，跳過
-    /// 其餘所有 response 一律忽略（呼叫端已先確認 `capture_enabled()`）。
+    /// 命中「可撈的比賽」才落檔。支援兩種（呼叫端已先確認 `capture_enabled()`）：
+    /// - **練習賽**：`data.race_result_info` && `data.practice_race_id` → race_scenario 在
+    ///   `race_result_info.race_scenario`；用 `race_instance_id` 查課程表當檔名。
+    /// - **自訂配對賽（room match）**：`data` 頂層有 `race_scenario`(str) && `race_horse_data_array`
+    ///   && `random_seed`，且無 `race_result_info`/`legend_data_set`/`race_start_info`（後兩者是
+    ///   單人劇本，排除）→ race_scenario 在 `data.race_scenario`；封包不帶 race_instance_id，檔名
+    ///   固定 `roommatch`。
+    ///
+    /// `data` 含任何 `before_*` 欄位 → 賽後重看重送（seed/scenario 同首播），跳過。其餘一律忽略。
     pub fn capture(json: &serde_json::Value) {
         let Some(data) = json.get("data").and_then(|d| d.as_object()) else {
             return;
         };
-        if !data.contains_key("race_result_info") || !data.contains_key("practice_race_id") {
-            return;
-        }
-        // 賽後重看重送：多帶 before_* 快照，seed 與 scenario 與首播相同 → 多餘，跳過。
+        // 賽後重看重送：多帶 before_* 快照 → 多餘，跳過。
         if data.keys().any(|k| k.starts_with("before_")) {
             return;
         }
 
-        let race_instance_id = data
-            .get("race_result_info")
-            .and_then(|r| r.get("race_instance_id"))
-            .and_then(|v| v.as_u64());
-        let label = race_instance_id
-            .and_then(|id| PRACTICE_RACE_MAP.get(&id.to_string()).cloned())
-            .unwrap_or_else(|| match race_instance_id {
-                Some(id) => format!("race{id}"),
-                None => "race_unknown".to_string(),
-            });
+        // 分類並定出：race_scenario 在 JSON 裡的位置（pointer）＋檔名 label。
+        let (scenario_ptr, label): (&str, String) =
+            if data.contains_key("race_result_info") && data.contains_key("practice_race_id") {
+                let race_instance_id = data
+                    .get("race_result_info")
+                    .and_then(|r| r.get("race_instance_id"))
+                    .and_then(|v| v.as_u64());
+                let label = race_instance_id
+                    .and_then(|id| PRACTICE_RACE_MAP.get(&id.to_string()).cloned())
+                    .unwrap_or_else(|| match race_instance_id {
+                        Some(id) => format!("race{id}"),
+                        None => "race_unknown".to_string(),
+                    });
+                ("/data/race_result_info/race_scenario", label)
+            } else if data.get("race_scenario").map_or(false, |v| v.is_string())
+                && data.contains_key("race_horse_data_array")
+                && data.contains_key("random_seed")
+                && !data.contains_key("legend_data_set")
+                && !data.contains_key("race_start_info")
+            {
+                ("/data/race_scenario", "roommatch".to_string())
+            } else {
+                return; // 單人劇本 career 等其餘 response 一律忽略
+            };
 
         let dir = capture_dir();
         if let Err(e) = std::fs::create_dir_all(&dir) {
@@ -330,26 +346,22 @@ pub mod practice_race {
         }
         let stem = format!("{}_{}", local_timestamp(), label);
 
-        // 逐幀資料藏在 race_result_info.race_scenario（base64 + gzip 字串）。解出後拆成逐幀
-        // 物件，待會塞回 JSON 取代那串亂碼。只輸出 JSON，不另存二進位。
+        // race_scenario 是 base64 + gzip 壓縮字串。解出後拆成逐幀物件，待會塞回原位取代那串亂碼。
+        // 只輸出 JSON，不另存二進位。
         let mut decoded_scenario: Option<serde_json::Value> = None;
-        if let Some(b64) = data
-            .get("race_result_info")
-            .and_then(|r| r.get("race_scenario"))
-            .and_then(|v| v.as_str())
-        {
+        if let Some(b64) = json.pointer(scenario_ptr).and_then(|v| v.as_str()) {
             match decode_scenario(b64).and_then(|raw| parse_scenario_json(&raw)) {
                 Ok(v) => decoded_scenario = Some(v),
                 Err(e) => warn!("[race_capture] scenario 解碼/解析失敗（JSON 保留原字串）：{e}"),
             }
         }
 
-        // 單一輸出檔：完整封包（有哪些馬／參數／技能／賽道設定），且把 race_result_info.race_scenario
-        // 從壓縮字串換成解好的逐幀物件（frames／results／events，id 原樣）。解不出來才退回原字串。
+        // 單一輸出檔：完整封包（有哪些馬／參數／技能／賽道設定），且把 race_scenario 從壓縮字串
+        // 換成解好的逐幀物件（frames／results／events，id 原樣）。解不出來才退回原字串。
         let path = dir.join(format!("{stem}.json"));
         let serialized = if let Some(v) = decoded_scenario {
             let mut merged = json.clone();
-            match merged.pointer_mut("/data/race_result_info/race_scenario") {
+            match merged.pointer_mut(scenario_ptr) {
                 Some(slot) => *slot = v,
                 None => merged["data"]["race_scenario_decoded"] = v,
             }
