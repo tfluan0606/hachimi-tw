@@ -155,7 +155,13 @@ get_LiveTotalTime()
 
 ## 已知死路
 
-### 自動更新不能靠 installer
+### 自動更新不能靠 installer（✅ 已改成自寫換檔，2026-09-13）
+
+> **已實作。** `src/windows/updater.rs` 整個改寫：`REPO_PATH` 指向
+> `tfluan0606/hachimi-tw`，丟掉 installer，改成下載 `version.dll` +
+> blake3 校驗 + `fs::rename` 換檔（現役→`.old`、`.new`→現役），開機由
+> `updater::cleanup_old_dll()`（`src/windows/main.rs` DllMain 呼叫）清 `.old`。
+> 發版流程與 blake3 工具見本節末〈發版流程〉。以下保留原始分析。
 
 Edge 的 updater（`src/core/updater.rs`）跟舊版**機制完全相同**：
 
@@ -182,6 +188,20 @@ Edge 的 updater（`src/core/updater.rs`）跟舊版**機制完全相同**：
 同磁碟機內移動。值得從 Edge 抄的只有 **blake3 校驗**（release 附 `blake3.json`，
 下載後比對雜湊，避免半截檔案覆蓋掉能用的版本）。Codeberg 鏡像可跳過 ——
 它只鏡像「檢查更新」，實際下載仍走 GitHub。
+
+#### 發版流程（實作後）
+
+更新判斷是 `release tag ≠ 目前 DLL 內建版號`（`!=`，不是比大小），所以：
+
+1. 把 `Cargo.toml` 的 `version` 往上加（每次都要，不然 tag 撞到已安裝版號就不觸發）
+2. build 出新 `version.dll`
+3. 產生 blake3.json：`cargo run -p blake3json --release -- <version.dll 路徑>`
+   （工具在 `crates/blake3json`，不是 DLL build 的相依，只手動跑）
+4. 到 `tfluan0606/hachimi-tw` 開 release，**tag = `v` + Cargo.toml 版號**（例 `v0.14.1`），
+   附上 `version.dll` 和 `blake3.json` 兩個 asset
+
+⚠️ 第一次切換仍要手動給對方一次新 DLL —— 「去哪裡檢查」是由目前已安裝的那顆
+DLL 決定的，舊 DLL 還指著上游。裝過一次新版後才會全自動。
 
 ### 繁中服的視窗 hook 跑在 render thread —— 別在那裡呼叫 SendMessage 類的 API
 

@@ -64,6 +64,7 @@ notification:
   errors_during_update: "%{count} errors occurred during update. Check logs for more info."
   checking_for_updates: "Checking for updates..."
   no_updates: "No updates available."
+  update_ready_restart: "Update downloaded. Please restart the game to apply it."
 
 first_time_setup:
   title: "First Time Setup"
@@ -147,12 +148,12 @@ tl_update_dialog:
 update_prompt_dialog:
   title: "New update available"
   content: |
-    A new Hachimi update is available (%{version}). Do you want to install it?
-    The game will be restarted in order to apply the update.
+    A new Hachimi update is available (%{version}). Do you want to download and install it?
+    You'll need to restart the game manually afterwards to apply it.
 
 updating_dialog:
   title: "Updating"
-  content: "Downloading update, the game will restart shortly..."
+  content: "Downloading update, please wait..."
 
 steam_overlay_conflict_dialog:
   title: "Notice"

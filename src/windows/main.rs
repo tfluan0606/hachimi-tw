@@ -5,7 +5,7 @@ use windows::{core::PCWSTR, Win32::{Foundation::{BOOL, HMODULE, TRUE}, System::L
 
 use crate::{core::{plugin_api::Plugin, Hachimi}, windows::utils};
 
-use super::{discord, hook, proxy, wnd_hook};
+use super::{discord, hook, proxy, updater, wnd_hook};
 
 const DLL_PROCESS_ATTACH: c_ulong = 1;
 const DLL_PROCESS_DETACH: c_ulong = 0;
@@ -53,6 +53,9 @@ pub extern "C" fn DllMain(hmodule: HMODULE, call_reason: c_ulong, _reserved: *mu
         if !Hachimi::init() {
             return TRUE;
         }
+
+        // 清掉上次自動更新留下的 version.dll.old（現在它已不再被載入）。
+        updater::cleanup_old_dll();
 
         let hachimi = Hachimi::instance();
         *hachimi.plugins.lock().unwrap() = load_libraries();

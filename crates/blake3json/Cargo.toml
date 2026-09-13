@@ -1,0 +1,10 @@
+[package]
+name = "blake3json"
+version = "0.1.0"
+edition = "2021"
+
+# 發版小工具：對要上傳的 DLL 算 blake3，產生自動更新器要對照的 blake3.json。
+# 不是 DLL build 的一部分（不是 hachimi 的相依），只有手動 `cargo run -p blake3json` 才會編。
+
+[dependencies]
+blake3 = "1.5"

@@ -64,6 +64,7 @@ notification:
   errors_during_update: "更新時發生 %{count} 個錯誤，請確認日誌以獲取更多資訊。"
   checking_for_updates: "檢查更新"
   no_updates: "無可用的更新。"
+  update_ready_restart: "更新已下載完成，請重新啟動遊戲以套用。"
 
 first_time_setup:
   title: "設定精靈"
@@ -144,9 +145,9 @@ tl_update_dialog:
 update_prompt_dialog:
   title: "有可用的更新"
   content: |
-    目前有可用的更新 (%{version})，是否要安裝？
-    遊戲將重新啟動以套用更新內容。
+    目前有可用的更新 (%{version})，是否要下載安裝？
+    下載完成後，需要您手動重新啟動遊戲才會套用。
 
 updating_dialog:
   title: "更新中"
-  content: "正在下載更新，遊戲將會在稍後重啟…"
+  content: "正在下載更新，請稍候…"
