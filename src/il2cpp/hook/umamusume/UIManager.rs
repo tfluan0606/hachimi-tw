@@ -1,7 +1,7 @@
 use crate::{
     core::Hachimi,
     il2cpp::{
-        ext::{Il2CppStringExt, StringExt}, hook::UnityEngine_UI::CanvasScaler, symbols::{get_method_addr, get_method_overload_addr, Array, SingletonLike}, types::*
+        hook::UnityEngine_UI::CanvasScaler, symbols::{get_method_addr, Array, SingletonLike}, types::*
     }
 };
 
@@ -55,24 +55,6 @@ pub fn apply_ui_scale() {
     }
 }
 
-type SetHeaderTitleTextFn = extern "C" fn(this: *mut Il2CppObject, text: *mut Il2CppString, guide_id: i32);
-extern "C" fn SetHeaderTitleText(this: *mut Il2CppObject, text_: *mut Il2CppString, guide_id: i32) {
-    let text = unsafe { (*text_).as_utf16str() };
-
-    // The title text (aka the purple ribbon on the top left of the screen) doesn't run
-    // through TextGenerator, so we have to evaluate templates here (by emptying any filter exprs)
-    let new_text = if text.as_slice().contains(&36) { // 36 = dollar sign ($)
-        Hachimi::instance().template_parser
-            .remove_filters(&text.to_string())
-            .to_il2cpp_string()
-    }
-    else {
-        text_
-    };
-
-    get_orig_fn!(SetHeaderTitleText, SetHeaderTitleTextFn)(this, new_text, guide_id)
-}
-
 #[cfg(target_os = "windows")]
 type ChangeResizeUIForPCFn = extern "C" fn(this: *mut Il2CppObject, width: i32, height: i32);
 #[cfg(target_os = "windows")]
@@ -119,11 +101,6 @@ impl_addr_wrapper_fn!(CreateRenderTextureFromScreen, CREATERENDERTEXTUREFROMSCRE
 
 pub fn init(umamusume: *const Il2CppImage) {
     get_class_or_return!(umamusume, Gallop, UIManager);
-
-    let SetHeaderTitleText_addr = get_method_overload_addr(UIManager, "SetHeaderTitleText",
-        &[Il2CppTypeEnum_IL2CPP_TYPE_STRING, Il2CppTypeEnum_IL2CPP_TYPE_VALUETYPE]);
-
-    new_hook!(SetHeaderTitleText_addr, SetHeaderTitleText);
 
     #[cfg(target_os = "windows")]
     {

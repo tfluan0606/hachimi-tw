@@ -18,7 +18,7 @@ use crate::il2cpp::hook::umamusume::WebViewManager;
 #[cfg(target_os = "windows")]
 use crate::il2cpp::hook::UnityEngine_CoreModule::QualitySettings;
 
-use super::{hachimi::{self, Language}, http::AsyncRequest, tl_repo::{self, RepoInfo}, Hachimi};
+use super::{hachimi::{self, Language}, Hachimi};
 
 macro_rules! add_font {
     ($fonts:expr, $family_fonts:expr, $filename:literal) => {
@@ -53,8 +53,6 @@ pub struct Gui {
     #[cfg(target_os = "windows")]
     menu_vsync_value: i32,
 
-    pub update_progress_visible: bool,
-
     notifications: Vec<Notification>,
     windows: Vec<BoxedWindow>
 }
@@ -76,7 +74,6 @@ impl Gui {
         }
 
         let hachimi = Hachimi::instance();
-        let config = hachimi.config.load();
 
         let context = egui::Context::default();
         egui_extras::install_image_loaders(&context);
@@ -98,10 +95,7 @@ impl Gui {
             fps_value = 30;
         }
 
-        let mut windows: Vec<BoxedWindow> = Vec::new();
-        if !config.skip_first_time_setup {
-            windows.push(Box::new(FirstTimeSetupWindow::new()));
-        }
+        let windows: Vec<BoxedWindow> = Vec::new();
 
         let now = Instant::now();
         let instance = Gui {
@@ -125,8 +119,6 @@ impl Gui {
 
             #[cfg(target_os = "windows")]
             menu_vsync_value: hachimi.vsync_count.load(atomic::Ordering::Relaxed),
-
-            update_progress_visible: false,
 
             notifications: Vec::new(),
             windows
@@ -201,7 +193,6 @@ impl Gui {
         self.context.begin_frame(input);
         
         if self.menu_visible { self.run_menu(); }
-        if self.update_progress_visible { self.run_update_progress(); }
 
         self.run_windows();
         self.run_notifications();
@@ -508,15 +499,12 @@ impl Gui {
 
     fn toggle_game_ui() {
         use crate::il2cpp::hook::{
-            UnityEngine_CoreModule::{Object, Behaviour, GameObject},
-            UnityEngine_UIModule::Canvas,
-            Plugins::AnimateToUnity::AnRoot
+            UnityEngine_CoreModule::{Object, Behaviour},
+            UnityEngine_UIModule::Canvas
         };
 
         let canvas_array = Object::FindObjectsOfType(Canvas::type_object(), true);
-        let an_root_array = Object::FindObjectsOfType(AnRoot::type_object(), true);
         let canvas_iter = unsafe { canvas_array.as_slice().iter() };
-        let an_root_iter = unsafe { an_root_array.as_slice().iter() };
 
         if unsafe { DISABLED_GAME_UIS.is_empty() } {
             for canvas in canvas_iter {
@@ -525,24 +513,11 @@ impl Gui {
                     unsafe { DISABLED_GAME_UIS.insert(*canvas); }
                 }
             }
-            for an_root in an_root_iter {
-                let top_object = AnRoot::get__topObject(*an_root);
-                if GameObject::get_activeSelf(top_object) {
-                    GameObject::SetActive(top_object, false);
-                    unsafe { DISABLED_GAME_UIS.insert(top_object); }
-                }
-            }
         }
         else {
             for canvas in canvas_iter {
                 if unsafe { DISABLED_GAME_UIS.contains(canvas) } {
                     Behaviour::set_enabled(*canvas, true);
-                }
-            }
-            for an_root in an_root_iter {
-                let top_object = AnRoot::get__topObject(*an_root);
-                if unsafe { DISABLED_GAME_UIS.contains(&top_object) } {
-                    GameObject::SetActive(top_object, true);
                 }
             }
             unsafe { DISABLED_GAME_UIS.clear(); }
@@ -586,44 +561,6 @@ impl Gui {
         changed
     }
 
-    fn run_update_progress(&mut self) {
-        let ctx = &self.context;
-        let progress = Hachimi::instance().tl_updater.progress().unwrap_or_else(|| {
-            // Assume that update is complete
-            self.update_progress_visible = false;
-            tl_repo::UpdateProgress::new(1, 1)
-        });
-        let ratio = progress.current as f32 / progress.total as f32;
-
-        egui::Area::new("update_progress".into())
-        .fixed_pos(egui::Pos2 {
-            x: 4.0,
-            y: 4.0
-        })
-        .show(ctx, |ui| {
-            egui::Frame::none()
-            .fill(BACKGROUND_COLOR)
-            .inner_margin(egui::Margin::same(4.0))
-            .rounding(4.0)
-            .show(ui, |ui| {
-                ui.horizontal(|ui| {
-                    ui.label(t!("tl_updater.title"));
-                    ui.add_space(26.0);
-                    ui.label(format!("{:.2}%", ratio * 100.0));
-                });
-                ui.add(
-                    egui::ProgressBar::new(ratio)
-                    .desired_height(4.0)
-                    .desired_width(140.0)
-                );
-                ui.label(
-                    egui::RichText::new(t!("tl_updater.warning"))
-                    .font(egui::FontId::proportional(10.0))
-                );
-            });
-        });
-    }
-
     fn run_notifications(&mut self) {
         let mut offset: f32 = -16.0;
         self.notifications.retain_mut(|n| n.run(&self.context, &mut offset));
@@ -634,7 +571,7 @@ impl Gui {
     }
 
     pub fn is_empty(&self) -> bool {
-        !self.splash_visible && !self.menu_visible && !self.update_progress_visible &&
+        !self.splash_visible && !self.menu_visible &&
         self.notifications.is_empty() && self.windows.is_empty()
     }
 
@@ -795,55 +732,6 @@ fn simple_window_layout(ui: &mut egui::Ui, id: egui::Id, add_contents: impl FnOn
     .show_inside(ui, |ui| {
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Min), add_buttons)
     });
-}
-
-fn paginated_window_layout(ui: &mut egui::Ui, id: egui::Id, i: &mut usize, page_count: usize, add_page_content: impl FnOnce(&mut egui::Ui, usize) -> bool) -> bool {
-    let allow_next = add_page_content(ui, *i);
-    egui::TopBottomPanel::bottom(id.with("bottom_panel"))
-    .show_inside(ui, |ui| {
-        ui.with_layout(egui::Layout::right_to_left(egui::Align::Min), |ui| {
-            let mut open = true;
-            if *i < page_count - 1 {
-                if allow_next && ui.button(t!("next")).clicked() {
-                    *i += 1;
-                }
-            }
-            else {
-                if ui.button(t!("done")).clicked() {
-                    open = false;
-                }
-            }
-            if *i > 0 && ui.button(t!("previous")).clicked() {
-                *i -= 1;
-            }
-
-            open
-        }).inner
-    }).inner
-}
-
-fn async_request_ui_content<T: Send + Sync + 'static>(ui: &mut egui::Ui, request: Arc<AsyncRequest<T>>, add_contents: impl FnOnce(&mut egui::Ui, &T)) {
-    let Some(result) = &**request.result.load() else {
-        if !request.running() {
-            request.call();
-        }
-        ui.centered_and_justified(|ui| {
-            ui.label(t!("loading_label"));
-        });
-        return;
-    };
-
-    match result {
-        Ok(v) => add_contents(ui, v),
-        Err(e) => {
-            ui.centered_and_justified(|ui| {
-                ui.label(e.to_string());
-                if ui.button(t!("retry")).clicked() {
-                    request.call();
-                }
-            });
-        }
-    }
 }
 
 /// 設定因子卡片輸出資料夾
@@ -1353,121 +1241,6 @@ fn save_and_reload_config(config: hachimi::Config) {
     });
 }
 
-struct FirstTimeSetupWindow {
-    id: egui::Id,
-    index_request: Arc<AsyncRequest<Vec<RepoInfo>>>,
-    current_page: usize,
-    current_tl_repo: usize
-}
-
-impl FirstTimeSetupWindow {
-    fn new() -> FirstTimeSetupWindow {
-        FirstTimeSetupWindow {
-            id: random_id(),
-            index_request: Arc::new(tl_repo::new_meta_index_request()),
-            current_page: 0,
-            current_tl_repo: 0
-        }
-    }
-}
-
-impl Window for FirstTimeSetupWindow {
-    fn run(&mut self, ctx: &egui::Context) -> bool {
-        let mut open = true;
-        let mut page_open = true;
-
-        new_window(ctx, t!("first_time_setup.title"))
-        .id(self.id)
-        .open(&mut open)
-        .show(ctx, |ui| {
-            page_open = paginated_window_layout(ui, self.id, &mut self.current_page, 3, |ui, i| {
-                match i {
-                    0 => {
-                        ui.heading(t!("first_time_setup.welcome_heading"));
-                        ui.separator();
-                        ui.horizontal(|ui| {
-                            ui.label(t!("config_editor.language"));
-
-                            let hachimi = Hachimi::instance();
-                            let config = &**hachimi.config.load();
-                            let mut language = config.language;
-                            let lang_changed = Gui::run_combo(ui, "language", &mut language, Language::CHOICES);
-                            if lang_changed {
-                                let mut config = config.clone();
-                                config.language = language;
-                                save_and_reload_config(config);
-                            }   
-                        });
-                        ui.label(t!("first_time_setup.welcome_content"));
-                        true
-                    }
-                    1 => {
-                        ui.heading(t!("first_time_setup.translation_repo_heading"));
-                        ui.separator();
-                        ui.label(t!("first_time_setup.select_translation_repo"));
-                        ui.add_space(4.0);
-
-                        let mut selected = false;
-                        async_request_ui_content(ui, self.index_request.clone(), |ui, repo_list| {
-                            selected = repo_list.get(self.current_tl_repo).is_some();
-                            egui::ScrollArea::vertical().show(ui, |ui| {
-                                egui::Frame::none()
-                                .inner_margin(egui::Margin::symmetric(8.0, 0.0))
-                                .show(ui, |ui| {
-                                    for (i, repo) in repo_list.iter().enumerate() {
-                                        ui.radio_value(&mut self.current_tl_repo, i, &repo.name);
-                                        if let Some(short_desc) = &repo.short_desc {
-                                            ui.label(egui::RichText::new(short_desc).small());
-                                        }
-                                    }
-                                });
-                            });
-                        });
-                        selected
-                    }
-                    2 => {
-                        ui.heading(t!("first_time_setup.complete_heading"));
-                        ui.separator();
-                        ui.label(t!("first_time_setup.complete_content"));
-                        true
-                    }
-                    _ => false
-                }
-            });
-        });
-
-        let open_res = open && page_open;
-        if !open_res {
-            let hachimi = Hachimi::instance();
-            let mut config = (**hachimi.config.load()).clone();
-            config.skip_first_time_setup = true;
-
-            if !page_open {
-                let Some(res) = &**self.index_request.result.load() else {
-                    return open_res;
-                };
-
-                let Ok(repo_list) = res else {
-                    return open_res;
-                };
-
-                let Some(repo) = repo_list.get(self.current_tl_repo) else {
-                    return open_res;
-                };
-
-                config.translation_repo_index = Some(repo.index.clone());
-            }
-
-            save_and_reload_config(config);
-
-            if !page_open {
-                hachimi.tl_updater.clone().check_for_updates(false);
-            }
-        }
-
-        open_res
-    }
-}
 
 struct AboutWindow {
     id: egui::Id

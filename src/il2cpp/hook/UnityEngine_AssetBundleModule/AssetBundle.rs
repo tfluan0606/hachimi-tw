@@ -2,14 +2,9 @@ use std::sync::Mutex;
 
 use fnv::FnvHashMap;
 use once_cell::sync::Lazy;
-use widestring::Utf16Str;
 
 use crate::{core::{ext::Utf16StringExt, hachimi::AssetMetadata}, il2cpp::{
-    api::il2cpp_resolve_icall, ext::{Il2CppObjectExt, Il2CppStringExt}, hook::{
-        umamusume::{StoryRaceTextAsset, StoryTimelineData, TextDotData, TextRubyData},
-        Cute_UI_Assembly::AtlasReference,
-        UnityEngine_CoreModule::{GameObject, Texture2D}
-    }, symbols::GCHandle, types::*
+    api::il2cpp_resolve_icall, ext::Il2CppStringExt, symbols::GCHandle, types::*
 }};
 
 pub const ASSET_PATH_PREFIX: &str = "assets/_gallopresources/bundle/resources/";
@@ -66,37 +61,9 @@ extern "C" fn LoadAssetAsync_Internal(this: *mut Il2CppObject, name: *mut Il2Cpp
     request
 }
 
-type OnLoadAssetFn = fn(bundle: *mut Il2CppObject, asset: *mut Il2CppObject, name: &Utf16Str);
-pub fn on_LoadAsset(bundle: *mut Il2CppObject, asset: *mut Il2CppObject, name: *mut Il2CppString) {
-    let class = unsafe { (*asset).klass() };
-    //debug!("{} {}", unsafe { std::ffi::CStr::from_ptr((*class).name).to_str().unwrap() }, unsafe { (*name).as_utf16str() });
-
-    let handler: OnLoadAssetFn = if class == GameObject::class() {
-        GameObject::on_LoadAsset
-    }
-    else if class == StoryTimelineData::class() {
-        StoryTimelineData::on_LoadAsset
-    }
-    else if class == Texture2D::class() {
-        Texture2D::on_LoadAsset
-    }
-    else if class == AtlasReference::class() {
-        AtlasReference::on_LoadAsset
-    }
-    else if class == StoryRaceTextAsset::class() {
-        StoryRaceTextAsset::on_LoadAsset
-    }
-    else if class == TextRubyData::class() {
-        TextRubyData::on_LoadAsset
-    }
-    else if class == TextDotData::class() {
-        TextDotData::on_LoadAsset
-    }
-    else {
-        return;
-    };
-
-    handler(bundle, asset, unsafe { (*name).as_utf16str() });
+// 資產替換（在地化）已移除。這裡保留成 no-op，只為了讓字體載入器仍能透過
+// LoadAsset_Internal_orig / LoadFromFile_Internal_orig 拿到原始函式（需要 hook 有裝）。
+pub fn on_LoadAsset(_bundle: *mut Il2CppObject, _asset: *mut Il2CppObject, _name: *mut Il2CppString) {
 }
 
 type LoadFromFileInternalFn = extern "C" fn(path: *mut Il2CppString, crc: u32, offset: u64) -> *mut Il2CppObject;

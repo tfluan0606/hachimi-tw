@@ -1,18 +1,15 @@
 use std::{path::Path, ptr::null_mut};
 
-use widestring::Utf16Str;
-
-use crate::{core::{ext::Utf16StringExt, Hachimi}, il2cpp::{
+use crate::il2cpp::{
     api::{il2cpp_object_new, il2cpp_resolve_icall},
     hook::{
         mscorlib,
-        UnityEngine_AssetBundleModule::AssetBundle::ASSET_PATH_PREFIX,
         UnityEngine_ImageConversionModule::ImageConversion
     },
     symbols::{get_method_addr, Array},
     ext::StringExt,
-    types::*, utils
-}};
+    types::*
+};
 
 use super::{Graphics, RenderTexture, Texture, TextureFormat_RGBA32};
 
@@ -109,51 +106,6 @@ pub fn render_to_texture(this: *mut Il2CppObject) -> *mut Il2CppObject {
     RenderTexture::ReleaseTemporary(render_texture);
 
     output_texture
-}
-
-// hook::UnityEngine_AssetBundleModule::AssetBundle
-pub fn on_LoadAsset(_bundle: *mut Il2CppObject, this: *mut Il2CppObject, name: &Utf16Str) {
-    if !name.starts_with(ASSET_PATH_PREFIX) {
-        debug!("non-resource texture: {}", name);
-        return;
-    }
-
-    let orig_path = &name[ASSET_PATH_PREFIX.len()..];
-    let rel_replace_path = Path::new("textures").join(orig_path.to_string());
-    let localized_data = Hachimi::instance().localized_data.load();
-    let Some(replace_path) = localized_data.get_assets_path(&rel_replace_path) else {
-        return;
-    };
-
-    // Common diff handling
-    // ...chara/chrXXXX/petit/petit_chr_XXXX_YYYYYY_ZZZZ.png
-    if orig_path.len() == 50 && orig_path.starts_with("chara/chr") && orig_path[13..30] == "/petit/petit_chr_" {
-        let petit_type = &orig_path[42..46];
-        if petit_type == "0070" || petit_type == "0071" {
-            // Let texture's own diff take precedence
-            // Don't allow direct loading fallback here, otherwise the common diff would be skipped
-            // after the initial patch (when the texture has already been created)
-            if utils::replace_texture_with_diff_ex(
-                this, &replace_path, utils::get_texture_diff_path(&replace_path), true, false
-            ) {
-                return;
-            }
-
-            // Try to load common diff for "Train" buttons
-            let rel_common_diff_path = Path::new("textures")
-                .join(format!("chara/_chr/petit/petit_chr_{}.diff.png", petit_type));
-
-            let Some(common_diff_path) = localized_data.get_assets_path(&rel_common_diff_path) else {
-                return;
-            };
-
-            utils::replace_texture_with_diff_ex(this, &replace_path, &common_diff_path, true, true);
-            return;
-        }
-    }
-
-    // Normal replacement procedure
-    utils::replace_texture_with_diff(this, &replace_path, true);
 }
 
 static mut GETPIXELS32_ADDR: usize = 0;

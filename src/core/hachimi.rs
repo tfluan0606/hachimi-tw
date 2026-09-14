@@ -1,12 +1,12 @@
 use std::{fs, path::{Path, PathBuf}, process, sync::{atomic::{self, AtomicBool, AtomicI32}, Arc, Mutex}};
 use arc_swap::ArcSwap;
-use fnv::{FnvHashMap, FnvHashSet};
+use fnv::FnvHashSet;
 use once_cell::sync::OnceCell;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
 use crate::{core::plugin_api::Plugin, gui_impl, hachimi_impl, il2cpp::{self, hook::umamusume::{CySpringController::SpringUpdateMode, GameSystem}}};
 
-use super::{game::Game, ipc, plurals, template, template_filters, tl_repo, utils, Error, Interceptor};
+use super::{game::Game, utils, Error, Interceptor};
 
 pub struct Hachimi {
     // Hooking stuff
@@ -14,14 +14,12 @@ pub struct Hachimi {
     pub hooking_finished: AtomicBool,
     pub plugins: Mutex<Vec<Plugin>>,
 
-    // Localized data
+    // 字體／顯示用的在地化資料（翻譯已移除，只留字體相關）
     pub localized_data: ArcSwap<LocalizedData>,
-    pub tl_updater: Arc<tl_repo::Updater>,
 
     // Shared properties
     pub game: Game,
     pub config: ArcSwap<Config>,
-    pub template_parser: template::Parser,
 
     /// -1 = default
     pub target_fps: AtomicI32,
@@ -100,10 +98,8 @@ impl Hachimi {
 
             // Don't load localized data initially since it might fail, logging the error is not possible here
             localized_data: ArcSwap::default(),
-            tl_updater: Arc::default(),
 
             game,
-            template_parser: template::Parser::new(&template_filters::LIST),
 
             target_fps: AtomicI32::new(config.target_fps.unwrap_or(-1)),
 
@@ -164,10 +160,6 @@ impl Hachimi {
     }
 
     pub fn load_localized_data(&self) {
-        if self.tl_updater.progress().is_some() {
-            warn!("Update in progress, not loading localized data");
-            return;
-        }
         let new_data = match LocalizedData::new(&self.config.load(), &self.game.data_dir) {
             Ok(v) => v,
             Err(e) => {
@@ -214,10 +206,6 @@ impl Hachimi {
             if !config.disable_gui {
                 gui_impl::init();
             }
-
-            if config.enable_ipc {
-                ipc::start_http(config.ipc_listen_all);
-            }
         }
 
         hachimi_impl::on_hooking_finished(self);
@@ -237,17 +225,9 @@ impl Hachimi {
 
     pub fn run_auto_update_check(&self) {
         if !self.config.load().disable_auto_update_check {
-            #[cfg(not(target_os = "windows"))]
-            self.tl_updater.clone().check_for_updates(false);
-
-            // Check for hachimi updates first, then translations
-            // Don't auto check for tl updates if it's not up to date
+            // 只剩本體（DLL）自動更新；翻譯更新已移除。
             #[cfg(target_os = "windows")]
-            self.updater.clone().check_for_updates(|new_update| {
-                if !new_update {
-                    Hachimi::instance().tl_updater.clone().check_for_updates(false);
-                }
-            });
+            self.updater.clone().check_for_updates(|_| {});
         }
     }
 }
@@ -263,8 +243,6 @@ pub struct Config {
     #[serde(default)]
     pub debug_mode: bool,
     #[serde(default)]
-    pub translator_mode: bool,
-    #[serde(default)]
     pub disable_gui: bool,
     #[serde(default)]
     pub disable_gui_once: bool,
@@ -274,13 +252,8 @@ pub struct Config {
     pub open_browser_url: String,
     #[serde(default = "Config::default_virtual_res_mult")]
     pub virtual_res_mult: f32,
-    pub translation_repo_index: Option<String>,
-    #[serde(default)]
-    pub skip_first_time_setup: bool,
     #[serde(default)]
     pub disable_auto_update_check: bool,
-    #[serde(default)]
-    pub disable_translations: bool,
     /// 因子卡片用亮色主題（預設暗色）
     #[serde(default)]
     pub factor_card_light_theme: bool,
@@ -309,24 +282,11 @@ pub struct Config {
     #[serde(default = "Config::default_story_tcps_multiplier")]
     pub story_tcps_multiplier: f32,
     #[serde(default)]
-    pub enable_ipc: bool,
-    #[serde(default)]
-    pub ipc_listen_all: bool,
-    #[serde(default)]
     pub force_allow_dynamic_camera: bool,
     #[serde(default)]
     pub live_theater_allow_same_chara: bool,
-    pub sugoi_url: Option<String>,
-    #[serde(default)]
-    pub auto_translate_stories: bool,
-    #[serde(default)]
-    pub auto_translate_localize: bool,
-    #[serde(default)]
-    pub disable_skill_name_translation: bool,
     #[serde(default)]
     pub language: Language,
-    #[serde(default = "Config::default_meta_index_url")]
-    pub meta_index_url: String,
     pub physics_update_mode: Option<SpringUpdateMode>,
     #[serde(default = "Config::default_ui_animation_scale")]
     pub ui_animation_scale: f32,
@@ -350,7 +310,6 @@ impl Config {
     fn default_live_playback_speed() -> f32 { 1.0 }
     fn default_story_choice_auto_select_delay() -> f32 { 0.75 }
     fn default_story_tcps_multiplier() -> f32 { 1.0 }
-    fn default_meta_index_url() -> String { "https://files.leadrdrk.com/hachimi/meta/index.json".to_owned() }
     fn default_ui_animation_scale() -> f32 { 1.0 }
 }
 
@@ -430,29 +389,16 @@ impl Language {
     }
 }
 
+// 文字翻譯已移除，這裡只保留「字體／顯示」相關的設定與資產路徑（給字體載入器用）。
 #[derive(Default)]
 pub struct LocalizedData {
     pub config: LocalizedDataConfig,
     path: Option<PathBuf>,
-
-    pub localize_dict: FnvHashMap<String, String>,
-    pub hashed_dict: FnvHashMap<u64, String>,
-    pub text_data_dict: FnvHashMap<i32, FnvHashMap<i32, String>>, // {"category": {"index": "text"}}
-    pub character_system_text_dict: FnvHashMap<i32, FnvHashMap<i32, String>>, // {"character_id": {"voice_id": "text"}}
-    pub race_jikkyo_comment_dict: FnvHashMap<i32, String>, // {"id": "text"}
-    pub race_jikkyo_message_dict: FnvHashMap<i32, String>, // {"id": "text"}
-    assets_path: Option<PathBuf>,
-
-    pub plural_form: plurals::Resolver,
-    pub ordinal_form: plurals::Resolver
+    assets_path: Option<PathBuf>
 }
 
 impl LocalizedData {
     fn new(config: &Config, data_dir: &Path) -> Result<LocalizedData, Error> {
-        if config.disable_translations {
-            return Ok(LocalizedData::default());
-        }
-
         let path: Option<PathBuf>;
         let config: LocalizedDataConfig = if let Some(ld_dir) = &config.localized_data_dir {
             let ld_path = Path::new(data_dir).join(ld_dir);
@@ -478,24 +424,12 @@ impl LocalizedData {
             LocalizedDataConfig::default()
         };
 
-        let plural_form = Self::parse_plural_form_or_default(&config.plural_form)?;
-        let ordinal_form = Self::parse_plural_form_or_default(&config.ordinal_form)?;
-
         Ok(LocalizedData {
-            localize_dict: Self::load_dict_static(&path, config.localize_dict.as_ref()).unwrap_or_default(),
-            hashed_dict: Self::load_dict_static(&path, config.hashed_dict.as_ref()).unwrap_or_default(),
-            text_data_dict: Self::load_dict_static(&path, config.text_data_dict.as_ref()).unwrap_or_default(),
-            character_system_text_dict: Self::load_dict_static(&path, config.character_system_text_dict.as_ref()).unwrap_or_default(),
-            race_jikkyo_comment_dict: Self::load_dict_static(&path, config.race_jikkyo_comment_dict.as_ref()).unwrap_or_default(),
-            race_jikkyo_message_dict: Self::load_dict_static(&path, config.race_jikkyo_message_dict.as_ref()).unwrap_or_default(),
             assets_path: path.as_ref()
                 .map(|p| config.assets_dir.as_ref()
                     .map(|dir| p.join(dir))
                 )
                 .unwrap_or_default(),
-
-            plural_form,
-            ordinal_form,
 
             config,
             path
@@ -544,15 +478,6 @@ impl LocalizedData {
         Self::load_dict_static_ex(&self.assets_path, rel_path_opt, true)
     }
 
-    fn parse_plural_form_or_default(opt: &Option<String>) -> Result<plurals::Resolver, Error> {
-        if let Some(plural_form) = opt {
-            Ok(plurals::Resolver::Expr(plurals::Ast::parse(plural_form)?))
-        }
-        else {
-            Ok(plurals::Resolver::Function(|_| 0))
-        }
-    }
-
     pub fn get_assets_path<P: AsRef<Path>>(&self, rel_path: P) -> Option<PathBuf> {
         self.assets_path.as_ref().map(|p| p.join(rel_path))
     }
@@ -574,61 +499,28 @@ impl LocalizedData {
     }
 }
 
+// 文字翻譯已移除，這裡只保留「字體／顯示」相關設定（給字體載入器與少數顯示 hook 用）。
 #[derive(Deserialize, Clone)]
 pub struct LocalizedDataConfig {
-    pub localize_dict: Option<String>,
-    pub hashed_dict: Option<String>,
-    pub text_data_dict: Option<String>,
-    pub character_system_text_dict: Option<String>,
-    pub race_jikkyo_comment_dict: Option<String>,
-    pub race_jikkyo_message_dict: Option<String>,
     pub assets_dir: Option<String>,
     #[serde(default)]
     pub extra_asset_bundle: OsOption<String>,
     pub replacement_font_name: Option<String>,
 
-    pub plural_form: Option<String>,
-    pub ordinal_form: Option<String>,
-    #[serde(default)]
-    pub ordinal_types: Vec<String>,
-    #[serde(default)]
-    pub months: Vec<String>,
-    pub month_text_format: Option<String>,
-
+    // 文字換行（給 core::utils 的斷行工具用；目前沒有 hook 呼叫，保留供未來字體/排版微調）
     #[serde(default)]
     pub use_text_wrapper: bool,
     // Predefined line widths are counts of cjk characters.
     // 1 cjk char = 2 columns, so setting this value to 2 replicates the default behaviour.
     pub line_width_multiplier: Option<f32>,
 
-    #[serde(default)]
-    pub auto_adjust_story_clip_length: bool,
-    pub story_line_count_offset: Option<i32>,
     pub text_frame_line_spacing_multiplier: Option<f32>,
-    pub text_frame_font_size_multiplier: Option<f32>,
-    pub skill_list_item_desc_font_size_multiplier: Option<f32>,
     #[serde(default)]
     pub text_common_allow_overflow: bool,
-    #[serde(default)]
-    pub now_loading_comic_title_ellipsis: bool,
-
-    #[serde(default)]
-    pub remove_ruby: bool,
-    pub character_note_top_gallery_button: Option<UITextConfig>,
-    pub character_note_top_talk_gallery_button: Option<UITextConfig>,
-
-    pub news_url: Option<String>,
 
     // RESERVED
     #[serde(default)]
     pub _debug: i32
-}
-
-#[derive(Deserialize, Clone)]
-pub struct UITextConfig {
-    pub text: Option<String>,
-    pub font_size: Option<i32>,
-    pub line_spacing: Option<f32>
 }
 
 impl Default for LocalizedDataConfig {

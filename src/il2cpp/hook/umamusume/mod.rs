@@ -1,49 +1,19 @@
-pub mod Localize;
-pub mod TextId;
-pub mod StoryRaceTextAsset;
-mod LyricsController;
-pub mod StoryTimelineData;
-pub mod StoryTimelineBlockData;
-pub mod StoryTimelineTrackData;
-pub mod StoryTimelineTextClipData;
-pub mod GallopUtil;
-mod UIManager;
-pub mod GraphicSettings;
-mod CameraController;
-pub mod SingleModeStartResultCharaViewer;
-pub mod WebViewManager;
-pub mod DialogCommon;
-mod PartsSingleModeSkillLearningListItem;
-mod MasterMissionData;
-mod TrainingParamChangeA2U;
-pub mod WebViewDefine;
+// 字體／顯示相關（保留，未來自訂字體功能要用）
 pub mod TextFrame;
-mod PartsSingleModeSkillListItem;
-pub mod FlashActionPlayer;
-pub mod TextRubyData;
-pub mod TextDotData;
-pub mod GameSystem;
-mod StoryViewTextControllerLandscape;
-mod StoryViewTextControllerSingleMode;
-mod JikkyoDisplay;
-pub mod Screen;
-mod TrainingParamChangePlate;
-mod SingleModeUtils;
-mod MasterSingleModeTurn;
 mod TextFontManager;
 mod TextFormat;
 mod TextCommon;
 mod TextMeshProUguiCommon;
+
+// 玩法／畫面／擷取等非翻譯 hook（保留）
+mod UIManager;
+pub mod GraphicSettings;
+mod CameraController;
+pub mod SingleModeStartResultCharaViewer;
+pub mod GameSystem;
+pub mod Screen;
 mod StoryChoiceController;
 mod StoryViewController;
-mod StoryTimelineClipData;
-mod StoryTimelineCharaTrackData;
-mod CharacterNoteTopView;
-mod CharacterNoteTopViewController;
-mod ViewControllerBase;
-mod ButtonCommon;
-mod NowLoading;
-pub mod StoryTimelineController;
 mod DialogRaceOrientation;
 mod RaceInfo;
 mod RaceUtil;
@@ -78,56 +48,28 @@ pub fn init() {
     // 封包擷取的唯一 choke point，capture-only 建置也只裝這一個。
     HttpHelper::init(image);
 
-    // 以下全是翻譯／劇情／UI 等遊戲改動 hook，capture-only 建置一律不裝。
+    // 以下是字體／玩法／畫面等遊戲改動 hook，capture-only 建置一律不裝。
     #[cfg(not(feature = "capture-only"))]
     {
     #[cfg(target_os = "windows")]
     DialogTrainedCharacterDetail::init(image);
-    Localize::init(image);
-    TextId::init(image);
-    StoryRaceTextAsset::init(image);
-    LyricsController::init(image);
-    StoryTimelineData::init(image);
-    StoryTimelineBlockData::init(image);
-    StoryTimelineTrackData::init(image);
-    StoryTimelineTextClipData::init(image);
-    GallopUtil::init(image);
-    UIManager::init(image);
-    GraphicSettings::init(image);
-    CameraController::init(image);
-    SingleModeStartResultCharaViewer::init(image);
-    WebViewManager::init(image);
-    DialogCommon::init(image);
-    PartsSingleModeSkillLearningListItem::init(image);
-    MasterMissionData::init(image);
-    TrainingParamChangeA2U::init(image);
+
+    // 字體／顯示
     TextFrame::init(image);
-    PartsSingleModeSkillListItem::init(image);
-    FlashActionPlayer::init(image);
-    TextRubyData::init(image);
-    TextDotData::init(image);
-    GameSystem::init(image);
-    StoryViewTextControllerLandscape::init(image);
-    StoryViewTextControllerSingleMode::init(image);
-    JikkyoDisplay::init(image);
-    Screen::init(image);
-    TrainingParamChangePlate::init(image);
-    SingleModeUtils::init(image);
-    MasterSingleModeTurn::init(image);
     TextFontManager::init(image);
     TextFormat::init(image);
     TextCommon::init(image);
     TextMeshProUguiCommon::init(image);
+
+    // 玩法／畫面
+    UIManager::init(image);
+    GraphicSettings::init(image);
+    CameraController::init(image);
+    SingleModeStartResultCharaViewer::init(image);
+    GameSystem::init(image);
+    Screen::init(image);
     StoryChoiceController::init(image);
     StoryViewController::init(image);
-    StoryTimelineClipData::init(image);
-    StoryTimelineCharaTrackData::init(image);
-    CharacterNoteTopView::init(image);
-    CharacterNoteTopViewController::init(image);
-    ViewControllerBase::init(image);
-    ButtonCommon::init(image);
-    NowLoading::init(image);
-    StoryTimelineController::init(image);
     DialogRaceOrientation::init(image);
     RaceInfo::init(image);
     RaceUtil::init(image);

@@ -77,11 +77,7 @@ pub mod UnityEngine_UI;
 pub mod UnityEngine_UIModule;
 pub mod Unity_TextMeshPro;
 
-pub mod LibNative_Runtime;
 pub mod umamusume;
-pub mod Cute_UI_Assembly;
-pub mod Plugins;
-mod Cute_Cri_Assembly;
 mod DOTween;
 
 #[cfg(any(target_os = "android", target_os = "windows"))]
@@ -105,8 +101,6 @@ pub fn init() {
         UnityEngine_UI::init();
         UnityEngine_UIModule::init();
         Unity_TextMeshPro::init();
-
-        LibNative_Runtime::init();
     }
 
     // Umamusume（capture-only 時 umamusume::init 內部只裝 HttpHelper）
@@ -114,9 +108,6 @@ pub fn init() {
 
     #[cfg(not(feature = "capture-only"))]
     {
-        Cute_UI_Assembly::init();
-        Plugins::init();
-        Cute_Cri_Assembly::init();
         DOTween::init();
 
         #[cfg(any(target_os = "android", target_os = "windows"))]
