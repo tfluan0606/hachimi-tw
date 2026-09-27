@@ -1,0 +1,53 @@
+# 推 `vX.Y.Z` tag 就自動發版：build → 算 blake3 → 開 GitHub release 附 version.dll + blake3.json。
+# 自動更新器（src/windows/updater.rs）只認這兩個 asset，且只抓 releases/latest（非 prerelease）。
+# 本機用 tools/release.ps1 改版號、打 tag、推上來即可，不用上網站手動發。
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # build.rs 用 git 取 commit hash／dirty 狀態組版號字串
+          fetch-depth: 0
+
+      - name: 檢查 tag 與 Cargo.toml 版號一致
+        shell: pwsh
+        run: |
+          $version = (Select-String -Path Cargo.toml -Pattern '^version = "(.+)"' | Select-Object -First 1).Matches.Groups[1].Value
+          if ("v$version" -ne "${{ github.ref_name }}") {
+            # 版號對不上的 DLL 發出去，裝完的人會一直被判定有新版（v0.14.1-test 的教訓）
+            Write-Error "tag ${{ github.ref_name }} 與 Cargo.toml 版號 $version 不一致"
+            exit 1
+          }
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: 測試
+        run: cargo test --lib --locked
+
+      - name: Build
+        run: cargo build --release --locked
+
+      - name: 打包 version.dll + blake3.json
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force out | Out-Null
+          Copy-Item target/release/hachimi.dll out/version.dll
+          cargo run --locked -p blake3json --release -- out/version.dll -o out/blake3.json
+          Get-Content out/blake3.json
+
+      - name: 開 release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${{ github.ref_name }}" out/version.dll out/blake3.json --title "${{ github.ref_name }}" --generate-notes
