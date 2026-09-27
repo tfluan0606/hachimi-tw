@@ -256,6 +256,10 @@ pub struct Config {
     pub virtual_res_mult: f32,
     #[serde(default)]
     pub disable_auto_update_check: bool,
+    /// 測試用：把「最新 release」查詢網址換掉（例 `http://127.0.0.1:8765/latest.json`），
+    /// 回傳格式同 GitHub `releases/latest`。未設定＝查 GitHub。設定編輯器不顯示。
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub update_check_url: Option<String>,
     /// 自動更新：開＝查到新版就背景下載、完成後通知重開；關＝只在右下角通知有新版，不下載。
     /// 開啟時也保證每次啟動都會檢查（不受 `disable_auto_update_check` 影響）。
     #[serde(default)]

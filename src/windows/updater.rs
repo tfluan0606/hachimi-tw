@@ -72,7 +72,9 @@ impl Updater {
             }
         }
 
-        let latest: Release = http::get_json(&format!("https://api.github.com/repos/{}/releases/latest", REPO_PATH))?;
+        let url = Hachimi::instance().config.load().update_check_url.clone()
+            .unwrap_or_else(|| format!("https://api.github.com/repos/{}/releases/latest", REPO_PATH));
+        let latest: Release = http::get_json(&url)?;
         if latest.is_newer_version() {
             let mut dll_url = None;
             let mut hash_url = None;
