@@ -239,7 +239,7 @@ impl Gui {
                 ui.horizontal(|ui| {
                     ui.add(Self::icon());
                     ui.heading("Hachimi");
-                    // splash 只顯示乾淨版本號；完整含 git hash 的版本留在「關於」視窗（除錯用）
+                    // splash／關於只顯示乾淨版本號；完整含 git hash 的版本只寫在 log 開頭（除錯用）
                     ui.label(concat!("v", env!("CARGO_PKG_VERSION")));
                 });
                 ui.label(&self.splash_sub_str);
@@ -1272,7 +1272,7 @@ impl Window for AboutWindow {
                 ui.add(Gui::icon_2x());
                 ui.vertical(|ui| {
                     ui.heading(t!("hachimi"));
-                    ui.label(env!("HACHIMI_DISPLAY_VERSION"));
+                    ui.label(concat!("v", env!("CARGO_PKG_VERSION")));
                 });
             });
             ui.label(t!("about.copyright"));
