@@ -5,3 +5,4 @@ pub mod dump;
 pub mod hook;
 mod utils;
 pub mod ext;
+pub mod sql;

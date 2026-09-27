@@ -132,6 +132,8 @@ config_editor:
   story_choice_auto_select_delay: "Độ trễ tự động chọn\nlựa chọn truyện"
   story_text_speed_multiplier: "Hệ số tốc độ văn bản\ntruyện"
   force_allow_dynamic_camera: "Buộc cho phép\ndynamic camera"
+  skill_data_desc: "Mô tả dữ liệu kỹ năng"
+  skill_data_desc_hint: "Thay mô tả kỹ năng bằng điều kiện kích hoạt và giá trị hiệu ứng thực tế (đọc từ cơ sở dữ liệu game)."
   live_theater_allow_same_chara: "Cho phép cùng\nnhân vật trong live"
   physics_update_mode: "Chế độ vật lý"
 

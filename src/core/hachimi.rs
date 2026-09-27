@@ -293,6 +293,9 @@ pub struct Config {
     pub story_tcps_multiplier: f32,
     #[serde(default)]
     pub force_allow_dynamic_camera: bool,
+    /// 技能說明改成顯示實際發動條件與效果數值（讀 master.mdb 的 skill_data，移植自 Edge）。預設關。
+    #[serde(default)]
+    pub skill_data_desc: bool,
     #[serde(default)]
     pub live_theater_allow_same_chara: bool,
     #[serde(default)]

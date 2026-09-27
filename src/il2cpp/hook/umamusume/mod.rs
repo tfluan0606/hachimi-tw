@@ -42,6 +42,9 @@ pub mod DialogTrainedCharacterDetail;
 
 pub mod HttpHelper;
 
+// 技能資料說明（skill_data_desc）的換行：避免遊戲把 rich text 標籤切斷
+mod GallopUtil;
+
 pub fn init() {
     get_assembly_image_or_return!(image, "umamusume.dll");
 
@@ -79,6 +82,7 @@ pub fn init() {
     LiveTheaterViewController::init(image);
     CySpringController::init(image);
     Director::init(image);
+    GallopUtil::init(image);
 
     #[cfg(target_os = "windows")]
     {

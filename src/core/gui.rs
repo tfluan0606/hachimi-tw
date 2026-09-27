@@ -1123,6 +1123,11 @@ impl ConfigEditor {
                 ui.checkbox(&mut config.force_allow_dynamic_camera, "");
                 ui.end_row();
 
+                ui.label(t!("config_editor.skill_data_desc"))
+                    .on_hover_text(t!("config_editor.skill_data_desc_hint"));
+                ui.checkbox(&mut config.skill_data_desc, "");
+                ui.end_row();
+
                 ui.label(t!("config_editor.live_theater_allow_same_chara"));
                 ui.checkbox(&mut config.live_theater_allow_same_chara, "");
                 ui.end_row();

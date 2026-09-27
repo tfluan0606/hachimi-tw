@@ -1,0 +1,959 @@
+//! 遊戲 SQLite 查詢攔截的共用型別，以及「技能資料說明」（skill_data_desc）。
+//!
+//! skill_data_desc 移植自 Hachimi-Edge（2b490c4 / c971890 / 4834434）：讀 master.mdb 的 `skill_data`，
+//! 把發動條件（condition / precondition）與效果（ability_type / value / target）組成人看得懂的文字，
+//! 在遊戲查 `text_data` category 48（技能說明）時換掉原本的說明。字串在 locale 的 `skill_data_desc.*`。
+//! 原本整套翻譯用的 SQL 查詢替換已在 bc3f711 拔掉，這裡只保留技能說明需要的部分。
+
+use std::ptr;
+use fnv::FnvHashMap;
+use sqlparser::ast;
+use once_cell::sync::OnceCell;
+use crate::{
+    core::Hachimi,
+    il2cpp::{ext::{StringExt, Il2CppStringExt}, hook::LibNative_Runtime::Sqlite3::{Connection, Query}, types::{Il2CppObject, Il2CppString}}
+};
+use rust_i18n::locale;
+
+/// master.mdb 位置：`<exe 目錄>/<exe 名>_Data/Persistent/master/master.mdb`
+/// （台服 `komoeumamusume_Data\Persistent\master\master.mdb`）。
+fn get_masterdb_path() -> String {
+    #[cfg(target_os = "windows")]
+    {
+        let exe = crate::windows::utils::get_exec_path();
+        let mut data_dir = exe.file_stem().unwrap_or_default().to_owned();
+        data_dir.push("_Data");
+        exe.parent().unwrap_or(std::path::Path::new("."))
+            .join(data_dir).join("Persistent").join("master").join("master.mdb")
+            .to_string_lossy().into_owned()
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        String::new()
+    }
+}
+
+/// 第一次用到時才從 master.mdb 建。必須在 il2cpp 執行緒上（查詢走遊戲自己的 Sqlite3 wrapper），
+/// 而呼叫點本來就在遊戲查 text_data 的當下（Query::GetText hook 裡）。
+/// 注意：這時 GetText hook 正鎖著 SELECT_QUERIES，所以建表時的 GetText／Dispose 一律走 `*_orig`，
+/// 不能再經過 hook。只建一次；失敗（空表）就記一筆 log，之後不再重試。
+static SKILL_DATA_DESC: OnceCell<Option<SkillDataDesc>> = OnceCell::new();
+
+fn skill_data_desc() -> Option<&'static SkillDataDesc> {
+    SKILL_DATA_DESC.get_or_init(|| {
+        let data = SkillDataDesc::load_from_db();
+        if data.descs.is_empty() {
+            warn!("[skill_data_desc] master.mdb 讀不到 skill_data（{}）", get_masterdb_path());
+            None
+        }
+        else {
+            info!("[skill_data_desc] 已建立 {} 筆技能說明", data.descs.len());
+            Some(data)
+        }
+    }).as_ref()
+}
+
+fn text_hash(text: &str) -> u64 {
+    use std::hash::{Hash, Hasher};
+    let mut h = std::collections::hash_map::DefaultHasher::new();
+    text.hash(&mut h);
+    h.finish()
+}
+
+/// 這段文字是不是我們產生的技能說明（給換行 hook 判斷要不要接手）。說明還沒建好時一律 false。
+pub fn is_skill_data_desc_text(text: &str) -> bool {
+    SKILL_DATA_DESC.get()
+        .and_then(|d| d.as_ref())
+        .is_some_and(|d| d.text_hashes.contains(&text_hash(text)))
+}
+
+pub trait SelectQueryState {
+    /// Adds a column to the query.
+    ///
+    /// Implementers are expected to only track the index of columns that they need.
+    fn add_column(&mut self, idx: i32, name: &str);
+
+    /// Adds a placeholder parameter to the query (WHERE param = ?).
+    ///
+    /// Index starts at 1.
+    fn add_param(&mut self, idx: i32, name: &str);
+
+    /// Bind an int value to a placeholder.
+    ///
+    /// Index starts at 1.
+    fn bind_int(&mut self, idx: i32, value: i32);
+
+    /// Gets the resulting string on the current row's column.
+    fn get_text(&self, query: *mut Il2CppObject, idx: i32) -> Option<*mut Il2CppString>;
+}
+
+#[derive(Default)]
+struct Column {
+    /// Index of the column in the SELECT statement.
+    ///
+    /// Can be used to query the value later if needed.
+    select_idx: Option<i32>,
+
+    /// Index of the placeholder param for this column.
+    ///
+    /// If this column's value is already binded as a param in the query, we won't need to query it later.
+    param_idx: Option<i32>,
+
+    /// The int value binded to this column as a parameter.
+    int_value: Option<i32>
+}
+
+impl Column {
+    fn is_select_idx(&self, idx: i32) -> bool {
+        if let Some(i) = self.select_idx {
+            idx == i
+        }
+        else {
+            false
+        }
+    }
+
+    fn is_param_idx(&self, idx: i32) -> bool {
+        if let Some(i) = self.param_idx {
+            idx == i
+        }
+        else {
+            false
+        }
+    }
+
+    fn try_bind_int(&mut self, idx: i32, value: i32) {
+        if self.is_param_idx(idx) {
+            self.int_value = Some(value);
+        }
+    }
+}
+
+#[derive(Default)]
+pub struct SkillDataDesc {
+    pub descs: FnvHashMap<i32, String>,
+    /// descs 每段文字的雜湊，見 [`is_skill_data_desc_text`]
+    text_hashes: fnv::FnvHashSet<u64>
+}
+
+struct SkillDataDescRow {
+    id: i32,
+    precondition_1: String,
+    condition_1: String,
+    ability_time_1: i32,
+    cooldown_time_1: i32,
+    precondition_2: String,
+    condition_2: String,
+    ability_time_2: i32,
+    cooldown_time_2: i32,
+    slots: [SkillDataDescSlot; 6]
+}
+
+#[derive(Clone, Copy, Default)]
+struct SkillDataDescSlot {
+    ability_type: i32,
+    ability_value: i32,
+    ability_value_usage: i32,
+    additional_activate_type: i32,
+    target_type: i32,
+    target_value: i32
+}
+
+impl SkillDataDesc {
+    pub fn load_from_db() -> Self {
+        let mut descs = FnvHashMap::default();
+
+        let db_path = get_masterdb_path();
+        let conn = Connection::new();
+
+        if Connection::Open(conn, db_path.to_il2cpp_string(), ptr::null_mut(), ptr::null_mut(), 0) {
+            let sql = "SELECT id, \
+                precondition_1, condition_1, float_ability_time_1, float_cooldown_time_1, \
+                ability_type_1_1, ability_value_usage_1_1, additional_activate_type_1_1, float_ability_value_1_1, target_type_1_1, target_value_1_1, \
+                ability_type_1_2, ability_value_usage_1_2, additional_activate_type_1_2, float_ability_value_1_2, target_type_1_2, target_value_1_2, \
+                ability_type_1_3, ability_value_usage_1_3, additional_activate_type_1_3, float_ability_value_1_3, target_type_1_3, target_value_1_3, \
+                precondition_2, condition_2, float_ability_time_2, float_cooldown_time_2, \
+                ability_type_2_1, ability_value_usage_2_1, additional_activate_type_2_1, float_ability_value_2_1, target_type_2_1, target_value_2_1, \
+                ability_type_2_2, ability_value_usage_2_2, additional_activate_type_2_2, float_ability_value_2_2, target_type_2_2, target_value_2_2, \
+                ability_type_2_3, ability_value_usage_2_3, additional_activate_type_2_3, float_ability_value_2_3, target_type_2_3, target_value_2_3 \
+                FROM skill_data";
+            let query = Connection::Query(conn, sql.to_il2cpp_string());
+
+            if !query.is_null() {
+                while Query::Step(query) {
+                    let row = Self::get_data_row(query);
+                    let desc = Self::format_data_desc(&row);
+                    descs.insert(row.id, desc);
+                }
+                Query::Dispose_orig(query);
+            }
+            Connection::CloseDB(conn);
+        }
+
+        let text_hashes = descs.values().map(|t| text_hash(t)).collect();
+        SkillDataDesc { descs, text_hashes }
+    }
+
+    pub fn get_desc(&self, id: i32) -> Option<&String> {
+        self.descs.get(&id)
+    }
+    
+    fn get_data_slot(query: *mut Il2CppObject, base: i32) -> SkillDataDescSlot {
+        SkillDataDescSlot {
+            ability_type: Query::GetInt(query, base),
+            ability_value_usage: Query::GetInt(query, base + 1),
+            additional_activate_type: Query::GetInt(query, base + 2),
+            ability_value: Query::GetInt(query, base + 3),
+            target_type: Query::GetInt(query, base + 4),
+            target_value: Query::GetInt(query, base + 5)
+        }
+    }
+
+    fn get_data_text(query: *mut Il2CppObject, idx: i32) -> String {
+        let text_ptr = Query::GetText_orig(query, idx);
+        unsafe { text_ptr.as_ref() }.map(|s| s.as_utf16str().to_string()).unwrap_or_default()
+    }
+
+    fn get_data_row(query: *mut Il2CppObject) -> SkillDataDescRow {
+        SkillDataDescRow {
+            id: Query::GetInt(query, 0),
+            precondition_1: Self::get_data_text(query, 1),
+            condition_1: Self::get_data_text(query, 2),
+            ability_time_1: Query::GetInt(query, 3),
+            cooldown_time_1: Query::GetInt(query, 4),
+            precondition_2: Self::get_data_text(query, 23),
+            condition_2: Self::get_data_text(query, 24),
+            ability_time_2: Query::GetInt(query, 25),
+            cooldown_time_2: Query::GetInt(query, 26),
+            slots: [
+                Self::get_data_slot(query, 5), Self::get_data_slot(query, 11), Self::get_data_slot(query, 17),
+                Self::get_data_slot(query, 27), Self::get_data_slot(query, 33), Self::get_data_slot(query, 39)
+            ]
+        }
+    }
+
+    fn round_ties_up(value: i32, units: i32) -> i32 {
+        let rem = value.rem_euclid(units);
+        let base = value - rem;
+        if rem * 2 >= units { base + units } else { base }
+    }
+
+    fn format_data_number(value: i32, div: i32, decimals: usize) -> String {
+        let units = div / 10i32.pow(decimals as u32);
+        let rounded = Self::round_ties_up(value, units);
+        let neg = rounded < 0;
+        let abs = rounded.unsigned_abs() as u64;
+        let div = div as u64;
+        let whole = abs / div;
+        let frac = (abs % div) / (div / 10u64.pow(decimals as u32));
+
+        let mut out = String::new();
+        if neg {
+            out.push('-');
+        }
+        out.push_str(&whole.to_string());
+        if frac > 0 {
+            out.push('.');
+            let frac_str = format!("{:0width$}", frac, width = decimals);
+            out.push_str(frac_str.trim_end_matches('0'));
+        }
+        out
+    }
+
+    fn str(key: &str) -> Option<String> {
+        let full_key = format!("skill_data_desc.{key}");
+        let locale = locale();
+        crate::_rust_i18n_try_translate(&locale, full_key.as_str()).map(|text| text.to_string())
+    }
+
+    fn data_fmt(key: &str, value: &str) -> Option<String> {
+        Self::str(key).map(|text| text.replace("%{v}", value))
+    }
+
+    fn op_tag(op: &str) -> &str {
+        match op {
+            "==" => "eq",
+            "!=" => "ne",
+            "<=" => "le",
+            ">=" => "ge",
+            "<" => "lt",
+            ">" => "gt",
+            _ => "op"
+        }
+    }
+
+    fn format_effect(slot: SkillDataDescSlot) -> Option<String> {
+        let (name_key, unit_key, div, decimals) = match slot.ability_type {
+            1 => ("speed_stat", "stat", 10000, 2),
+            2 => ("stamina_stat", "stat", 10000, 2),
+            3 => ("power_stat", "stat", 10000, 2),
+            4 => ("guts_stat", "stat", 10000, 2),
+            5 => ("wit_stat", "stat", 10000, 2),
+            8 => ("field_of_view", "deg", 10000, 2),
+            9 => ("current_hp", "percent", 100, 1),
+            13 => ("rushed_time", "second", 10000, 2),
+            14 => ("delay_start", "second", 10000, 2),
+            21 => ("current_speed", "mps", 10000, 2),
+            22 => ("current_speed_natural_decel", "mps", 10000, 2),
+            27 => ("target_speed", "mps", 10000, 2),
+            28 => ("lane_movement_speed", "percent", 100, 1),
+            29 => ("rushed_chance", "stat", 10000, 2),
+            31 => ("acceleration", "mps2", 10000, 2),
+            32 => ("all_stats", "stat", 10000, 2),
+            35 => ("target_lane", "stat", 10000, 2),
+            37 => ("activate_rare_skill", "stat", 10000, 2),
+            42 | 48 | 49 => ("special", "stat", 10000, 2),
+            501 => ("event_specific", "stat", 10000, 2),
+
+            6 => return Self::str("effect.fixed.aggressive_strategy"),
+            38 => return Self::str("effect.fixed.debuff_immunity"),
+            41 => return Self::str("effect.fixed.sympathy_all"),
+            502 => return Self::str("effect.fixed.loh_stat"),
+            10 => return Self::str(&format!("effect.start_reaction.{}", slot.ability_value)),
+            503 | _ => return None,
+        };
+
+        let name = Self::str(&format!("effect.name.{name_key}"))?;
+        let unit = Self::str(&format!("effect.unit.{unit_key}")).unwrap_or_default();
+        let value = Self::format_data_number(slot.ability_value, div, decimals);
+        let sign = if slot.ability_value > 0 { " +" } else { " " };
+        let mut out = format!("{name}{sign}{value}{unit}");
+        if slot.ability_value_usage == 19 {
+            out.push_str(&Self::str("effect.usage19_suffix").unwrap_or_default());
+        }
+
+        let star = match slot.additional_activate_type {
+            1 => Self::str("star.activate.1"),
+            2 => Self::str("star.activate.2"),
+            3 => Self::str("star.activate.3"),
+            _ => None
+        }.or_else(|| {
+            if slot.ability_value_usage != 1 {
+                Self::str(&format!("star.usage.{}", slot.ability_value_usage))
+            } else {
+                None
+            }
+        });
+        if let Some(star) = star {
+            out.push_str(&Self::str("sep.star").unwrap_or_default());
+            out.push_str(&star);
+        }
+
+        if slot.target_type != 1 {
+            let target = match slot.target_type {
+                4 => Self::str("target.all_in_fov"),
+                7 => Self::data_fmt("target.leading", &(slot.target_value - 1).to_string()),
+                9 => if slot.target_value == 18 {
+                    Self::str("target.all_ahead")
+                } else {
+                    Self::data_fmt("target.closest_ahead", &slot.target_value.to_string())
+                },
+                10 => if slot.target_value == 18 {
+                    Self::str("target.all_behind")
+                } else {
+                    Self::data_fmt("target.closest_behind", &slot.target_value.to_string())
+                },
+                11 => Self::str("target.team"),
+                18 => match Self::str(&format!("target.style.{}", slot.target_value)) {
+                    Some(text) => Some(text),
+                    None => return None
+                },
+                19 => Self::data_fmt("target.random_rushed_ahead", &slot.target_value.to_string()),
+                20 => Self::data_fmt("target.random_rushed_behind", &slot.target_value.to_string()),
+                21 => match Self::str(&format!("target.style_rushed.{}", slot.target_value)) {
+                    Some(text) => Some(text),
+                    None => return None
+                },
+                22 => Self::str("target.suzuka"),
+                23 => Self::data_fmt("target.random_recovery_users", &slot.target_value.to_string()),
+                24 => Self::str("target.unknown"),
+                _ => None
+            };
+            if let Some(target) = target {
+                // locale 有 sep.target_wrap（例「（%{v}）」）就整段包起來，沒有就照舊「 to 對象」
+                match Self::data_fmt("sep.target_wrap", &target) {
+                    Some(wrapped) => out.push_str(&wrapped),
+                    None => {
+                        out.push_str(&Self::str("sep.to").unwrap_or_default());
+                        out.push_str(&target);
+                    }
+                }
+            }
+        }
+
+        Some(out)
+    }
+
+    /// 「硬限制」：跑法、距離、場地、賽場（只認 `==`）。這些決定技能「能不能用」，跟發動時機無關，
+    /// 所以從條件裡拆出來，放在說明最前面醒目標示（遊戲原文是放在最後的「＜一哩/中距離＞」）。
+    const HARD_TOKENS: [&'static str; 4] = ["running_style", "distance_type", "ground_type", "track_id"];
+
+    fn is_hard_atom(atom: &str) -> bool {
+        Self::HARD_TOKENS.iter().any(|t| {
+            atom.strip_prefix(t).is_some_and(|rest| rest.starts_with("=="))
+        })
+    }
+
+    /// 把條件拆成（剩下的條件原始字串, 硬限制文字清單）。
+    /// 只有在「每個 OR 分支拿掉硬限制後剩下的條件都一樣」時才拆（例：`一哩&第3彎道@中距離&第3彎道`
+    /// → 限制「一哩／中距離」、條件「第3彎道」）；分支之間其他條件不同時硬拆會弄錯配對，就不拆。
+    fn split_hard_conditions(condition: &str) -> (String, Vec<String>) {
+        if condition.is_empty() {
+            return (String::new(), Vec::new());
+        }
+        let and_sep = Self::str("sep.and").unwrap_or_default();
+        let branches: Vec<(Vec<&str>, Vec<&str>)> = condition.split('@')
+            .map(|g| g.split('&').partition(|a| Self::is_hard_atom(a)))
+            .collect();
+        if branches.iter().all(|(hard, _)| hard.is_empty()) {
+            return (condition.to_string(), Vec::new());
+        }
+        let first_soft = &branches[0].1;
+        if !branches.iter().all(|(_, soft)| soft == first_soft) {
+            return (condition.to_string(), Vec::new());
+        }
+        let mut labels: Vec<String> = Vec::new();
+        for (hard, _) in &branches {
+            let label = hard.iter().map(|a| Self::format_data_atom(a)).collect::<Vec<_>>().join(&and_sep);
+            if !label.is_empty() && !labels.contains(&label) {
+                labels.push(label);
+            }
+        }
+        (first_soft.join("&"), labels)
+    }
+
+    /// 拆原始條件 `token op value`（例 `order_rate>=40` → ("order_rate", ">=", 40)）。
+    fn parse_atom(atom: &str) -> (&str, &str, i32) {
+        let token_end = atom.find(|c: char| !(c.is_ascii_lowercase() || c.is_ascii_digit() || c == '_')).unwrap_or(atom.len());
+        let rest = &atom[token_end..];
+        let op_end = rest.find(|c: char| !matches!(c, '=' | '!' | '<' | '>')).unwrap_or(rest.len());
+        (&atom[..token_end], &rest[..op_end], rest[op_end..].parse().unwrap_or(0))
+    }
+
+    /// 一組 AND 條件。同一個條件同時有 `>=` 下限與 `<=` 上限、且 locale 有對應的 `range` 字串時，
+    /// 合併成區間（「名次40～70%」「競賽距離50～60%」「剩餘距離199～201米」）；其餘照原本不等式顯示。
+    /// range 字串：`cond.order_rate.range`，其他在 `cond.template.<token>.range`。
+    fn format_and_group(atoms: &[&str], and_sep: &str) -> String {
+        let parsed: Vec<(&str, &str, i32)> = atoms.iter().map(|a| Self::parse_atom(a)).collect();
+        let mut merged: Vec<(usize, usize, String)> = Vec::new(); // (前面那個的位置, 後面那個的位置, 區間文字)
+        for (lo, (token, op, _)) in parsed.iter().enumerate() {
+            if *op != ">=" || merged.iter().any(|(a, b, _)| *a == lo || *b == lo) {
+                continue;
+            }
+            let Some(hi) = parsed.iter().position(|(t, op, _)| t == token && *op == "<=") else {
+                continue;
+            };
+            let key = if *token == "order_rate" { "cond.order_rate.range".to_string() } else { format!("cond.template.{token}.range") };
+            let range_sep = Self::str("sep.range").unwrap_or_else(|| "~".into());
+            let range = format!("{}{range_sep}{}", parsed[lo].2, parsed[hi].2);
+            if let Some(text) = Self::data_fmt(&key, &range) {
+                merged.push((lo.min(hi), lo.max(hi), text));
+            }
+        }
+        let mut out = Vec::with_capacity(atoms.len());
+        for (i, atom) in atoms.iter().enumerate() {
+            if let Some((_, _, text)) = merged.iter().find(|(first, _, _)| *first == i) {
+                out.push(text.clone());
+            }
+            else if !merged.iter().any(|(_, second, _)| *second == i) {
+                out.push(Self::format_data_atom(atom));
+            }
+        }
+        out.join(and_sep)
+    }
+
+    fn format_data_conditions(condition: &str) -> String {
+        let or_sep = Self::str("sep.or").unwrap_or_default();
+        let and_sep = Self::str("sep.and").unwrap_or_default();
+        let fmt_and = |atoms: &[&str]| Self::format_and_group(atoms, &and_sep);
+
+        let groups: Vec<Vec<&str>> = condition.split('@').map(|g| g.split('&').collect()).collect();
+
+        // 各 OR 分支共有的條件抽出來，只寫一次：
+        //   A&B&C / D&B&C → (A / D) & B & C；若某分支就只剩共同條件（X / X&Y）→ 整體等於 X
+        if groups.len() > 1 {
+            let common: Vec<&str> = groups[0].iter().copied()
+                .filter(|a| groups[1..].iter().all(|g| g.contains(a)))
+                .collect();
+            if !common.is_empty() {
+                let diffs: Vec<Vec<&str>> = groups.iter()
+                    .map(|g| g.iter().copied().filter(|a| !common.contains(a)).collect())
+                    .collect();
+                if diffs.iter().any(|d| d.is_empty()) {
+                    return fmt_and(&common);
+                }
+                let open = Self::str("sep.group_open").unwrap_or_else(|| "(".into());
+                let close = Self::str("sep.group_close").unwrap_or_else(|| ")".into());
+                let alts = diffs.iter().map(|d| fmt_and(d)).collect::<Vec<_>>().join(&or_sep);
+                return format!("{open}{alts}{close}{and_sep}{}", fmt_and(&common));
+            }
+        }
+
+        groups.iter().map(|g| fmt_and(g)).collect::<Vec<_>>().join(&or_sep)
+    }
+
+    fn format_data_atom(atom: &str) -> String {
+        let bytes = atom.as_bytes();
+        let mut token_end = 0;
+        while token_end < bytes.len() && (bytes[token_end].is_ascii_lowercase() || bytes[token_end] == b'_' || bytes[token_end].is_ascii_digit()) {
+            token_end += 1;
+        }
+        let op_start = token_end;
+        let mut op_end = op_start;
+        while op_end < bytes.len() && (bytes[op_end] == b'=' || bytes[op_end] == b'!' || bytes[op_end] == b'<' || bytes[op_end] == b'>') {
+            op_end += 1;
+        }
+        let token = &atom[..token_end];
+        let op = &atom[op_start..op_end];
+        let value = atom[op_end..].parse::<i32>().unwrap_or(0);
+
+        if token == "order_rate" {
+            let text = match op {
+                ">" => Self::data_fmt("cond.order_rate.gt", &value.to_string()),
+                ">=" => Self::data_fmt("cond.order_rate.ge", &value.to_string()),
+                "<=" => Self::data_fmt("cond.order_rate.le", &value.to_string()),
+                "<" => Self::data_fmt("cond.order_rate.lt", &value.to_string()),
+                _ => None
+            };
+            if let Some(text) = text {
+                return text;
+            }
+        }
+
+        if token == "corner" {
+            let text = match (op, value) {
+                ("==", 0) => Self::str("cond.corner.straight"),
+                ("==", _) => Self::data_fmt("cond.corner.corner", &value.to_string()),
+                ("!=", 0) => Self::str("cond.corner.any"),
+                ("!=", _) => Self::data_fmt("cond.corner.not", &value.to_string()),
+                _ => None
+            };
+            if let Some(text) = text {
+                return text;
+            }
+        }
+
+        if token == "phase" && matches!(op, "==" | "!=" | "<=" | ">=") {
+            if let Some(name) = Self::str(&format!("cond.phase.name.{value}")) {
+                return match op {
+                    "==" => name,
+                    "!=" => Self::data_fmt("cond.negate", &name).unwrap_or_default(),
+                    "<=" => Self::data_fmt("cond.phase.le", &name).unwrap_or_default(),
+                    _ => Self::data_fmt("cond.phase.ge", &name).unwrap_or_default()
+                };
+            }
+        }
+
+        if token == "ground_condition" && matches!(op, "==" | "!=" | "<=" | ">=") {
+            if let Some(name) = Self::str(&format!("cond.ground_condition.name.{value}")) {
+                if let Some(text) = Self::data_fmt(&format!("cond.ground_condition.{}", Self::op_tag(op)), &name) {
+                    return text;
+                }
+            }
+        }
+
+        if token == "track_id" {
+            if op == "<=" && value == 10010 {
+                if let Some(text) = Self::str("cond.track_id.jra") {
+                    return text;
+                }
+            }
+            if op == ">=" && value == 10001 {
+                if let Some(text) = Self::str("cond.track_id.any") {
+                    return text;
+                }
+            }
+            if op == "==" || op == "!=" {
+                if let Some(name) = Self::str(&format!("cond.track_name.{value}")) {
+                    let key = if op == "==" { "cond.track_id.at" } else { "cond.track_id.not_at" };
+                    if let Some(text) = Self::data_fmt(key, &name) {
+                        return text;
+                    }
+                }
+            }
+        }
+
+        if token == "same_skill_horse_count" && op == "==" {
+            let text = if value == 1 {
+                Self::str("cond.same_skill_horse_count.unique")
+            } else {
+                Self::data_fmt("cond.same_skill_horse_count.count", &value.to_string())
+            };
+            if let Some(text) = text {
+                return text;
+            }
+        }
+
+        if token == "near_infront_count" && op == "==" {
+            let text = if value == 0 {
+                Self::str("cond.near_infront_count.none")
+            } else {
+                Self::data_fmt("cond.near_infront_count.count", &value.to_string())
+            };
+            if let Some(text) = text {
+                return text;
+            }
+        }
+
+        if let Some(text) = Self::data_condition_enum(token, op, value) {
+            return text;
+        }
+
+        if op == "!=" {
+            if let Some(text) = Self::data_condition_enum(token, "==", value) {
+                if let Some(negated) = Self::data_fmt("cond.negate", &text) {
+                    return negated;
+                }
+            }
+        }
+
+        if let Some(text) = Self::data_condition_fixed(token, op) {
+            return text;
+        }
+
+        if token == "distance_diff_top_float" && op == "<=" {
+            if let Some(text) = Self::data_fmt("cond.template.distance_diff_top_float.le", &Self::format_data_number(value, 10, 1)) {
+                return text;
+            }
+        }
+
+        if let Some(text) = Self::data_condition_template(token, op, value) {
+            return text;
+        }
+
+        if token == "furlong" && op == "==" {
+            if let Some(text) = Self::data_fmt("cond.furlong", &(value + 1).to_string()) {
+                return text;
+            }
+        }
+
+        if token == "is_used_skill_id" && op == "==" {
+            if let Some(text) = Self::str(&format!("cond.used_skill.{value}")) {
+                return text;
+            }
+            if let Some(text) = Self::data_fmt("cond.used_skill.template", &value.to_string()) {
+                return text;
+            }
+        }
+
+        if token == "is_used_skill_id_with_detail_one" && op == "==" {
+            if let Some(text) = Self::str(&format!("cond.used_skill_detail_one.{value}")) {
+                return text;
+            }
+            if let Some(text) = Self::data_fmt("cond.used_skill_detail_one.template", &value.to_string()) {
+                return text;
+            }
+        }
+
+        if token == "is_popularity_top_character_activate_advantage_skill" && op == "==" {
+            if value == -1 {
+                if let Some(text) = Self::str("cond.popularity_top.any") {
+                    return text;
+                }
+            }
+            if let Some(text) = Self::data_fmt("cond.popularity_top.count", &value.to_string()) {
+                return text;
+            }
+        }
+
+        format!("{token} {op} {value}")
+    }
+
+    fn data_condition_enum(token: &str, op: &str, value: i32) -> Option<String> {
+        Self::str(&format!("cond.enum.{token}.{}.{}", Self::op_tag(op), value))
+    }
+
+    fn data_condition_fixed(token: &str, op: &str) -> Option<String> {
+        Self::str(&format!("cond.fixed.{token}.{}", Self::op_tag(op)))
+    }
+
+    fn data_condition_template(token: &str, op: &str, value: i32) -> Option<String> {
+        Self::str(&format!("cond.template.{token}.{}", Self::op_tag(op)))
+            .map(|text| text.replace("%{v}", &value.to_string()))
+    }
+
+    fn format_data_group(condition: &str, precondition: &str, ability_time: i32, cooldown_time: i32, slots: &[SkillDataDescSlot]) -> Option<String> {
+        let mut effects: Vec<String> = Vec::new();
+        for slot in slots {
+            if slot.ability_type == 0 && slot.ability_value == 0 {
+                continue;
+            }
+            if let Some(effect) = Self::format_effect(*slot) {
+                effects.push(effect);
+            }
+        }
+        if effects.is_empty() {
+            return None;
+        }
+
+        let first_type = slots.first().map(|s| s.ability_type).unwrap_or(0);
+        let first_value = slots.first().map(|s| s.ability_value).unwrap_or(0);
+        let time_suffix = if ability_time > 0 {
+            Self::data_fmt("group.duration", &Self::format_data_number(ability_time, 10000, 2))
+        } else if ability_time == 0 {
+            Self::str("group.immediate")
+        } else if first_type == 21 && first_value < 0 {
+            Self::str("group.long_negative")
+        } else {
+            Self::str("group.indefinite")
+        }.unwrap_or_default();
+
+        let mut body = effects.join(&Self::str("sep.effect").unwrap_or_else(|| ", ".into()));
+        body.push(' ');
+        body.push_str(&time_suffix);
+
+        let mut line = format!("<b>{body}</b>");
+        if cooldown_time > 0 && cooldown_time < 5000000 {
+            line.push_str(&Self::data_fmt("group.cd", &format!("{:.1}", cooldown_time as f64 / 10000.0)).unwrap_or_default());
+        }
+        let (condition, mut restrictions) = Self::split_hard_conditions(condition);
+        let (precondition, pre_restrictions) = Self::split_hard_conditions(precondition);
+        for r in pre_restrictions {
+            if !restrictions.contains(&r) {
+                restrictions.push(r);
+            }
+        }
+        // 原本整句只有硬限制（拆完沒剩）→ 視同「隨時」，不再多印一次
+        if !condition.is_empty() || restrictions.is_empty() {
+            line.push_str(&Self::str("group.when").unwrap_or_default());
+            line.push_str(&Self::format_data_conditions(if condition.is_empty() { "always==1" } else { &condition }));
+        }
+        if !precondition.is_empty() {
+            line.push_str(&Self::str("group.after").unwrap_or_default());
+            line.push_str(&Self::format_data_conditions(&precondition));
+        }
+        if !restrictions.is_empty() {
+            let or_sep = Self::str("sep.or").unwrap_or_default();
+            if let Some(tag) = Self::data_fmt("group.restriction", &restrictions.join(&or_sep)) {
+                line.insert_str(0, &tag);
+            }
+        }
+        Some(line)
+    }
+
+    fn format_data_desc(row: &SkillDataDescRow) -> String {
+        let group1 = Self::format_data_group(&row.condition_1, &row.precondition_1, row.ability_time_1, row.cooldown_time_1, &row.slots[0..3]);
+        let group2 = Self::format_data_group(&row.condition_2, &row.precondition_2, row.ability_time_2, row.cooldown_time_2, &row.slots[3..6]);
+
+        match (group1, group2) {
+            (Some(g1), Some(g2)) => format!("{g1}\n{g2}"),
+            (Some(g1), None) => g1,
+            (None, Some(g2)) => g2,
+            (None, None) => String::new()
+        }
+    }
+}
+
+// text_data：只接 category 48（技能說明）
+#[derive(Default)]
+pub struct TextDataQuery {
+    // SELECT
+    text: Column,
+
+    // WHERE
+    category: Column,
+    index: Column
+}
+
+impl TextDataQuery {
+    fn get_skill_desc(index: i32) -> Option<*mut Il2CppString> {
+        if !Hachimi::instance().config.load().skill_data_desc {
+            return None;
+        }
+        skill_data_desc()?.get_desc(index).map(|desc| desc.to_il2cpp_string())
+    }
+}
+
+impl SelectQueryState for TextDataQuery {
+    fn add_column(&mut self, idx: i32, name: &str) {
+        if name == "text" {
+            self.text.select_idx = Some(idx)
+        }
+    }
+
+    fn add_param(&mut self, idx: i32, name: &str) {
+        match name {
+            "category" => self.category.param_idx = Some(idx),
+            "index" => self.index.param_idx = Some(idx),
+            _ => ()
+        }
+    }
+
+    fn bind_int(&mut self, idx: i32, value: i32) {
+        self.category.try_bind_int(idx, value);
+        self.index.try_bind_int(idx, value);
+    }
+
+    fn get_text(&self, _query: *mut Il2CppObject, idx: i32) -> Option<*mut Il2CppString> {
+        if !self.text.is_select_idx(idx) {
+            return None;
+        }
+        match (self.category.int_value, self.index.int_value) {
+            (Some(48), Some(index)) => Self::get_skill_desc(index),
+            _ => None
+        }
+    }
+}
+
+pub trait SelectExt {
+    fn get_first_table_name(&self) -> Option<&String>;
+}
+
+impl SelectExt for ast::Select {
+    fn get_first_table_name(&self) -> Option<&String> {
+        if let Some(table_with_joins) = self.from.get(0) {
+            if let ast::TableFactor::Table { name: object_name, .. } = &table_with_joins.relation {
+                if let Some(ident) = object_name.0.get(0) {
+                    return Some(&ident.value);
+                }
+            }
+        }
+
+        None
+    }
+}
+
+pub trait SelectItemExt {
+    fn get_unnamed_expr_ident(&self) -> Option<&String>;
+}
+
+impl SelectItemExt for ast::SelectItem {
+    fn get_unnamed_expr_ident(&self) -> Option<&String> {
+        if let ast::SelectItem::UnnamedExpr(expr) = self {
+            return expr.get_ident_value();
+        }
+
+        None
+    }
+}
+
+pub trait ExprExt {
+    fn binary_op_iter<'a>(&'a self) -> BinaryOpIter<'a>;
+    fn get_ident_value(&self) -> Option<&String>;
+    fn is_placeholder_value(&self) -> bool;
+}
+
+impl ExprExt for ast::Expr {
+    fn binary_op_iter<'a>(&'a self) -> BinaryOpIter<'a> {
+        BinaryOpIter { stack: vec![self] }
+    }
+
+    fn get_ident_value(&self) -> Option<&String> {
+        if let ast::Expr::Identifier(ident) = self {
+            return Some(&ident.value);
+        }
+
+        None
+    }
+
+    fn is_placeholder_value(&self) -> bool {
+        if let ast::Expr::Value(value) = self {
+            if let ast::Value::Placeholder(_) = value {
+                return true;
+            }
+        }
+
+        false
+    }
+}
+
+pub struct BinaryOpIter<'a> {
+    stack: Vec<&'a ast::Expr>
+}
+
+pub struct BinaryOpRef<'a> {
+    pub left: &'a Box<ast::Expr>,
+    pub op: &'a ast::BinaryOperator,
+    pub right: &'a Box<ast::Expr>
+}
+
+impl<'a> Iterator for BinaryOpIter<'a> {
+    type Item = BinaryOpRef<'a>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        loop {
+            let Some(expr) = self.stack.pop() else {
+                return None;
+            };
+
+            let ast::Expr::BinaryOp { left, op, right } = expr else {
+                continue;
+            };
+
+            self.stack.push(right);
+            self.stack.push(left); // left will be pop'd first
+
+            return Some(BinaryOpRef { left, op, right })
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// 用台服 master.mdb 匯出的 skill_data（JSON）跑一遍格式化：數有幾筆還殘留原始條件式
+    /// （= 沒有對應的說明字串），並印幾筆樣本對照遊戲原文。沒有匯出檔就跳過。
+    /// 匯出：HACHIMI_SKILL_JSON=<檔> ，內容 {"rows": [[id, precondition_1, ...同 load_from_db 的 SELECT 順序]], "names": {...}, "descs": {...}}
+    #[test]
+    fn formats_tw_skill_data() {
+        let Ok(path) = std::env::var("HACHIMI_SKILL_JSON") else { eprintln!("skip: HACHIMI_SKILL_JSON not set"); return; };
+        let json: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(path).unwrap()).unwrap();
+        rust_i18n::set_locale("zh-tw");
+
+        let int = |v: &serde_json::Value| v.as_i64().unwrap_or(0) as i32;
+        let text = |v: &serde_json::Value| v.as_str().unwrap_or("").to_string();
+        let slot = |r: &[serde_json::Value], b: usize| SkillDataDescSlot {
+            ability_type: int(&r[b]), ability_value_usage: int(&r[b + 1]), additional_activate_type: int(&r[b + 2]),
+            ability_value: int(&r[b + 3]), target_type: int(&r[b + 4]), target_value: int(&r[b + 5]),
+        };
+        let raw_atom = regex_lite_like;
+
+        let rows = json["rows"].as_array().unwrap();
+        let (mut raw, mut empty) = (Vec::new(), 0usize);
+        let mut samples = Vec::new();
+        let (mut tagged, mut hard_left) = (0usize, Vec::new());
+        for r in rows {
+            let r = r.as_array().unwrap();
+            let row = SkillDataDescRow {
+                id: int(&r[0]),
+                precondition_1: text(&r[1]), condition_1: text(&r[2]), ability_time_1: int(&r[3]), cooldown_time_1: int(&r[4]),
+                precondition_2: text(&r[23]), condition_2: text(&r[24]), ability_time_2: int(&r[25]), cooldown_time_2: int(&r[26]),
+                slots: [slot(r, 5), slot(r, 11), slot(r, 17), slot(r, 27), slot(r, 33), slot(r, 39)],
+            };
+            let desc = SkillDataDesc::format_data_desc(&row);
+            if desc.is_empty() { empty += 1; }
+            if desc.contains("＜") { tagged += 1; }
+            // 各組「條件：」之後、到下一組限制標籤之前的文字
+            let cond_part = desc.split("條件</color>：").skip(1)
+                .map(|p| p.split("＜").next().unwrap_or(""))
+                .collect::<Vec<_>>().join(" ");
+            if ["領頭", "前列", "居中", "後追", "短距離", "一哩", "中距離", "長距離", "草地", "沙地"].iter().any(|k| cond_part.contains(k)) {
+                hard_left.push((row.id, desc.clone()));
+            }
+            if raw_atom(&desc) { raw.push((row.id, desc.clone())); }
+            if [100251, 10071, 100061, 101241].contains(&row.id) { samples.push((row.id, desc)); }
+        }
+        for (id, d) in &samples {
+            eprintln!("== {id} {} | 原文：{}\n{d}\n", json["names"][id.to_string()], json["descs"][id.to_string()]);
+        }
+        eprintln!("total {} / empty {} / 殘留原始條件式 {}", rows.len(), empty, raw.len());
+        eprintln!("拆出硬限制 {tagged} / 硬限制仍留在條件裡 {}", hard_left.len());
+        for (id, d) in hard_left.iter().take(6) {
+            eprintln!("  left {id} {}: {}", json["names"][id.to_string()], d.replace('\n', " ⏎ "));
+        }
+        for (id, d) in raw.iter().take(15) {
+            eprintln!("  raw {id}: {}", d.replace('\n', " ⏎ "));
+        }
+    }
+
+    /// 是否含 `foo_bar==3` 這類沒被翻成人話的原始條件式
+    fn regex_lite_like(s: &str) -> bool {
+        let b = s.as_bytes();
+        (0..b.len()).any(|i| {
+            let op = &b[i..];
+            (op.starts_with(b"==") || op.starts_with(b">=") || op.starts_with(b"<=") || op.starts_with(b"!="))
+                && i > 0 && (b[i - 1].is_ascii_lowercase() || b[i - 1] == b'_')
+        })
+    }
+}

@@ -80,6 +80,9 @@ pub mod Unity_TextMeshPro;
 pub mod umamusume;
 mod DOTween;
 
+// 技能資料說明（skill_data_desc）要攔遊戲的 text_data 查詢
+pub mod LibNative_Runtime;
+
 #[cfg(any(target_os = "android", target_os = "windows"))]
 mod Cute_Core_Assembly;
 
@@ -109,6 +112,7 @@ pub fn init() {
     #[cfg(not(feature = "capture-only"))]
     {
         DOTween::init();
+        LibNative_Runtime::init();
 
         #[cfg(any(target_os = "android", target_os = "windows"))]
         Cute_Core_Assembly::init();
