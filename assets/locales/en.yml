@@ -161,6 +161,11 @@ steam_overlay_conflict_dialog:
 skill_data_desc:
   group:
     restriction: "<color=#d81b60><b>[%{v}]</b></color> "
+    variant: "<color=#d81b60>If %{v}:</color> "
+    extra: "also "
+    replace: "instead "
+    also_when: " <color=#11998e>also needs</color>: "
+    also_after: " <color=#11998e>after, also</color>: "
     duration: "for %{v} s"
     immediate: "immediately"
     long_negative: "for 500 s"

@@ -129,6 +129,21 @@ impl Column {
     }
 }
 
+/// 一組效果（condition_N + 最多 3 個效果）拆好的各部分，組合時才決定要印哪些。
+struct GroupParts {
+    /// 拆出來的硬限制（跑法／距離／場地／賽場）
+    restrictions: Vec<String>,
+    effects: Vec<String>,
+    /// 「持續X秒」「立即發動」…
+    time: String,
+    /// 「（冷卻X秒）」，沒有就空字串
+    cd: String,
+    /// 「 條件：…」「 附加：…」
+    cond: String,
+    /// 拆掉硬限制後的原始條件式（condition, precondition），給加強版比對「多了哪幾項」用
+    cond_raw: (String, String),
+}
+
 #[derive(Default)]
 pub struct SkillDataDesc {
     pub descs: FnvHashMap<i32, String>,
@@ -395,7 +410,7 @@ impl SkillDataDesc {
     }
 
     /// 把條件拆成（剩下的條件原始字串, 硬限制文字清單）。
-    /// 只有在「每個 OR 分支拿掉硬限制後剩下的條件都一樣」時才拆（例：`一哩&第3彎道@中距離&第3彎道`
+    /// 兩種情況才拆：各分支硬限制完全相同；或「每個 OR 分支拿掉硬限制後剩下的條件都一樣」（例：`一哩&第3彎道@中距離&第3彎道`
     /// → 限制「一哩／中距離」、條件「第3彎道」）；分支之間其他條件不同時硬拆會弄錯配對，就不拆。
     fn split_hard_conditions(condition: &str) -> (String, Vec<String>) {
         if condition.is_empty() {
@@ -407,6 +422,13 @@ impl SkillDataDesc {
             .collect();
         if branches.iter().all(|(hard, _)| hard.is_empty()) {
             return (condition.to_string(), Vec::new());
+        }
+        // 每個分支的硬限制都一樣（例：`超越中&一哩@被超越&一哩`）→ 直接拆出，各分支保留自己的其他條件
+        let first_hard = &branches[0].0;
+        if branches.iter().all(|(hard, _)| hard == first_hard) {
+            let label = first_hard.iter().map(|a| Self::format_data_atom(a)).collect::<Vec<_>>().join(&and_sep);
+            let rest = branches.iter().map(|(_, soft)| soft.join("&")).collect::<Vec<_>>().join("@");
+            return (rest, vec![label]);
         }
         let first_soft = &branches[0].1;
         if !branches.iter().all(|(_, soft)| soft == first_soft) {
@@ -672,7 +694,8 @@ impl SkillDataDesc {
             .map(|text| text.replace("%{v}", &value.to_string()))
     }
 
-    fn format_data_group(condition: &str, precondition: &str, ability_time: i32, cooldown_time: i32, slots: &[SkillDataDescSlot]) -> Option<String> {
+    /// 回傳這組拆好的各部分；怎麼組成一行由 [`Self::format_data_desc`] 依兩組的關係決定。
+    fn format_data_group(condition: &str, precondition: &str, ability_time: i32, cooldown_time: i32, slots: &[SkillDataDescSlot]) -> Option<GroupParts> {
         let mut effects: Vec<String> = Vec::new();
         for slot in slots {
             if slot.ability_type == 0 && slot.ability_value == 0 {
@@ -698,14 +721,12 @@ impl SkillDataDesc {
             Self::str("group.indefinite")
         }.unwrap_or_default();
 
-        let mut body = effects.join(&Self::str("sep.effect").unwrap_or_else(|| ", ".into()));
-        body.push(' ');
-        body.push_str(&time_suffix);
-
-        let mut line = format!("<b>{body}</b>");
-        if cooldown_time > 0 && cooldown_time < 5000000 {
-            line.push_str(&Self::data_fmt("group.cd", &format!("{:.1}", cooldown_time as f64 / 10000.0)).unwrap_or_default());
-        }
+        let cd = if cooldown_time > 0 && cooldown_time < 5000000 {
+            Self::data_fmt("group.cd", &format!("{:.1}", cooldown_time as f64 / 10000.0)).unwrap_or_default()
+        } else {
+            String::new()
+        };
+        let mut line = String::new();
         let (condition, mut restrictions) = Self::split_hard_conditions(condition);
         let (precondition, pre_restrictions) = Self::split_hard_conditions(precondition);
         for r in pre_restrictions {
@@ -722,23 +743,124 @@ impl SkillDataDesc {
             line.push_str(&Self::str("group.after").unwrap_or_default());
             line.push_str(&Self::format_data_conditions(&precondition));
         }
-        if !restrictions.is_empty() {
-            let or_sep = Self::str("sep.or").unwrap_or_default();
-            if let Some(tag) = Self::data_fmt("group.restriction", &restrictions.join(&or_sep)) {
-                line.insert_str(0, &tag);
+        Some(GroupParts { restrictions, effects, time: time_suffix, cd, cond: line, cond_raw: (condition, precondition) })
+    }
+
+    /// 加強版比一般版「多出來的條件」（原始條件式）。兩邊都是單純 AND（或 OR 部分完全相同，只差 AND 項）
+    /// 才比；一般版有、加強版沒有的條件若只是硬限制的反面（例：一般版的 `distance_type!=3`）就忽略。
+    /// 情況複雜時回 None，呼叫端就印完整條件。
+    fn extra_conditions<'a>(base: &'a str, v: &'a str) -> Option<Vec<&'a str>> {
+        if base.contains('@') || v.contains('@') {
+            return None;
+        }
+        let split = |c: &'a str| -> Vec<&'a str> { c.split('&').filter(|a| !a.is_empty()).collect() };
+        let (b, x) = (split(base), split(v));
+        let missing_ok = b.iter().filter(|a| !x.contains(a)).all(|a| {
+            let (token, op, _) = Self::parse_atom(a);
+            op == "!=" && Self::HARD_TOKENS.contains(&token)
+        });
+        missing_ok.then(|| x.into_iter().filter(|a| !b.contains(a)).collect())
+    }
+
+    fn join_effects(effects: &[String]) -> String {
+        effects.join(&Self::str("sep.effect").unwrap_or_else(|| ", ".into()))
+    }
+
+    /// 完整一行：效果 時間（冷卻） 條件
+    fn render_group(g: &GroupParts) -> String {
+        format!("<b>{} {}</b>{}{}", Self::join_effects(&g.effects), g.time, g.cd, g.cond)
+    }
+
+    /// 加強版那一行只寫跟一般版不同的部分：
+    /// - 效果：一般版的效果它全都有 → 只列多出來的（「另加 …」）；否則整組列出（「改為 …」）；一樣就不列
+    /// - 時間／冷卻、條件：跟一般版一樣就省略
+    fn render_variant_diff(base: &GroupParts, v: &GroupParts) -> String {
+        // 條件跟一般版比不出「只多幾項」（例：接在條件1之後才發動的另一段效果）→ 它是獨立的效果，
+        // 不是一般版的加強／替換，整行完整寫出、不加「另加／改為」
+        let independent = [(&base.cond_raw.0, &v.cond_raw.0), (&base.cond_raw.1, &v.cond_raw.1)]
+            .iter()
+            .any(|(b, x)| b != x && !x.is_empty() && Self::extra_conditions(b, x).is_none());
+        if independent {
+            return Self::render_group(v);
+        }
+
+        let mut out = String::new();
+        if v.effects != base.effects {
+            let extra: Vec<String> = v.effects.iter().filter(|e| !base.effects.contains(e)).cloned().collect();
+            let (prefix, shown) = if base.effects.iter().all(|e| v.effects.contains(e)) {
+                (Self::str("group.extra").unwrap_or_default(), extra)
+            } else {
+                (Self::str("group.replace").unwrap_or_default(), v.effects.clone())
+            };
+            out.push_str(&prefix);
+            out.push_str(&format!("<b>{}</b>", Self::join_effects(&shown)));
+        }
+        if v.time != base.time || v.cd != base.cd {
+            if !out.is_empty() {
+                out.push(' ');
+            }
+            out.push_str(&format!("<b>{}</b>{}", v.time, v.cd));
+        }
+        if v.cond != base.cond {
+            let and_sep = Self::str("sep.and").unwrap_or_default();
+            // 條件、附加條件各自比：一樣就省略，只多幾項就寫「另需：」，比不出來才寫完整
+            for (b, x, full_key, extra_key) in [
+                (&base.cond_raw.0, &v.cond_raw.0, "group.when", "group.also_when"),
+                (&base.cond_raw.1, &v.cond_raw.1, "group.after", "group.also_after"),
+            ] {
+                if b == x {
+                    continue;
+                }
+                match Self::extra_conditions(b, x) {
+                    Some(extra) if extra.is_empty() => {}
+                    Some(extra) => {
+                        out.push_str(&Self::str(extra_key).unwrap_or_default());
+                        out.push_str(&extra.iter().map(|a| Self::format_data_atom(a)).collect::<Vec<_>>().join(&and_sep));
+                    }
+                    None if x.is_empty() => {}
+                    None => {
+                        out.push_str(&Self::str(full_key).unwrap_or_default());
+                        out.push_str(&Self::format_data_conditions(x));
+                    }
+                }
             }
         }
-        Some(line)
+        if out.is_empty() {
+            // 理論上不會發生（兩組完全一樣）；保險起見印完整一行
+            return Self::render_group(v);
+        }
+        out
     }
 
     fn format_data_desc(row: &SkillDataDescRow) -> String {
         let group1 = Self::format_data_group(&row.condition_1, &row.precondition_1, row.ability_time_1, row.cooldown_time_1, &row.slots[0..3]);
         let group2 = Self::format_data_group(&row.condition_2, &row.precondition_2, row.ability_time_2, row.cooldown_time_2, &row.slots[3..6]);
 
+        let or_sep = Self::str("sep.or").unwrap_or_default();
+        // 一般：限制標在該組最前面（＜一哩／中距離＞）
+        let tagged = |g: &GroupParts| -> String {
+            let line = Self::render_group(g);
+            match (g.restrictions.is_empty(), Self::data_fmt("group.restriction", &g.restrictions.join(&or_sep))) {
+                (false, Some(tag)) => format!("{tag}{line}"),
+                _ => line
+            }
+        };
+        // 兩組只有一組帶限制：那組是「特定情況下的加強版」（例：一般效果＋在中山賽場時另有加成）。
+        // 一般效果排前面，加強版放後面標「在中山賽場時：」，而且只寫跟一般版不同的部分。
+        let variant = |base: &GroupParts, v: &GroupParts| -> String {
+            match Self::data_fmt("group.variant", &v.restrictions.join(&or_sep)) {
+                Some(tag) => format!("{tag}{}", Self::render_variant_diff(base, v)),
+                None => tagged(v)
+            }
+        };
+
         match (group1, group2) {
-            (Some(g1), Some(g2)) => format!("{g1}\n{g2}"),
-            (Some(g1), None) => g1,
-            (None, Some(g2)) => g2,
+            (Some(g1), Some(g2)) => match (g1.restrictions.is_empty(), g2.restrictions.is_empty()) {
+                (true, false) => format!("{}\n{}", Self::render_group(&g1), variant(&g1, &g2)),
+                (false, true) => format!("{}\n{}", Self::render_group(&g2), variant(&g2, &g1)),
+                _ => format!("{}\n{}", tagged(&g1), tagged(&g2))
+            },
+            (Some(g), None) | (None, Some(g)) => tagged(&g),
             (None, None) => String::new()
         }
     }
@@ -913,6 +1035,7 @@ mod tests {
         let (mut raw, mut empty) = (Vec::new(), 0usize);
         let mut samples = Vec::new();
         let (mut tagged, mut hard_left) = (0usize, Vec::new());
+        let (mut variants, mut variant_full) = (0usize, Vec::<(i32, String)>::new());
         for r in rows {
             let r = r.as_array().unwrap();
             let row = SkillDataDescRow {
@@ -923,22 +1046,30 @@ mod tests {
             };
             let desc = SkillDataDesc::format_data_desc(&row);
             if desc.is_empty() { empty += 1; }
-            if desc.contains("＜") { tagged += 1; }
+            if desc.contains("＜") || desc.contains("時：</color>") { tagged += 1; }
+            for line in desc.split('\n').filter(|l| l.contains("時：</color>")) {
+                variants += 1;
+                if line.contains("條件</color>：") { variant_full.push((row.id, line.to_string())); }
+            }
             // 各組「條件：」之後、到下一組限制標籤之前的文字
             let cond_part = desc.split("條件</color>：").skip(1)
-                .map(|p| p.split("＜").next().unwrap_or(""))
+                .map(|p| p.split("＜").next().unwrap_or("").split('\n').next().unwrap_or(""))
                 .collect::<Vec<_>>().join(" ");
             if ["領頭", "前列", "居中", "後追", "短距離", "一哩", "中距離", "長距離", "草地", "沙地"].iter().any(|k| cond_part.contains(k)) {
                 hard_left.push((row.id, desc.clone()));
             }
             if raw_atom(&desc) { raw.push((row.id, desc.clone())); }
-            if [100251, 10071, 100061, 101241].contains(&row.id) { samples.push((row.id, desc)); }
+            if [110321, 910321, 120041, 100131, 100281, 120671].contains(&row.id) { samples.push((row.id, desc)); }
         }
         for (id, d) in &samples {
             eprintln!("== {id} {} | 原文：{}\n{d}\n", json["names"][id.to_string()], json["descs"][id.to_string()]);
         }
         eprintln!("total {} / empty {} / 殘留原始條件式 {}", rows.len(), empty, raw.len());
         eprintln!("拆出硬限制 {tagged} / 硬限制仍留在條件裡 {}", hard_left.len());
+        eprintln!("加強版 {variants} 行 / 仍印完整條件 {}", variant_full.len());
+        for (id, l) in variant_full.iter().take(5) {
+            eprintln!("  full {id} {}: {l}", json["names"][id.to_string()]);
+        }
         for (id, d) in hard_left.iter().take(6) {
             eprintln!("  left {id} {}: {}", json["names"][id.to_string()], d.replace('\n', " ⏎ "));
         }

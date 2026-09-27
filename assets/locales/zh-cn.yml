@@ -148,6 +148,11 @@ tl_update_dialog:
 skill_data_desc:
   group:
     restriction: "<color=#d81b60><b>＜%{v}＞</b></color>"
+    variant: "<color=#d81b60>%{v}时：</color>"
+    extra: "另加 "
+    replace: "改为 "
+    also_when: " <color=#11998e>另需</color>："
+    also_after: " <color=#11998e>附加另需</color>："
     duration: "</b><color=#e67e00>持续%{v}秒</color><b>"
     immediate: "</b><color=#e67e00>立即发动</color><b>"
     long_negative: "</b><color=#e67e00>持续500秒</color><b>"
