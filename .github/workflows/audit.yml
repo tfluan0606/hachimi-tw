@@ -1,0 +1,22 @@
+# 依賴安全檢查：對 Cargo.lock 跑 cargo-audit（RustSec 漏洞資料庫）。
+# 推 main 時與每週一跑一次（新公告會在沒改 code 時冒出來）。有漏洞＝這個 workflow 失敗，
+# 修法通常是 `cargo update -p <crate>` 再推。刻意不擋 release.yml，避免新公告卡住發版。
+name: audit
+
+on:
+  push:
+    branches: [main]
+    paths: ["Cargo.toml", "Cargo.lock", "crates/**/Cargo.toml", ".github/workflows/audit.yml"]
+  schedule:
+    - cron: "0 1 * * 1"
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-audit
+      - run: cargo audit
