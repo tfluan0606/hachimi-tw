@@ -191,9 +191,13 @@ Edge 的 updater（`src/core/updater.rs`）跟舊版**機制完全相同**：
 
 #### 發版流程（實作後）
 
-更新判斷是 `release tag ≠ 目前 DLL 內建版號`（`!=`，不是比大小），所以：
+更新判斷是 `release tag 的 major.minor.patch > 目前 DLL 內建版號`（`-test` 之類後綴忽略），
+只抓 `releases/latest`（非 prerelease、非 draft 的最新一個）。所以：
 
-1. 把 `Cargo.toml` 的 `version` 往上加（每次都要，不然 tag 撞到已安裝版號就不觸發）
+1. 把 `Cargo.toml` 的 `version` 往上加（每次都要，不然 tag 不比已安裝版號新就不觸發）。
+   **release 裡那顆 DLL 必須是用這個新版號 build 的**——2026-09-16 的 `v0.14.1-test` 就是
+   tag 寫 0.14.1、DLL 內建卻是 0.14.0；當時判斷還是 `!=`，裝完每次啟動都會判定有新版、無限重抓。
+   現在改成比大小後不會無限重抓，但版號對不上仍會讓「已經是新版」的人一直看到更新提示。
 2. build 出新 `version.dll`
 3. 產生 blake3.json：`cargo run -p blake3json --release -- <version.dll 路徑>`
    （工具在 `crates/blake3json`，不是 DLL build 的相依，只手動跑）
@@ -202,6 +206,11 @@ Edge 的 updater（`src/core/updater.rs`）跟舊版**機制完全相同**：
 
 ⚠️ 第一次切換仍要手動給對方一次新 DLL —— 「去哪裡檢查」是由目前已安裝的那顆
 DLL 決定的，舊 DLL 還指著上游。裝過一次新版後才會全自動。
+
+設定：`auto_update`（設定編輯器「自動更新」，預設關）開＝查到新版就背景下載、換檔完通知重開；
+關＝只在右下角通知有新版。背景檢查每次開 GUI 時跑一次（`disable_auto_update_check` 可關，
+但 `auto_update` 開著時一律會查）；關於視窗的「檢查更新」是手動檢查，會回報「無更新／失敗」。
+同一次執行已經換好新 DLL 後，再查到新版不會重抓，只提示重開。
 
 ### 繁中服的視窗 hook 跑在 render thread —— 別在那裡呼叫 SendMessage 類的 API
 

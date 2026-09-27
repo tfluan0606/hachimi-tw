@@ -65,6 +65,8 @@ notification:
   checking_for_updates: "檢查更新"
   no_updates: "無可用的更新。"
   update_ready_restart: "更新已下載完成，請重新啟動遊戲以套用。"
+  update_available: "發現新版本 %{version}（可在設定開啟「自動更新」自動下載）"
+  update_downloading: "正在背景下載更新…"
 
 first_time_setup:
   title: "設定精靈"
@@ -142,12 +144,4 @@ tl_update_dialog:
   title: "有可用的更新"
   content: "有可用的更新 (%{size})，是否要下載？"
 
-update_prompt_dialog:
-  title: "有可用的更新"
-  content: |
-    目前有可用的更新 (%{version})，是否要下載安裝？
-    下載完成後，需要您手動重新啟動遊戲才會套用。
-
-updating_dialog:
-  title: "更新中"
   content: "正在下載更新，請稍候…"

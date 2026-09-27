@@ -65,6 +65,8 @@ notification:
   checking_for_updates: "Đang kiểm tra cập nhật..."
   no_updates: "Không có bản cập nhật."
   update_ready_restart: "Đã tải xong bản cập nhật. Vui lòng khởi động lại game để áp dụng."
+  update_available: "Đã có phiên bản mới %{version} (bật Tự động cập nhật trong cài đặt để tải tự động)"
+  update_downloading: "Đang tải bản cập nhật ở chế độ nền..."
 
 first_time_setup:
   title: "Thiết lập lần đầu"
@@ -136,13 +138,3 @@ config_editor:
 tl_update_dialog:
   title: "Bản cập nhật mới"
   content: "Đã có bản cập nhật bản dịch mới (%{size}). Bạn có muốn tải về không?"
-
-update_prompt_dialog:
-  title: "Bản cập nhật mới"
-  content: |
-    Đã có phiên bản Hachimi mới (%{version}). Bạn có muốn tải và cài đặt không?
-    Sau đó bạn cần tự khởi động lại game để áp dụng.
-
-updating_dialog:
-  title: "Đang cập nhật"
-  content: "Đang tải về bản cập nhật, vui lòng đợi..."

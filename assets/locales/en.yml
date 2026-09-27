@@ -65,6 +65,8 @@ notification:
   checking_for_updates: "Checking for updates..."
   no_updates: "No updates available."
   update_ready_restart: "Update downloaded. Please restart the game to apply it."
+  update_available: "New version %{version} available (enable Auto-update in settings to download automatically)"
+  update_downloading: "Downloading update in the background..."
 
 first_time_setup:
   title: "First Time Setup"
@@ -144,16 +146,6 @@ config_editor:
 tl_update_dialog:
   title: "New update available"
   content: "A new translation update is available (%{size}). Do you want to download it?"
-
-update_prompt_dialog:
-  title: "New update available"
-  content: |
-    A new Hachimi update is available (%{version}). Do you want to download and install it?
-    You'll need to restart the game manually afterwards to apply it.
-
-updating_dialog:
-  title: "Updating"
-  content: "Downloading update, please wait..."
 
 steam_overlay_conflict_dialog:
   title: "Notice"

@@ -6,7 +6,7 @@ use rust_i18n::t;
 use serde::Deserialize;
 use windows::Win32::{Foundation::MAX_PATH, System::LibraryLoader::GetModuleFileNameW};
 
-use crate::core::{gui::{PersistentMessageWindow, SimpleYesNoDialog}, http, Error, Gui, Hachimi};
+use crate::core::{http, Error, Gui, Hachimi};
 
 use super::main::DLL_HMODULE;
 
@@ -26,31 +26,54 @@ struct DllUpdate {
 #[derive(Default)]
 pub struct Updater {
     update_check_mutex: Mutex<()>,
-    new_update: ArcSwap<Option<DllUpdate>>
+    new_update: ArcSwap<Option<DllUpdate>>,
+    // 正在背景下載時為 true，擋掉同時觸發的第二次下載（會搶同一個 .new 檔）。
+    downloading: AtomicBool,
+    // 本次執行已經換好新 DLL、只等重開。此時再查到「有新版」其實就是剛裝的那個，
+    // 不能再下載一次（現役 DLL 已改名成 .old 且仍被載入，刪不掉，會直接失敗）。
+    installed: AtomicBool
 }
 
 impl Updater {
-    pub fn check_for_updates(self: Arc<Self>, callback: fn(bool)) {
+    /// `manual`：是否為使用者在選單按「檢查更新」觸發（會顯示「檢查更新中／無更新」等回饋）。
+    /// 背景（啟動）檢查傳 false，安靜進行，只有真的查到新版才出聲。
+    pub fn check_for_updates(self: Arc<Self>, manual: bool) {
         std::thread::spawn(move || {
-            match self.check_for_updates_internal() {
-                Ok(v) => callback(v),
-                Err(e) => error!("{}", e)
+            if let Err(e) = self.check_for_updates_internal(manual) {
+                error!("{}", e);
+                // 只有手動檢查才把錯誤跳給使用者；背景檢查（例如還沒發 release 會 404）不打擾。
+                if manual {
+                    if let Some(mutex) = Gui::instance() {
+                        mutex.lock().unwrap().show_notification(&t!("notification.update_failed", reason = e.to_string()));
+                    }
+                }
             }
         });
     }
 
-    fn check_for_updates_internal(&self) -> Result<bool, Error> {
+    fn check_for_updates_internal(&self, manual: bool) -> Result<(), Error> {
         // Prevent multiple update checks running at the same time
         let Ok(_guard) = self.update_check_mutex.try_lock() else {
-            return Ok(false);
+            return Ok(());
         };
 
-        if let Some(mutex) = Gui::instance() {
-            mutex.lock().unwrap().show_notification(&t!("notification.checking_for_updates"));
+        if self.installed.load(atomic::Ordering::Acquire) {
+            if manual {
+                if let Some(mutex) = Gui::instance() {
+                    mutex.lock().unwrap().show_notification(&t!("notification.update_ready_restart"));
+                }
+            }
+            return Ok(());
+        }
+
+        if manual {
+            if let Some(mutex) = Gui::instance() {
+                mutex.lock().unwrap().show_notification(&t!("notification.checking_for_updates"));
+            }
         }
 
         let latest: Release = http::get_json(&format!("https://api.github.com/repos/{}/releases/latest", REPO_PATH))?;
-        if latest.is_different_version() {
+        if latest.is_newer_version() {
             let mut dll_url = None;
             let mut hash_url = None;
             for asset in latest.assets {
@@ -64,49 +87,57 @@ impl Updater {
 
             if let (Some(dll_url), Some(hash_url)) = (dll_url, hash_url) {
                 self.new_update.store(Arc::new(Some(DllUpdate { dll_url, hash_url })));
-                if let Some(mutex) = Gui::instance() {
-                    mutex.lock().unwrap().show_window(Box::new(SimpleYesNoDialog::new(
-                        &t!("update_prompt_dialog.title"),
-                        &t!("update_prompt_dialog.content", version = latest.tag_name),
-                        |ok| {
-                            if !ok { return; }
-                            Hachimi::instance().updater.clone().run();
-                        }
-                    )));
+
+                if Hachimi::instance().config.load().auto_update {
+                    // 自動更新開啟：直接背景下載（run() 會自己跳通知），不鎖畫面、不問。
+                    Hachimi::instance().updater.clone().run();
                 }
-                return Ok(true);
+                else if let Some(mutex) = Gui::instance() {
+                    // 關閉：只在右下角通知有新版，不下載。
+                    mutex.lock().unwrap().show_notification(&t!("notification.update_available", version = latest.tag_name));
+                }
             }
             else {
-                // 有新版但 release 少了 DLL 或 blake3.json，沒法安全更新，只記 log 不打擾使用者。
+                // 有新版但 release 少了 DLL 或 blake3.json，沒法安全更新，只記 log。
                 warn!("Release '{}' is missing '{}' or '{}' asset; skipping update", latest.tag_name, DLL_ASSET_NAME, HASH_ASSET_NAME);
+                if manual {
+                    if let Some(mutex) = Gui::instance() {
+                        mutex.lock().unwrap().show_notification(&t!("notification.no_updates"));
+                    }
+                }
             }
         }
-        else if let Some(mutex) = Gui::instance() {
-            mutex.lock().unwrap().show_notification(&t!("notification.no_updates"));
+        else if manual {
+            if let Some(mutex) = Gui::instance() {
+                mutex.lock().unwrap().show_notification(&t!("notification.no_updates"));
+            }
         }
 
-        Ok(false)
+        Ok(())
     }
 
     pub fn run(self: Arc<Self>) {
+        // 已在背景下載中就不再開一個（會搶同一個 version.dll.new）。
+        if self.downloading.swap(true, atomic::Ordering::AcqRel) {
+            return;
+        }
         std::thread::spawn(move || {
-            let dialog_show = Arc::new(AtomicBool::new(true));
+            // 只跳一則右下角通知，不用會鎖住輸入的「更新中」視窗，下載期間照樣能玩。
             if let Some(mutex) = Gui::instance() {
-                mutex.lock().unwrap().show_window(Box::new(PersistentMessageWindow::new(
-                    &t!("updating_dialog.title"),
-                    &t!("updating_dialog.content"),
-                    dialog_show.clone()
-                )));
+                mutex.lock().unwrap().show_notification(&t!("notification.update_downloading"));
             }
 
             let res = self.clone().run_internal();
-
-            dialog_show.store(false, atomic::Ordering::Relaxed);
+            if let Ok(true) = res {
+                self.installed.store(true, atomic::Ordering::Release);
+            }
+            self.downloading.store(false, atomic::Ordering::Release);
 
             if let Some(mutex) = Gui::instance() {
                 let mut gui = mutex.lock().unwrap();
                 match res {
-                    Ok(()) => gui.show_notification(&t!("notification.update_ready_restart")),
+                    Ok(true) => gui.show_notification(&t!("notification.update_ready_restart")),
+                    Ok(false) => {}
                     Err(e) => {
                         error!("{}", e);
                         gui.show_notification(&t!("notification.update_failed", reason = e.to_string()));
@@ -119,9 +150,10 @@ impl Updater {
         });
     }
 
-    fn run_internal(self: Arc<Self>) -> Result<(), Error> {
+    /// 回傳是否真的換好了新 DLL（沒有待裝的更新時回傳 false）。
+    fn run_internal(self: Arc<Self>) -> Result<bool, Error> {
         let Some(update) = (**self.new_update.load()).clone() else {
-            return Ok(());
+            return Ok(false);
         };
         self.new_update.store(Arc::new(None));
 
@@ -176,7 +208,7 @@ impl Updater {
         }
 
         info!("Updated DLL in place; old version kept at '{}' until next launch", old_path.display());
-        Ok(())
+        Ok(true)
     }
 }
 
@@ -218,8 +250,41 @@ pub struct Release {
 }
 
 impl Release {
-    pub fn is_different_version(&self) -> bool {
-        self.tag_name != format!("v{}", env!("CARGO_PKG_VERSION"))
+    /// release tag 比目前 DLL 內建版號**新**才算有更新（只比 major.minor.patch，`-test` 之類後綴忽略）。
+    /// 不能用 `!=`：發出去的 DLL 若版號跟 tag 對不上（例如 tag `v0.14.1-test` 但 DLL 內建 0.14.0），
+    /// 裝完每次啟動都會再判定有新版，無限重抓；也會把比較新的本機 build「更新」回舊版。
+    pub fn is_newer_version(&self) -> bool {
+        match (parse_version(&self.tag_name), parse_version(env!("CARGO_PKG_VERSION"))) {
+            (Some(latest), Some(current)) => latest > current,
+            _ => {
+                warn!("Can't parse release tag '{}' as a version; skipping update", self.tag_name);
+                false
+            }
+        }
+    }
+}
+
+/// `v0.14.1`、`0.14.1-test` → `(0, 14, 1)`。
+fn parse_version(s: &str) -> Option<(u64, u64, u64)> {
+    let s = s.strip_prefix('v').unwrap_or(s);
+    let core = s.split(['-', '+']).next()?;
+    let mut parts = core.split('.').map(|p| p.parse::<u64>().ok());
+    let v = (parts.next()??, parts.next()??, parts.next()??);
+    parts.next().is_none().then_some(v)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::parse_version;
+
+    #[test]
+    fn parses_release_tags() {
+        assert_eq!(parse_version("v0.14.1"), Some((0, 14, 1)));
+        assert_eq!(parse_version("v0.14.1-test"), Some((0, 14, 1)));
+        assert_eq!(parse_version("0.14.0"), Some((0, 14, 0)));
+        assert_eq!(parse_version("v0.14"), None);
+        assert_eq!(parse_version("latest"), None);
+        assert!(parse_version("v0.14.10") > parse_version("v0.14.9"));
     }
 }
 

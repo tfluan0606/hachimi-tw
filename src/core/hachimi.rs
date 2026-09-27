@@ -224,10 +224,12 @@ impl Hachimi {
     }
 
     pub fn run_auto_update_check(&self) {
-        if !self.config.load().disable_auto_update_check {
-            // 只剩本體（DLL）自動更新；翻譯更新已移除。
+        let config = self.config.load();
+        // auto_update 開啟時一律檢查；否則沿用 disable_auto_update_check（預設會查，好顯示「有新版」通知）。
+        if config.auto_update || !config.disable_auto_update_check {
+            // 只剩本體（DLL）自動更新；翻譯更新已移除。這是背景（非手動）檢查。
             #[cfg(target_os = "windows")]
-            self.updater.clone().check_for_updates(|_| {});
+            self.updater.clone().check_for_updates(false);
         }
     }
 }
@@ -254,6 +256,10 @@ pub struct Config {
     pub virtual_res_mult: f32,
     #[serde(default)]
     pub disable_auto_update_check: bool,
+    /// 自動更新：開＝查到新版就背景下載、完成後通知重開；關＝只在右下角通知有新版，不下載。
+    /// 開啟時也保證每次啟動都會檢查（不受 `disable_auto_update_check` 影響）。
+    #[serde(default)]
+    pub auto_update: bool,
     /// 因子卡片用亮色主題（預設暗色）
     #[serde(default)]
     pub factor_card_light_theme: bool,

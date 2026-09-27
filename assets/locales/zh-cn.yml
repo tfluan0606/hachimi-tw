@@ -65,6 +65,8 @@ notification:
   checking_for_updates: "正在检查更新..."
   no_updates: "无可用更新"
   update_ready_restart: "更新已下载完成，请重新启动游戏以应用。"
+  update_available: "发现新版本 %{version}（可在设置开启「自动更新」自动下载）"
+  update_downloading: "正在后台下载更新…"
 
 first_time_setup:
   title: "初始化设置"
@@ -139,12 +141,4 @@ tl_update_dialog:
   title: "新翻译更新可用"
   content: "新的翻译更新可用 (%{size})，是否下载？"
 
-update_prompt_dialog:
-  title: "新版本可用"
-  content: |
-    发现新的Hachimi更新 (%{version})，是否下载安装？
-    下载完成后需要您手动重启游戏才会应用。
-
-updating_dialog:
-  title: "更新中"
   content: "正在下载更新，请稍候..."

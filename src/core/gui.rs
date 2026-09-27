@@ -239,7 +239,8 @@ impl Gui {
                 ui.horizontal(|ui| {
                     ui.add(Self::icon());
                     ui.heading("Hachimi");
-                    ui.label(env!("HACHIMI_DISPLAY_VERSION"));
+                    // splash 只顯示乾淨版本號；完整含 git hash 的版本留在「關於」視窗（除錯用）
+                    ui.label(concat!("v", env!("CARGO_PKG_VERSION")));
                 });
                 ui.label(&self.splash_sub_str);
             });
@@ -979,6 +980,11 @@ impl ConfigEditor {
                 ui.add(egui::Slider::new(&mut config.gui_scale, 0.5..=3.0).step_by(0.05));
                 ui.end_row();
 
+                ui.label("自動更新")
+                    .on_hover_text("開：發現新版自動背景下載，完成後通知重開遊戲。\n關：只在右下角通知有新版，不下載。");
+                ui.checkbox(&mut config.auto_update, "");
+                ui.end_row();
+
                 #[cfg(target_os = "windows")]
                 {
                     use crate::windows::wnd_hook;
@@ -1280,7 +1286,7 @@ impl Window for AboutWindow {
                 }
                 #[cfg(target_os = "windows")]
                 if ui.button(t!("about.check_for_updates")).clicked() {
-                    Hachimi::instance().updater.clone().check_for_updates(|_| {});
+                    Hachimi::instance().updater.clone().check_for_updates(true);
                 }
             });
         });
