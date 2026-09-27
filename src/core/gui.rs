@@ -384,7 +384,7 @@ impl Gui {
                                 r"本次已存 {} 場 → hachimi\race_capture",
                                 practice_race::capture_count()
                             ));
-                            ui.label("練習賽＋自訂配對賽；逐幀資料已解好塞進 JSON，其他封包不理");
+                            ui.label("練習賽＋自訂配對賽＋群英聯賽；逐幀資料已解好塞進 JSON，其他封包不理");
                         }
                         #[cfg(target_os = "windows")]
                         if ui.button("開啟練習賽資料夾").clicked() {

@@ -307,6 +307,9 @@ pub mod practice_race {
     ///   && `random_seed`，且無 `race_result_info`/`legend_data_set`/`race_start_info`（後兩者是
     ///   單人劇本，排除）→ race_scenario 在 `data.race_scenario`；封包不帶 race_instance_id，檔名
     ///   固定 `roommatch`。
+    /// - **群英聯賽（League of Heroes）**：`data.start_set_info.round_result_array[]` 各有
+    ///   `race_scenario`（一組 5 輪、每輪對手不同），課程在 `start_set_info.set_info.race_instance_id`
+    ///   → 5 份全部就地解碼，檔名 `群英_<時間>_<課程>`。（2026-09-27 實機封包確認）
     ///
     /// `data` 含任何 `before_*` 欄位 → 賽後重看重送（seed/scenario 同首播），跳過。其餘一律忽略。
     pub fn capture(json: &serde_json::Value) {
@@ -343,7 +346,7 @@ pub mod practice_race {
                 .cloned()
                 .unwrap_or_else(|| format!("race{id}"))
         };
-        let (scenario_ptr, kind, label): (&str, &str, String) =
+        let (scenario_ptrs, kind, label): (Vec<String>, &str, String) =
             if data.contains_key("race_result_info") && data.contains_key("practice_race_id") {
                 let label = data
                     .get("race_result_info")
@@ -351,7 +354,7 @@ pub mod practice_race {
                     .and_then(|v| v.as_u64())
                     .map(course_label)
                     .unwrap_or_else(|| "race_unknown".to_string());
-                ("/data/race_result_info/race_scenario", "練習", label)
+                (vec!["/data/race_result_info/race_scenario".into()], "練習", label)
             } else if data.get("race_scenario").map_or(false, |v| v.is_string())
                 && data.contains_key("race_horse_data_array")
                 && data.contains_key("random_seed")
@@ -360,7 +363,23 @@ pub mod practice_race {
             {
                 let id = LAST_ROOM_RACE_INSTANCE.load(Ordering::Relaxed);
                 let label = if id != 0 { course_label(id) } else { "roommatch".to_string() };
-                ("/data/race_scenario", "自訂", label)
+                (vec!["/data/race_scenario".into()], "自訂", label)
+            } else if let Some(rounds) = data
+                .get("start_set_info")
+                .and_then(|s| s.get("round_result_array"))
+                .and_then(|a| a.as_array())
+                .filter(|a| a.iter().any(|r| r.get("race_scenario").map_or(false, |v| v.is_string())))
+            {
+                // 群英聯賽：一組 5 輪、每輪不同對手，同一個課程（set_info.race_instance_id）。
+                let course = data["start_set_info"]
+                    .pointer("/set_info/race_instance_id")
+                    .and_then(|v| v.as_u64())
+                    .map(course_label)
+                    .unwrap_or_else(|| "race_unknown".to_string());
+                let ptrs = (0..rounds.len())
+                    .map(|i| format!("/data/start_set_info/round_result_array/{i}/race_scenario"))
+                    .collect();
+                (ptrs, "群英", course)
             } else {
                 return; // 單人劇本 career 等其餘 response 一律忽略
             };
@@ -372,30 +391,13 @@ pub mod practice_race {
         }
         let stem = format!("{}_{}_{}", kind, local_timestamp(), label);
 
-        // race_scenario 是 base64 + gzip 壓縮字串。解出後拆成逐幀物件，待會塞回原位取代那串亂碼。
-        // 只輸出 JSON，不另存二進位。
-        let mut decoded_scenario: Option<serde_json::Value> = None;
-        if let Some(b64) = json.pointer(scenario_ptr).and_then(|v| v.as_str()) {
-            match decode_scenario(b64).and_then(|raw| parse_scenario_json(&raw)) {
-                Ok(v) => decoded_scenario = Some(v),
-                Err(e) => warn!("[race_capture] scenario 解碼/解析失敗（JSON 保留原字串）：{e}"),
-            }
-        }
-
-        // 單一輸出檔：完整封包（有哪些馬／參數／技能／賽道設定），且把 race_scenario 從壓縮字串
-        // 換成解好的逐幀物件（frames／results／events，id 原樣）。解不出來才退回原字串。
+        // 單一輸出檔：完整封包（有哪些馬／參數／技能／賽道設定），且把每個 race_scenario 從
+        // base64 + gzip 壓縮字串換成解好的逐幀物件（frames／results／events，id 原樣），
+        // 解不出來的那份保留原字串。只輸出 JSON，不另存二進位。
         let path = dir.join(format!("{stem}.json"));
-        let serialized = if let Some(v) = decoded_scenario {
-            let mut merged = json.clone();
-            match merged.pointer_mut(scenario_ptr) {
-                Some(slot) => *slot = v,
-                None => merged["data"]["race_scenario_decoded"] = v,
-            }
-            serde_json::to_string_pretty(&merged)
-        } else {
-            serde_json::to_string_pretty(json)
-        };
-        match serialized {
+        let mut merged = json.clone();
+        decode_scenarios_at(&mut merged, &scenario_ptrs);
+        match serde_json::to_string_pretty(&merged) {
             Ok(s) => match std::fs::write(&path, s) {
                 Ok(_) => {
                     COUNTER.fetch_add(1, Ordering::Relaxed);
@@ -404,6 +406,18 @@ pub mod practice_race {
                 Err(e) => warn!("[race_capture] 寫檔失敗：{e}"),
             },
             Err(e) => warn!("[race_capture] serialize 失敗：{e}"),
+        }
+    }
+
+    /// 把 `ptrs` 指到的每個 race_scenario 字串就地換成逐幀物件；解不出來的保留原字串。
+    pub(super) fn decode_scenarios_at(json: &mut serde_json::Value, ptrs: &[String]) {
+        for ptr in ptrs {
+            let Some(slot) = json.pointer_mut(ptr) else { continue };
+            let Some(b64) = slot.as_str() else { continue };
+            match decode_scenario(b64).and_then(|raw| parse_scenario_json(&raw)) {
+                Ok(v) => *slot = v,
+                Err(e) => warn!("[race_capture] scenario 解碼/解析失敗（{ptr} 保留原字串）：{e}"),
+            }
         }
     }
 
@@ -656,5 +670,33 @@ mod tests {
         }
         eprintln!("decoded {ok}/{game_api} game-API flows");
         assert!(game_api > 0 && ok == game_api, "decoded {ok}/{game_api}");
+    }
+
+    /// 群英聯賽形狀（start_set_info.round_result_array[].race_scenario）的 5 份 scenario 全部就地解碼。
+    /// 手邊沒有未解碼的群英聯賽封包，借競技場 fixture 的 5 份真實 race_scenario 塞進同樣形狀。
+    #[test]
+    fn decodes_heroes_set_scenarios() {
+        let Some(dir) = cap_dir() else { eprintln!("skip: no pc_cap dir"); return; };
+        let path = dir.join("0215_team_stadium_start.json");
+        if !path.is_file() { eprintln!("skip: fixture missing"); return; }
+        let ts = decode_capture_file(&path).expect("decode failed");
+        let rounds: Vec<serde_json::Value> = ts["data"]["race_result_array"].as_array().unwrap().iter()
+            .map(|r| serde_json::json!({ "race_scenario": r["race_scenario"].clone(), "round_info": {} }))
+            .collect();
+        let n = rounds.len();
+        let mut json = serde_json::json!({ "data": { "start_set_info": {
+            "set_info": { "race_instance_id": 670021 },
+            "round_result_array": rounds,
+        }}});
+        let ptrs: Vec<String> = (0..n)
+            .map(|i| format!("/data/start_set_info/round_result_array/{i}/race_scenario"))
+            .collect();
+        practice_race::decode_scenarios_at(&mut json, &ptrs);
+        assert_eq!(n, 5);
+        for p in &ptrs {
+            let sc = json.pointer(p).unwrap();
+            assert!(sc["frame_count"].as_u64().unwrap_or(0) > 0, "{p} not decoded");
+            assert_eq!(sc["bytes_consumed"], sc["bytes_total"], "{p} not fully consumed");
+        }
     }
 }
