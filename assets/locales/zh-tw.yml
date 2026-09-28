@@ -151,6 +151,7 @@ tl_update_dialog:
 skill_data_desc:
   group:
     restriction: "<color=#d81b60>＜%{v}＞</color>"
+    tag_strip: "在|賽場|距離=距"
     variant: "<color=#d81b60>%{v}時：</color>"
     variant_join: "；"
     extra: "另加 "

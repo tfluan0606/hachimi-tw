@@ -431,8 +431,15 @@ impl SkillDataDesc {
             return (String::new(), Vec::new());
         }
         let and_sep = Self::str("sep.and").unwrap_or_default();
+        // 硬限制排固定順序（賽場 → 距離 → 場地 → 跑法），同樣的組合才會寫得一樣
+        const ORDER: [&str; 4] = ["track_id", "distance_type", "ground_type", "running_style"];
+        let rank = |a: &str| ORDER.iter().position(|t| a.starts_with(t)).unwrap_or(ORDER.len());
         let branches: Vec<(Vec<&str>, Vec<&str>)> = condition.split('@')
-            .map(|g| g.split('&').partition(|a| Self::is_hard_atom(a)))
+            .map(|g| {
+                let (mut hard, soft): (Vec<&str>, Vec<&str>) = g.split('&').partition(|a| Self::is_hard_atom(a));
+                hard.sort_by_key(|a| rank(a));
+                (hard, soft)
+            })
             .collect();
         if branches.iter().all(|(hard, _)| hard.is_empty()) {
             return (condition.to_string(), Vec::new());
@@ -440,7 +447,7 @@ impl SkillDataDesc {
         // 每個分支的硬限制都一樣（例：`超越中&一哩@被超越&一哩`）→ 直接拆出，各分支保留自己的其他條件
         let first_hard = &branches[0].0;
         if branches.iter().all(|(hard, _)| hard == first_hard) {
-            let label = first_hard.iter().map(|a| Self::format_data_atom(a)).collect::<Vec<_>>().join(&and_sep);
+            let label = first_hard.iter().map(|a| Self::format_tag_atom(a)).collect::<Vec<_>>().join(&and_sep);
             let rest = branches.iter().map(|(_, soft)| soft.join("&")).collect::<Vec<_>>().join("@");
             return (rest, vec![label]);
         }
@@ -450,7 +457,7 @@ impl SkillDataDesc {
         }
         let mut labels: Vec<String> = Vec::new();
         for (hard, _) in &branches {
-            let label = hard.iter().map(|a| Self::format_data_atom(a)).collect::<Vec<_>>().join(&and_sep);
+            let label = hard.iter().map(|a| Self::format_tag_atom(a)).collect::<Vec<_>>().join(&and_sep);
             if !label.is_empty() && !labels.contains(&label) {
                 labels.push(label);
             }
@@ -496,6 +503,20 @@ impl SkillDataDesc {
             }
         }
         out.join(and_sep)
+    }
+
+    /// 限制標籤裡的單項：套 locale `group.tag_strip`（以 | 分隔；`A` = 拿掉、`A=B` = 換成 B），
+    /// zh-tw 例：「在中山賽場」→「中山」、「中距離」→「中距」。處理完變空就用原文。
+    fn format_tag_atom(atom: &str) -> String {
+        let text = Self::format_data_atom(atom);
+        let Some(strip) = Self::str("group.tag_strip") else {
+            return text;
+        };
+        let short = strip.split('|').filter(|w| !w.is_empty()).fold(text.clone(), |t, rule| match rule.split_once('=') {
+            Some((from, to)) => t.replace(from, to),
+            None => t.replace(rule, ""),
+        });
+        if short.is_empty() { text } else { short }
     }
 
     fn format_data_conditions(condition: &str) -> String {
@@ -755,13 +776,27 @@ impl SkillDataDesc {
             String::new()
         };
         let mut line = String::new();
-        let (condition, mut restrictions) = Self::split_hard_conditions(condition);
+        let (condition, cond_restrictions) = Self::split_hard_conditions(condition);
         let (precondition, pre_restrictions) = Self::split_hard_conditions(precondition);
-        for r in pre_restrictions {
-            if !restrictions.contains(&r) {
-                restrictions.push(r);
+        // 條件與附加條件的限制是「且」：兩邊都有時交叉組合（後追 × 中距／長距 → 後追、中距／後追、長距），
+        // 不能直接串成一串選項（會變成「後追／中距／長距」三選一）
+        let restrictions: Vec<String> = match (cond_restrictions.is_empty(), pre_restrictions.is_empty()) {
+            (false, false) => {
+                let and_sep = Self::str("sep.and").unwrap_or_default();
+                let mut out = Vec::new();
+                for c in &cond_restrictions {
+                    for p in &pre_restrictions {
+                        let label = if c == p { c.clone() } else { format!("{c}{and_sep}{p}") };
+                        if !out.contains(&label) {
+                            out.push(label);
+                        }
+                    }
+                }
+                out
             }
-        }
+            (false, true) => cond_restrictions,
+            _ => pre_restrictions,
+        };
         // 原本整句只有硬限制（拆完沒剩）→ 視同「隨時」，不再多印一次
         if !condition.is_empty() || restrictions.is_empty() {
             line.push_str(&Self::str("group.when").unwrap_or_default());
@@ -797,6 +832,9 @@ impl SkillDataDesc {
         if labels.len() < 2 {
             return labels.join(sep);
         }
+        if let Some(product) = Self::compact_product(labels, sep) {
+            return product;
+        }
         let chars: Vec<Vec<char>> = labels.iter().map(|l| l.chars().collect()).collect();
         let min_len = chars.iter().map(|c| c.len()).min().unwrap_or(0);
         let prefix = (0..min_len).take_while(|&i| chars.iter().all(|c| c[i] == chars[0][i])).count();
@@ -815,6 +853,30 @@ impl SkillDataDesc {
         let head: String = chars[0][..prefix].iter().collect();
         let tail: String = chars[0][chars[0].len() - suffix..].iter().collect();
         format!("{head}{}{tail}", middles.join(sep))
+    }
+
+    /// 選項剛好是兩類的所有組合時合併：「中山、中／中山、長／阪神、中／阪神、長」→「中山／阪神、中／長」。
+    /// 每個選項都要恰好兩項、且 選項集合 = 第一項集合 × 第二項集合，否則回 None。
+    fn compact_product(labels: &[String], sep: &str) -> Option<String> {
+        let and_sep = Self::str("sep.and").unwrap_or_default();
+        if and_sep.is_empty() {
+            return None;
+        }
+        let pairs: Vec<(&str, &str)> = labels.iter().map(|l| l.split_once(and_sep.as_str())).collect::<Option<_>>()?;
+        if pairs.iter().any(|(_, b)| b.contains(and_sep.as_str())) {
+            return None;
+        }
+        let mut firsts: Vec<&str> = Vec::new();
+        let mut seconds: Vec<&str> = Vec::new();
+        for (a, b) in &pairs {
+            if !firsts.contains(a) { firsts.push(a); }
+            if !seconds.contains(b) { seconds.push(b); }
+        }
+        if firsts.len() < 2 || seconds.len() < 2 || firsts.len() * seconds.len() != pairs.len() {
+            return None;
+        }
+        let all = firsts.iter().all(|a| seconds.iter().all(|b| pairs.contains(&(*a, *b))));
+        all.then(|| format!("{}{and_sep}{}", firsts.join(sep), seconds.join(sep)))
     }
 
     fn join_effects(effects: &[String]) -> String {
