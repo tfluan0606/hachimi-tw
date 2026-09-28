@@ -479,6 +479,13 @@ impl SkillDataDesc {
     fn format_and_group(atoms: &[&str], and_sep: &str) -> String {
         let parsed: Vec<(&str, &str, i32)> = atoms.iter().map(|a| Self::parse_atom(a)).collect();
         let mut merged: Vec<(usize, usize, String)> = Vec::new(); // (前面那個的位置, 後面那個的位置, 區間文字)
+        // 賽場編號 10001～10010 正好是 JRA 的 10 個賽場：`track_id>=10001&track_id<=10010` 整組就是「JRA賽場」
+        // （單看 >=10001 會被翻成「任意賽場」，拆開寫變成「在任意賽場、在JRA賽場」）
+        let lo = parsed.iter().position(|(t, op, v)| *t == "track_id" && *op == ">=" && *v == 10001);
+        let hi = parsed.iter().position(|(t, op, v)| *t == "track_id" && *op == "<=" && *v == 10010);
+        if let (Some(lo), Some(hi), Some(text)) = (lo, hi, Self::str("cond.track_id.jra")) {
+            merged.push((lo.min(hi), lo.max(hi), text));
+        }
         for (lo, (token, op, _)) in parsed.iter().enumerate() {
             if *op != ">=" || merged.iter().any(|(a, b, _)| *a == lo || *b == lo) {
                 continue;
@@ -893,7 +900,7 @@ impl SkillDataDesc {
         if extra.is_empty() {
             return None;
         }
-        Some(extra.iter().map(|a| Self::format_data_atom(a)).collect::<Vec<_>>().join(&and_sep))
+        Some(Self::format_and_group(&extra, &and_sep))
     }
 
     fn join_effects(effects: &[String]) -> String {
@@ -948,8 +955,10 @@ impl SkillDataDesc {
                 match Self::extra_conditions(b, x) {
                     Some(extra) if extra.is_empty() => {}
                     Some(extra) => {
-                        out.push_str(&Self::str(extra_key).unwrap_or_default());
-                        out.push_str(&extra.iter().map(|a| Self::format_data_atom(a)).collect::<Vec<_>>().join(&and_sep));
+                        // 一般版這一段根本是空的（例：一般版沒有前提）→ 不是「另需」，直接寫「前提：」
+                        let key = if b.is_empty() { full_key } else { extra_key };
+                        out.push_str(&Self::str(key).unwrap_or_default());
+                        out.push_str(&Self::format_and_group(&extra, &and_sep));
                     }
                     None if x.is_empty() => {}
                     None => {
