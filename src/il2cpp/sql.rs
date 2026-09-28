@@ -1005,43 +1005,21 @@ impl SkillDataDesc {
         all.then(|| format!("{}{and_sep}{}", firsts.join(sep), seconds.join(sep)))
     }
 
-    /// 加強版那一段：「情境時：」＋ 效果（只寫差異）＋ 前提。
-    /// - 情境＝硬限制 ＋ 條件：一般是比一般版多出的條件（中／長距、五圍≥1000時：）；
-    ///   比不出差異的獨立效果（例：條件1達成後才發動）就放它自己的完整條件，讓人知道是這個情況下的條件
-    /// - 前提維持「前提：…」寫法接在效果後面（一般是多出的前提，獨立效果是完整前提）
-    /// locale 沒有 group.variant 回 None（呼叫端照舊寫法）。
-    fn render_variant(base: &GroupParts, v: &GroupParts, restriction: &str) -> Option<String> {
+    /// v 的條件是否就是 base 的條件再多幾項（條件或附加條件其中一邊多、另一邊相同）；是的話回傳多出來那幾項的文字。
+    fn situational_extra(base: &GroupParts, v: &GroupParts) -> Option<String> {
         let and_sep = Self::str("sep.and").unwrap_or_default();
-        let diff = |b: &str, x: &str| -> Option<String> {
-            if b == x {
-                return Some(String::new());
-            }
-            Some(Self::format_and_group(&Self::extra_conditions(b, x)?, &and_sep))
+        let (b, x) = (&base.cond_raw, &v.cond_raw);
+        let extra = if b.1 == x.1 && b.0 != x.0 {
+            Self::extra_conditions(&b.0, &x.0)?
+        } else if b.0 == x.0 && b.1 != x.1 {
+            Self::extra_conditions(&b.1, &x.1)?
+        } else {
+            return None;
         };
-        let full = |c: &str| if c.is_empty() { String::new() } else { Self::format_data_conditions(c) };
-        let (cond, pre, independent) = match (diff(&base.cond_raw.0, &v.cond_raw.0), diff(&base.cond_raw.1, &v.cond_raw.1)) {
-            (Some(c), Some(p)) => (c, p, false),
-            _ => (full(&v.cond_raw.0), full(&v.cond_raw.1), true),
-        };
-        let situation = [restriction.to_string(), cond].into_iter().filter(|x| !x.is_empty()).collect::<Vec<_>>().join(&and_sep);
-        if situation.is_empty() {
+        if extra.is_empty() {
             return None;
         }
-        let mut out = Self::data_fmt("group.variant", &situation)?;
-        if independent {
-            // 獨立效果：效果、時間完整寫
-            out.push_str(&format!("<b>{} {}</b>{}", Self::join_effects(&v.effects), v.time, v.cd));
-        }
-        else {
-            out.push_str(&Self::render_variant_diff(base, v, true));
-        }
-        if !pre.is_empty() {
-            // 一般版本來就有前提 → 多出來的寫「前提另需」；一般版沒有前提或是獨立效果 → 「前提」
-            let key = if independent || base.cond_raw.1.is_empty() { "group.after" } else { "group.also_after" };
-            out.push_str(&Self::str(key).unwrap_or_default());
-            out.push_str(&pre);
-        }
-        Some(out)
+        Some(Self::format_and_group(&extra, &and_sep))
     }
 
     fn join_effects(effects: &[String]) -> String {
@@ -1176,8 +1154,10 @@ impl SkillDataDesc {
                 // 抽完只剩一組帶限制：那組是「特定情況下的加強版」（例：一般效果＋在中山賽場時另有加成）。
                 // 一般效果排前面，加強版標「中山時：」，而且只寫跟一般版不同的部分。
                 let variant = |base: &GroupParts, v: &GroupParts, rv: &[Vec<String>]| -> String {
-                    Self::render_variant(base, v, &Self::restriction_label(rv))
-                        .unwrap_or_else(|| format!("{}{}", tag(rv), Self::render_group(v)))
+                    match Self::data_fmt("group.variant", &Self::restriction_label(rv)) {
+                        Some(label) => format!("{label}{}", Self::render_variant_diff(base, v, false)),
+                        None => format!("{}{}", tag(rv), Self::render_group(v))
+                    }
                 };
                 match (r1.is_empty(), r2.is_empty()) {
                     (true, false) => format!("{head}{}{variant_join}{}", Self::render_group(&g1), variant(&g1, &g2, &r2)),
@@ -1186,18 +1166,16 @@ impl SkillDataDesc {
                         // 兩組限制相同，但一組條件只是另一組多幾項（例：多「距第1名≤5米」）→ 多的那幾項就是
                         // 觸發加強版的情境：一般效果在前，「距第1名≤5米時：改為 …」
                         let situational = |base: &GroupParts, v: &GroupParts| -> Option<String> {
-                            // 只有「條件多幾項」的才算（前提也可以多）；完全不同的是獨立效果，不走這裡
-                            Self::extra_conditions(&base.cond_raw.0, &v.cond_raw.0).filter(|e| !e.is_empty())?;
-                            Self::extra_conditions(&base.cond_raw.1, &v.cond_raw.1)?;
-                            let body = Self::render_variant(base, v, "")?;
-                            Some(format!("{head}{}{variant_join}{body}", Self::render_group(base)))
+                            let extra = Self::situational_extra(base, v)?;
+                            let label = Self::data_fmt("group.variant", &extra)?;
+                            Some(format!("{head}{}{variant_join}{label}{}", Self::render_group(base), Self::render_variant_diff(base, v, true)))
                         };
                         situational(&g2, &g1)
                             .or_else(|| situational(&g1, &g2))
-                            .unwrap_or_else(|| format!("{head}{}\n{}", Self::render_group(&g1), Self::render_group(&g2)))
+                            .unwrap_or_else(|| format!("{head}{}{variant_join}{}", Self::render_group(&g1), Self::render_group(&g2)))
                     }
                     // 兩組各有不同限制（互斥的兩個版本）：各自完整標示
-                    (false, false) => format!("{}{}\n{}{}",
+                    (false, false) => format!("{}{}{variant_join}{}{}",
                         tag(&g1.restrictions), Self::render_group(&g1), tag(&g2.restrictions), Self::render_group(&g2))
                 }
             }
