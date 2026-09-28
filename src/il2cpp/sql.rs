@@ -53,6 +53,9 @@ fn skill_data_desc() -> Option<&'static SkillDataDesc> {
     }).as_ref()
 }
 
+/// 台服的技能名稱（text_data category 47），給「使用了技能 X」條件用；locale 裡寫死的是簡中名稱。
+static SKILL_NAMES: OnceCell<FnvHashMap<i32, String>> = OnceCell::new();
+
 fn text_hash(text: &str) -> u64 {
     use std::hash::{Hash, Hasher};
     let mut h = std::collections::hash_map::DefaultHasher::new();
@@ -182,6 +185,17 @@ impl SkillDataDesc {
         let conn = Connection::new();
 
         if Connection::Open(conn, db_path.to_il2cpp_string(), ptr::null_mut(), ptr::null_mut(), 0) {
+            // 技能名稱要先有，格式化條件時會用到
+            let mut names = FnvHashMap::default();
+            let name_query = Connection::Query_orig(conn, "SELECT \"index\", text FROM text_data WHERE category = 47".to_il2cpp_string());
+            if !name_query.is_null() {
+                while Query::Step(name_query) {
+                    names.insert(Query::GetInt(name_query, 0), Self::get_data_text(name_query, 1));
+                }
+                Query::Dispose_orig(name_query);
+            }
+            let _ = SKILL_NAMES.set(names);
+
             let sql = "SELECT id, \
                 precondition_1, condition_1, float_ability_time_1, float_cooldown_time_1, \
                 ability_type_1_1, ability_value_usage_1_1, additional_activate_type_1_1, float_ability_value_1_1, target_type_1_1, target_value_1_1, \
@@ -192,7 +206,7 @@ impl SkillDataDesc {
                 ability_type_2_2, ability_value_usage_2_2, additional_activate_type_2_2, float_ability_value_2_2, target_type_2_2, target_value_2_2, \
                 ability_type_2_3, ability_value_usage_2_3, additional_activate_type_2_3, float_ability_value_2_3, target_type_2_3, target_value_2_3 \
                 FROM skill_data";
-            let query = Connection::Query(conn, sql.to_il2cpp_string());
+            let query = Connection::Query_orig(conn, sql.to_il2cpp_string());
 
             if !query.is_null() {
                 while Query::Step(query) {
@@ -514,6 +528,14 @@ impl SkillDataDesc {
         groups.iter().map(|g| fmt_and(g)).collect::<Vec<_>>().join(&or_sep)
     }
 
+    /// zh-tw 時用遊戲資料庫的技能名稱（跟遊戲顯示一致）；其他語系沿用 locale 的名稱。
+    fn db_skill_name(id: i32) -> Option<String> {
+        if !locale().starts_with("zh-tw") {
+            return None;
+        }
+        SKILL_NAMES.get()?.get(&id).filter(|n| !n.is_empty()).cloned()
+    }
+
     fn format_data_atom(atom: &str) -> String {
         let bytes = atom.as_bytes();
         let mut token_end = 0;
@@ -650,6 +672,9 @@ impl SkillDataDesc {
         }
 
         if token == "is_used_skill_id" && op == "==" {
+            if let Some(text) = Self::db_skill_name(value).and_then(|n| Self::data_fmt("cond.used_skill.template", &n)) {
+                return text;
+            }
             if let Some(text) = Self::str(&format!("cond.used_skill.{value}")) {
                 return text;
             }
@@ -659,6 +684,9 @@ impl SkillDataDesc {
         }
 
         if token == "is_used_skill_id_with_detail_one" && op == "==" {
+            if let Some(text) = Self::db_skill_name(value).and_then(|n| Self::data_fmt("cond.used_skill_detail_one.template", &n)) {
+                return text;
+            }
             if let Some(text) = Self::str(&format!("cond.used_skill_detail_one.{value}")) {
                 return text;
             }
@@ -762,6 +790,33 @@ impl SkillDataDesc {
         missing_ok.then(|| x.into_iter().filter(|a| !b.contains(a)).collect())
     }
 
+    /// 多個選項共同的開頭／結尾只寫一次：
+    /// 「在札幌賽場／在函館賽場」→「在札幌／函館賽場」、「在東京賽場、短距離／在東京賽場、一哩」→「在東京賽場、短距離／一哩」。
+    /// 抽完若有選項變空字串（例：「一哩／一哩、草地」）或選項本身還是組合，就不抽，照原樣接起來。
+    fn compact_alternatives(labels: &[String], sep: &str) -> String {
+        if labels.len() < 2 {
+            return labels.join(sep);
+        }
+        let chars: Vec<Vec<char>> = labels.iter().map(|l| l.chars().collect()).collect();
+        let min_len = chars.iter().map(|c| c.len()).min().unwrap_or(0);
+        let prefix = (0..min_len).take_while(|&i| chars.iter().all(|c| c[i] == chars[0][i])).count();
+        let suffix = (0..min_len - prefix)
+            .take_while(|&i| chars.iter().all(|c| c[c.len() - 1 - i] == chars[0][chars[0].len() - 1 - i]))
+            .count();
+        if prefix + suffix == 0 {
+            return labels.join(sep);
+        }
+        let middles: Vec<String> = chars.iter().map(|c| c[prefix..c.len() - suffix].iter().collect()).collect();
+        // 選項本身是組合（中間還有「、」）時抽了會切得亂七八糟（「中山賽場、中／阪神賽場、長…」），就不抽
+        let and_sep = Self::str("sep.and").unwrap_or_default();
+        if middles.iter().any(|m| m.is_empty() || (!and_sep.is_empty() && m.contains(and_sep.as_str()))) {
+            return labels.join(sep);
+        }
+        let head: String = chars[0][..prefix].iter().collect();
+        let tail: String = chars[0][chars[0].len() - suffix..].iter().collect();
+        format!("{head}{}{tail}", middles.join(sep))
+    }
+
     fn join_effects(effects: &[String]) -> String {
         effects.join(&Self::str("sep.effect").unwrap_or_else(|| ", ".into()))
     }
@@ -840,7 +895,7 @@ impl SkillDataDesc {
         // 一般：限制標在該組最前面（＜一哩／中距離＞）
         let tagged = |g: &GroupParts| -> String {
             let line = Self::render_group(g);
-            match (g.restrictions.is_empty(), Self::data_fmt("group.restriction", &g.restrictions.join(&or_sep))) {
+            match (g.restrictions.is_empty(), Self::data_fmt("group.restriction", &Self::compact_alternatives(&g.restrictions, &or_sep))) {
                 (false, Some(tag)) => format!("{tag}{line}"),
                 _ => line
             }
@@ -848,7 +903,7 @@ impl SkillDataDesc {
         // 兩組只有一組帶限制：那組是「特定情況下的加強版」（例：一般效果＋在中山賽場時另有加成）。
         // 一般效果排前面，加強版放後面標「在中山賽場時：」，而且只寫跟一般版不同的部分。
         let variant = |base: &GroupParts, v: &GroupParts| -> String {
-            match Self::data_fmt("group.variant", &v.restrictions.join(&or_sep)) {
+            match Self::data_fmt("group.variant", &Self::compact_alternatives(&v.restrictions, &or_sep)) {
                 Some(tag) => format!("{tag}{}", Self::render_variant_diff(base, v)),
                 None => tagged(v)
             }
@@ -1025,6 +1080,8 @@ mod tests {
         let Ok(path) = std::env::var("HACHIMI_SKILL_JSON") else { eprintln!("skip: HACHIMI_SKILL_JSON not set"); return; };
         let json: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(path).unwrap()).unwrap();
         rust_i18n::set_locale("zh-tw");
+        let _ = SKILL_NAMES.set(json["names"].as_object().unwrap().iter()
+            .filter_map(|(k, v)| Some((k.parse().ok()?, v.as_str()?.to_string()))).collect());
 
         let int = |v: &serde_json::Value| v.as_i64().unwrap_or(0) as i32;
         let text = |v: &serde_json::Value| v.as_str().unwrap_or("").to_string();
@@ -1037,6 +1094,7 @@ mod tests {
         let rows = json["rows"].as_array().unwrap();
         let (mut raw, mut empty) = (Vec::new(), 0usize);
         let mut samples = Vec::new();
+        let mut dump = String::new();
         let (mut tagged, mut hard_left) = (0usize, Vec::new());
         let (mut variants, mut variant_full) = (0usize, Vec::<(i32, String)>::new());
         for r in rows {
@@ -1049,6 +1107,7 @@ mod tests {
             };
             let desc = SkillDataDesc::format_data_desc(&row);
             if desc.is_empty() { empty += 1; }
+            dump.push_str(&format!("{}\t{}\t{}\n", row.id, json["names"][row.id.to_string()].as_str().unwrap_or(""), desc.replace('\n', "⏎")));
             if desc.contains("＜") || desc.contains("時：</color>") { tagged += 1; }
             for line in desc.split('\n').filter(|l| l.contains("時：</color>")) {
                 variants += 1;
@@ -1066,6 +1125,10 @@ mod tests {
         }
         for (id, d) in &samples {
             eprintln!("== {id} {} | 原文：{}\n{d}\n", json["names"][id.to_string()], json["descs"][id.to_string()]);
+        }
+        // HACHIMI_SKILL_DUMP=<檔>：把全部輸出寫成 TSV（id、名稱、說明，說明內換行記成 ⏎），改格式時可前後比對
+        if let Ok(out) = std::env::var("HACHIMI_SKILL_DUMP") {
+            std::fs::write(out, &dump).unwrap();
         }
         eprintln!("total {} / empty {} / 殘留原始條件式 {}", rows.len(), empty, raw.len());
         eprintln!("拆出硬限制 {tagged} / 硬限制仍留在條件裡 {}", hard_left.len());

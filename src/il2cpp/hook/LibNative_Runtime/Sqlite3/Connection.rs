@@ -101,6 +101,12 @@ fn parse_query(query: *mut Il2CppObject, sql: *const Il2CppString) {
 }
 
 type QueryFn = extern "C" fn(this: *mut Il2CppObject, sql: *const Il2CppString) -> *mut Il2CppObject;
+
+/// 直接呼叫原函式、不經過 hook（不解析、不登記進 SELECT_QUERIES）。給我們自己發的查詢用：
+/// 那些查詢的 GetText／Dispose 也走 `*_orig`，若經過這裡的 hook 登記了，Dispose 時不會被移除。
+pub fn Query_orig(this: *mut Il2CppObject, sql: *const Il2CppString) -> *mut Il2CppObject {
+    get_orig_fn!(Query, QueryFn)(this, sql)
+}
 pub extern "C" fn Query(this: *mut Il2CppObject, sql: *const Il2CppString) -> *mut Il2CppObject {
     trace!("Query");
     let query = get_orig_fn!(Query, QueryFn)(this, sql);
