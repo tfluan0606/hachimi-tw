@@ -294,9 +294,15 @@ skill_data_desc:
         "0": "初期"
         "1": "中期"
         "2": "後期"
-        "3": "終直"
+        "3": "後期終段"
       le: "%{v}或更早"
       ge: "%{v}或更晚"
+      # phase：0 初期、1 中期、2 後期（End）、3 後期最後一段（遊戲 RacePhaseCalculator 的 Last）
+      special:
+        ge_2: "後期"
+        eq_2: "後期前段"
+        ge_1: "中期之後"
+        le_1: "初期～中期"
     ground_condition:
       name:
         "1": "良"
@@ -420,13 +426,13 @@ skill_data_desc:
       phase_firsthalf:
         eq:
           "1": "中期前半"
-          "3": "終直前半"
+          "3": "後期終段前半"
       phase_firsthalf_random:
         eq:
           "0": "初期前半<b>隨機</b>"
           "1": "中期前半<b>隨機</b>"
           "2": "後期前半<b>隨機</b>"
-          "3": "終直前半<b>隨機</b>"
+          "3": "後期終段前半<b>隨機</b>"
       phase_laterhalf:
         eq:
           "0": "初期後半"
@@ -446,7 +452,7 @@ skill_data_desc:
           "0": "初期<b>隨機</b>"
           "1": "中期<b>隨機</b>"
           "2": "後期<b>隨機</b>"
-          "3": "終直<b>隨機</b>"
+          "3": "後期終段<b>隨機</b>"
       phase_straight_random:
         eq:
           "1": "中期直線<b>隨機</b>"

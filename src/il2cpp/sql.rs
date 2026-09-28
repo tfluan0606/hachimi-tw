@@ -682,6 +682,10 @@ impl SkillDataDesc {
         }
 
         if token == "phase" && matches!(op, "==" | "!=" | "<=" | ">=") {
+            // 特定組合的慣用說法（例：phase>=2 就是玩家說的「後期」，含最後那段；不是「後期或更晚」）
+            if let Some(text) = Self::str(&format!("cond.phase.special.{}_{value}", Self::op_tag(op))) {
+                return text;
+            }
             if let Some(name) = Self::str(&format!("cond.phase.name.{value}")) {
                 return match op {
                     "==" => name,
