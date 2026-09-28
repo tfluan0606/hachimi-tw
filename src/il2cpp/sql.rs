@@ -511,16 +511,35 @@ impl SkillDataDesc {
                 merged.push((lo.min(hi), lo.max(hi), text));
             }
         }
-        let mut out = Vec::with_capacity(atoms.len());
+        // (是否時間類, 文字)；時間類（比賽進行到哪：階段、進度%、剩餘距離、經過秒數）排最前面並另外上色，
+        // 其他照原本順序。例：「後期或更晚、最後彎道過半之後」而不是反過來（有些賽道最後彎道不在後期）
+        let mut out: Vec<(bool, String)> = Vec::with_capacity(atoms.len());
         for (i, atom) in atoms.iter().enumerate() {
+            let timing = Self::is_timing_token(parsed[i].0);
             if let Some((_, _, text)) = merged.iter().find(|(first, _, _)| *first == i) {
-                out.push(text.clone());
+                out.push((timing, text.clone()));
             }
             else if !merged.iter().any(|(_, second, _)| *second == i) {
-                out.push(Self::format_data_atom(atom));
+                out.push((timing, Self::format_data_atom(atom)));
             }
         }
-        out.join(and_sep)
+        out.sort_by_key(|(timing, _)| !*timing);
+        out.into_iter()
+            .map(|(timing, text)| match timing.then(|| Self::data_fmt("cond.time_wrap", &text)).flatten() {
+                Some(wrapped) => wrapped,
+                None => text
+            })
+            .collect::<Vec<_>>()
+            .join(and_sep)
+    }
+
+    /// 描述「比賽進行到什麼時候」的條件：階段（phase*）、進度百分比（distance_rate*）、剩餘距離、經過秒數。
+    /// 「被堵≥2秒」這類持續時間、「正在最終衝刺中」這類狀態不算。
+    fn is_timing_token(token: &str) -> bool {
+        token.starts_with("phase")
+            || token.starts_with("distance_rate")
+            || token.starts_with("remain_distance")
+            || token == "accumulatetime"
     }
 
     /// 限制標籤裡的單項：套 locale `group.tag_strip`（以 | 分隔；`A` = 拿掉、`A=B` = 換成 B），
@@ -593,7 +612,20 @@ impl SkillDataDesc {
                 let open = Self::str("sep.group_open").unwrap_or_else(|| "(".into());
                 let close = Self::str("sep.group_close").unwrap_or_else(|| ")".into());
                 let alts = diffs.iter().map(|d| fmt_and(d)).collect::<Vec<_>>().join(&or_sep);
-                return format!("{open}{alts}{close}{and_sep}{}", fmt_and(&common));
+                // 共同條件裡的時間類放在括號前面（時間先講），其餘放後面
+                let (timing, rest): (Vec<&str>, Vec<&str>) = common.iter()
+                    .partition(|a| Self::is_timing_token(Self::parse_atom(a).0));
+                let mut out = String::new();
+                if !timing.is_empty() {
+                    out.push_str(&fmt_and(&timing));
+                    out.push_str(&and_sep);
+                }
+                out.push_str(&format!("{open}{alts}{close}"));
+                if !rest.is_empty() {
+                    out.push_str(&and_sep);
+                    out.push_str(&fmt_and(&rest));
+                }
+                return out;
             }
         }
 

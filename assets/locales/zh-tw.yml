@@ -276,6 +276,7 @@ skill_data_desc:
       on_corner: "在最後彎道上"
       on_straight: "最後彎道之後"
       laterhalf_after: "最後彎道過半之後"
+    time_wrap: "<color=#8e44ad>%{v}</color>"
     negate: "非%{v}"
     order_rate:
       gt: "名次>%{v}%"
