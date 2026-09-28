@@ -272,6 +272,9 @@ skill_data_desc:
     random_recovery_users: "隨機%{v}名回復技能使用者"
     unknown: "未知"
   cond:
+    final_corner:
+      on_corner: "在最後彎道上"
+      on_straight: "在最後直線上"
     negate: "非%{v}"
     order_rate:
       gt: "名次>%{v}%"
@@ -374,8 +377,8 @@ skill_data_desc:
           "1": "根幹距離"
       is_finalcorner:
         eq:
-          "0": "非最後彎道/直線"
-          "1": "最後彎道/直線"
+          "0": "最後彎道前"
+          "1": "最後彎道起"
       is_goodstart:
         eq:
           "0": "起步不佳"
@@ -502,7 +505,7 @@ skill_data_desc:
       is_exist_skill_id:
         eq: "技能 共鳴 在場"
       is_finalcorner_laterhalf:
-        eq: "最後彎道/直線（後半）"
+        eq: "最後彎道後半起"
       is_finalcorner_random:
         eq: "最後彎道<b>隨機</b>"
       is_hp_empty_onetime:

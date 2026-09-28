@@ -486,6 +486,17 @@ impl SkillDataDesc {
         if let (Some(lo), Some(hi), Some(text)) = (lo, hi, Self::str("cond.track_id.jra")) {
             merged.push((lo.min(hi), lo.max(hi), text));
         }
+        // 「最後彎道起」＋「在彎道上／在直線上」＝「在最後彎道上／在最後直線上」
+        // （分開寫成「最後彎道/直線、在彎道上」讀起來像直線也算）
+        if let Some(fc) = parsed.iter().position(|(t, op, v)| *t == "is_finalcorner" && *op == "==" && *v == 1) {
+            for (op, key) in [("!=", "cond.final_corner.on_corner"), ("==", "cond.final_corner.on_straight")] {
+                let pos = parsed.iter().position(|(t, o, v)| *t == "corner" && *o == op && *v == 0);
+                if let (Some(pos), Some(text)) = (pos, Self::str(key)) {
+                    merged.push((fc.min(pos), fc.max(pos), text));
+                    break;
+                }
+            }
+        }
         for (lo, (token, op, _)) in parsed.iter().enumerate() {
             if *op != ">=" || merged.iter().any(|(a, b, _)| *a == lo || *b == lo) {
                 continue;
