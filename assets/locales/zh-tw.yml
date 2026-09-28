@@ -552,9 +552,9 @@ skill_data_desc:
       order_rate_out70_continue:
         eq: "保持在後30%名"
       phase_firstquarter:
-        eq: "後期一開始"
+        eq: "後期前1/8"
       phase_firstquarter_random:
-        eq: "後期一開始<b>隨機</b>"
+        eq: "後期前1/8<b>隨機</b>"
       phase_laterhalf:
         le: "中期後半或更早"
       run_at_full_speed_random:
