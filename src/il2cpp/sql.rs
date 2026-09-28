@@ -1005,21 +1005,31 @@ impl SkillDataDesc {
         all.then(|| format!("{}{and_sep}{}", firsts.join(sep), seconds.join(sep)))
     }
 
-    /// v 的條件是否就是 base 的條件再多幾項（條件或附加條件其中一邊多、另一邊相同）；是的話回傳多出來那幾項的文字。
-    fn situational_extra(base: &GroupParts, v: &GroupParts) -> Option<String> {
+    /// 加強版的「情境」文字：（硬限制）＋ 多出的條件 ＋（前提：多出的前提）。
+    /// 條件或前提比不出「只多幾項」（獨立效果）就回 None；多出的前提在 locale 沒有 group.variant_pre 時也回 None（照舊寫法）。
+    fn variant_situation(base: &GroupParts, v: &GroupParts, restriction: Option<&str>) -> Option<String> {
         let and_sep = Self::str("sep.and").unwrap_or_default();
-        let (b, x) = (&base.cond_raw, &v.cond_raw);
-        let extra = if b.1 == x.1 && b.0 != x.0 {
-            Self::extra_conditions(&b.0, &x.0)?
-        } else if b.0 == x.0 && b.1 != x.1 {
-            Self::extra_conditions(&b.1, &x.1)?
-        } else {
-            return None;
+        let extra = |b: &str, x: &str| -> Option<String> {
+            if b == x {
+                return Some(String::new());
+            }
+            let atoms = Self::extra_conditions(b, x)?;
+            Some(Self::format_and_group(&atoms, &and_sep))
         };
-        if extra.is_empty() {
-            return None;
+        let cond = extra(&base.cond_raw.0, &v.cond_raw.0)?;
+        let pre = extra(&base.cond_raw.1, &v.cond_raw.1)?;
+        let mut parts: Vec<String> = Vec::new();
+        if let Some(r) = restriction.filter(|r| !r.is_empty()) {
+            parts.push(r.to_string());
         }
-        Some(Self::format_and_group(&extra, &and_sep))
+        if !cond.is_empty() {
+            parts.push(cond);
+        }
+        let mut out = parts.join(&and_sep);
+        if !pre.is_empty() {
+            out.push_str(&Self::data_fmt("group.variant_pre", &pre)?);
+        }
+        Some(out)
     }
 
     fn join_effects(effects: &[String]) -> String {
@@ -1154,9 +1164,14 @@ impl SkillDataDesc {
                 // 抽完只剩一組帶限制：那組是「特定情況下的加強版」（例：一般效果＋在中山賽場時另有加成）。
                 // 一般效果排前面，加強版標「中山時：」，而且只寫跟一般版不同的部分。
                 let variant = |base: &GroupParts, v: &GroupParts, rv: &[Vec<String>]| -> String {
-                    match Self::data_fmt("group.variant", &Self::restriction_label(rv)) {
-                        Some(label) => format!("{label}{}", Self::render_variant_diff(base, v, false)),
-                        None => format!("{}{}", tag(rv), Self::render_group(v))
+                    // 加強版多出的條件／前提也併進「…時：」（中／長距、五圍≥1000時：），效果後面不再接「另需」，
+                    // 免得折行後看起來像另一句話；比不出差異（獨立效果）才照舊
+                    let situation = Self::variant_situation(base, v, Some(&Self::restriction_label(rv)));
+                    match (situation, Self::data_fmt("group.variant", &Self::restriction_label(rv))) {
+                        (Some(content), Some(_)) => format!("{}{}",
+                            Self::data_fmt("group.variant", &content).unwrap_or_default(), Self::render_variant_diff(base, v, true)),
+                        (None, Some(label)) => format!("{label}{}", Self::render_variant_diff(base, v, false)),
+                        (_, None) => format!("{}{}", tag(rv), Self::render_group(v))
                     }
                 };
                 match (r1.is_empty(), r2.is_empty()) {
@@ -1166,7 +1181,7 @@ impl SkillDataDesc {
                         // 兩組限制相同，但一組條件只是另一組多幾項（例：多「距第1名≤5米」）→ 多的那幾項就是
                         // 觸發加強版的情境：一般效果在前，「距第1名≤5米時：改為 …」
                         let situational = |base: &GroupParts, v: &GroupParts| -> Option<String> {
-                            let extra = Self::situational_extra(base, v)?;
+                            let extra = Self::variant_situation(base, v, None).filter(|e| !e.is_empty())?;
                             let label = Self::data_fmt("group.variant", &extra)?;
                             Some(format!("{head}{}{variant_join}{label}{}", Self::render_group(base), Self::render_variant_diff(base, v, true)))
                         };

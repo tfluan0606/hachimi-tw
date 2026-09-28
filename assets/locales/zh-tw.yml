@@ -154,6 +154,7 @@ skill_data_desc:
     tag_strip: "在|賽場|距離=距"
     variant: "<color=#d81b60>%{v}時：</color>"
     variant_join: "；"
+    variant_pre: "（前提：%{v}）"
     extra: "另加 "
     replace: "改為 "
     also_when: " <color=#11998e>另需</color>："
@@ -379,8 +380,8 @@ skill_data_desc:
           "1": "海外"
       is_activate_other_skill_detail:
         eq:
-          "1": "效果1發動後"
-          "2": "效果2發動後"
+          "1": "條件1達成後"
+          "2": "條件2達成後"
       is_badstart:
         eq:
           "0": "起步尚佳"
