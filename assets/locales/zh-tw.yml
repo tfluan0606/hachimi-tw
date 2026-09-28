@@ -154,7 +154,6 @@ skill_data_desc:
     tag_strip: "在|賽場|距離=距"
     variant: "<color=#d81b60>%{v}時：</color>"
     variant_join: "；"
-    variant_pre: "（前提：%{v}）"
     extra: "另加 "
     replace: "改為 "
     also_when: " <color=#11998e>另需</color>："
