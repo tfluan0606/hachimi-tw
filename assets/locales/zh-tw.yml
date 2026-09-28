@@ -274,7 +274,8 @@ skill_data_desc:
   cond:
     final_corner:
       on_corner: "在最後彎道上"
-      on_straight: "在最後直線上"
+      on_straight: "最後彎道之後"
+      laterhalf_after: "最後彎道過半之後"
     negate: "非%{v}"
     order_rate:
       gt: "名次>%{v}%"
@@ -505,7 +506,7 @@ skill_data_desc:
       is_exist_skill_id:
         eq: "技能 共鳴 在場"
       is_finalcorner_laterhalf:
-        eq: "最後彎道後半起"
+        eq: "在最後彎道後半"
       is_finalcorner_random:
         eq: "最後彎道<b>隨機</b>"
       is_hp_empty_onetime:

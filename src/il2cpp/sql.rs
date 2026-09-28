@@ -537,7 +537,40 @@ impl SkillDataDesc {
         if short.is_empty() { text } else { short }
     }
 
+    /// 合成的條件 token：「最後彎道過半之後」＝ `is_finalcorner_laterhalf==1`（最後彎道後半）
+    /// 或 `is_finalcorner==1&corner==0`（進入過最後彎道、且已不在彎道上＝最後彎道之後）。
+    /// 遊戲資料一律用這兩個分支成對表達原文的「最後彎道過半之後」（台服 10 組、後者從不單獨出現）。
+    const LATERHALF_AFTER: &'static str = "hachimi_finalcorner_laterhalf_after==1";
+
+    /// 兩個分支除了「最後彎道後半」／「最後彎道之後」以外都一樣時，合併成一個分支＋合成 token。
+    /// locale 沒有 `cond.final_corner.laterhalf_after` 就不合併（照原樣顯示兩個分支）。
+    fn merge_laterhalf_after(condition: &str) -> Option<String> {
+        Self::str("cond.final_corner.laterhalf_after")?;
+        let groups: Vec<Vec<&str>> = condition.split('@').map(|g| g.split('&').collect()).collect();
+        let is_lh = |g: &Vec<&str>| g.contains(&"is_finalcorner_laterhalf==1");
+        let is_fc0 = |g: &Vec<&str>| g.contains(&"is_finalcorner==1") && g.contains(&"corner==0");
+        let a = groups.iter().position(|g| is_lh(g))?;
+        let b = groups.iter().position(|g| is_fc0(g))?;
+        let rest_a: Vec<&str> = groups[a].iter().copied().filter(|x| *x != "is_finalcorner_laterhalf==1").collect();
+        let rest_b: Vec<&str> = groups[b].iter().copied().filter(|x| *x != "is_finalcorner==1" && *x != "corner==0").collect();
+        let (mut sa, mut sb) = (rest_a.clone(), rest_b.clone());
+        sa.sort();
+        sb.sort();
+        if sa != sb {
+            return None;
+        }
+        let merged: Vec<&str> = std::iter::once(Self::LATERHALF_AFTER).chain(rest_a.iter().copied()).collect();
+        let out: Vec<String> = groups.iter().enumerate()
+            .filter(|(i, _)| *i != b)
+            .map(|(i, g)| if i == a { merged.join("&") } else { g.join("&") })
+            .collect();
+        Some(out.join("@"))
+    }
+
     fn format_data_conditions(condition: &str) -> String {
+        if let Some(merged) = Self::merge_laterhalf_after(condition) {
+            return Self::format_data_conditions(&merged);
+        }
         let or_sep = Self::str("sep.or").unwrap_or_default();
         let and_sep = Self::str("sep.and").unwrap_or_default();
         let fmt_and = |atoms: &[&str]| Self::format_and_group(atoms, &and_sep);
@@ -632,6 +665,12 @@ impl SkillDataDesc {
                 if let Some(text) = Self::data_fmt(&format!("cond.ground_condition.{}", Self::op_tag(op)), &name) {
                     return text;
                 }
+            }
+        }
+
+        if atom == Self::LATERHALF_AFTER {
+            if let Some(text) = Self::str("cond.final_corner.laterhalf_after") {
+                return text;
             }
         }
 
