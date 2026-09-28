@@ -134,8 +134,9 @@ impl Column {
 
 /// 一組效果（condition_N + 最多 3 個效果）拆好的各部分，組合時才決定要印哪些。
 struct GroupParts {
-    /// 拆出來的硬限制（跑法／距離／場地／賽場）
-    restrictions: Vec<String>,
+    /// 拆出來的硬限制（跑法／距離／場地／賽場）：外層是選項（或），內層是同時成立的項目（且），
+    /// 例：[[後追, 中距], [後追, 長距]]。保留結構是為了能算兩組效果的共同限制。
+    restrictions: Vec<Vec<String>>,
     effects: Vec<String>,
     /// 「持續X秒」「立即發動」…
     time: String,
@@ -426,11 +427,10 @@ impl SkillDataDesc {
     /// 把條件拆成（剩下的條件原始字串, 硬限制文字清單）。
     /// 兩種情況才拆：各分支硬限制完全相同；或「每個 OR 分支拿掉硬限制後剩下的條件都一樣」（例：`一哩&第3彎道@中距離&第3彎道`
     /// → 限制「一哩／中距離」、條件「第3彎道」）；分支之間其他條件不同時硬拆會弄錯配對，就不拆。
-    fn split_hard_conditions(condition: &str) -> (String, Vec<String>) {
+    fn split_hard_conditions(condition: &str) -> (String, Vec<Vec<String>>) {
         if condition.is_empty() {
             return (String::new(), Vec::new());
         }
-        let and_sep = Self::str("sep.and").unwrap_or_default();
         // 硬限制排固定順序（賽場 → 距離 → 場地 → 跑法），同樣的組合才會寫得一樣
         const ORDER: [&str; 4] = ["track_id", "distance_type", "ground_type", "running_style"];
         let rank = |a: &str| ORDER.iter().position(|t| a.starts_with(t)).unwrap_or(ORDER.len());
@@ -447,7 +447,7 @@ impl SkillDataDesc {
         // 每個分支的硬限制都一樣（例：`超越中&一哩@被超越&一哩`）→ 直接拆出，各分支保留自己的其他條件
         let first_hard = &branches[0].0;
         if branches.iter().all(|(hard, _)| hard == first_hard) {
-            let label = first_hard.iter().map(|a| Self::format_tag_atom(a)).collect::<Vec<_>>().join(&and_sep);
+            let label: Vec<String> = first_hard.iter().map(|a| Self::format_tag_atom(a)).collect();
             let rest = branches.iter().map(|(_, soft)| soft.join("&")).collect::<Vec<_>>().join("@");
             return (rest, vec![label]);
         }
@@ -455,9 +455,9 @@ impl SkillDataDesc {
         if !branches.iter().all(|(_, soft)| soft == first_soft) {
             return (condition.to_string(), Vec::new());
         }
-        let mut labels: Vec<String> = Vec::new();
+        let mut labels: Vec<Vec<String>> = Vec::new();
         for (hard, _) in &branches {
-            let label = hard.iter().map(|a| Self::format_tag_atom(a)).collect::<Vec<_>>().join(&and_sep);
+            let label: Vec<String> = hard.iter().map(|a| Self::format_tag_atom(a)).collect();
             if !label.is_empty() && !labels.contains(&label) {
                 labels.push(label);
             }
@@ -780,13 +780,13 @@ impl SkillDataDesc {
         let (precondition, pre_restrictions) = Self::split_hard_conditions(precondition);
         // 條件與附加條件的限制是「且」：兩邊都有時交叉組合（後追 × 中距／長距 → 後追、中距／後追、長距），
         // 不能直接串成一串選項（會變成「後追／中距／長距」三選一）
-        let restrictions: Vec<String> = match (cond_restrictions.is_empty(), pre_restrictions.is_empty()) {
+        let restrictions: Vec<Vec<String>> = match (cond_restrictions.is_empty(), pre_restrictions.is_empty()) {
             (false, false) => {
-                let and_sep = Self::str("sep.and").unwrap_or_default();
-                let mut out = Vec::new();
+                let mut out: Vec<Vec<String>> = Vec::new();
                 for c in &cond_restrictions {
                     for p in &pre_restrictions {
-                        let label = if c == p { c.clone() } else { format!("{c}{and_sep}{p}") };
+                        let mut label = c.clone();
+                        label.extend(p.iter().filter(|a| !c.contains(a)).cloned());
                         if !out.contains(&label) {
                             out.push(label);
                         }
@@ -879,6 +879,23 @@ impl SkillDataDesc {
         all.then(|| format!("{}{and_sep}{}", firsts.join(sep), seconds.join(sep)))
     }
 
+    /// v 的條件是否就是 base 的條件再多幾項（條件或附加條件其中一邊多、另一邊相同）；是的話回傳多出來那幾項的文字。
+    fn situational_extra(base: &GroupParts, v: &GroupParts) -> Option<String> {
+        let and_sep = Self::str("sep.and").unwrap_or_default();
+        let (b, x) = (&base.cond_raw, &v.cond_raw);
+        let extra = if b.1 == x.1 && b.0 != x.0 {
+            Self::extra_conditions(&b.0, &x.0)?
+        } else if b.0 == x.0 && b.1 != x.1 {
+            Self::extra_conditions(&b.1, &x.1)?
+        } else {
+            return None;
+        };
+        if extra.is_empty() {
+            return None;
+        }
+        Some(extra.iter().map(|a| Self::format_data_atom(a)).collect::<Vec<_>>().join(&and_sep))
+    }
+
     fn join_effects(effects: &[String]) -> String {
         effects.join(&Self::str("sep.effect").unwrap_or_else(|| ", ".into()))
     }
@@ -891,7 +908,7 @@ impl SkillDataDesc {
     /// 加強版那一行只寫跟一般版不同的部分：
     /// - 效果：一般版的效果它全都有 → 只列多出來的（「另加 …」）；否則整組列出（「改為 …」）；一樣就不列
     /// - 時間／冷卻、條件：跟一般版一樣就省略
-    fn render_variant_diff(base: &GroupParts, v: &GroupParts) -> String {
+    fn render_variant_diff(base: &GroupParts, v: &GroupParts, skip_cond: bool) -> String {
         // 條件跟一般版比不出「只多幾項」（例：接在條件1之後才發動的另一段效果）→ 它是獨立的效果，
         // 不是一般版的加強／替換，整行完整寫出、不加「另加／改為」
         let independent = [(&base.cond_raw.0, &v.cond_raw.0), (&base.cond_raw.1, &v.cond_raw.1)]
@@ -918,7 +935,7 @@ impl SkillDataDesc {
             }
             out.push_str(&format!("<b>{}</b>{}", v.time, v.cd));
         }
-        if v.cond != base.cond {
+        if v.cond != base.cond && !skip_cond {
             let and_sep = Self::str("sep.and").unwrap_or_default();
             // 條件、附加條件各自比：一樣就省略，只多幾項就寫「另需：」，比不出來才寫完整
             for (b, x, full_key, extra_key) in [
@@ -949,38 +966,92 @@ impl SkillDataDesc {
         out
     }
 
+    /// 限制（選項 × 項目）→ 標籤文字：項目用「、」接，選項用「／」接並抽共同開頭結尾。
+    fn restriction_label(alts: &[Vec<String>]) -> String {
+        let and_sep = Self::str("sep.and").unwrap_or_default();
+        let or_sep = Self::str("sep.or").unwrap_or_default();
+        let labels: Vec<String> = alts.iter().map(|a| a.join(&and_sep)).collect();
+        Self::compact_alternatives(&labels, &or_sep)
+    }
+
+    /// 兩組效果都有的限制項目（出現在兩組每一個選項裡的）。
+    fn common_restrictions(a: &[Vec<String>], b: &[Vec<String>]) -> Vec<String> {
+        // 任一組沒有限制就沒有「共同」可言（否則對空清單 all() 恆真，會把另一組的限制誤當成共同的）
+        if a.is_empty() || b.is_empty() {
+            return Vec::new();
+        }
+        let first = &a[0];
+        first.iter()
+            .filter(|atom| a.iter().chain(b.iter()).all(|alt| alt.contains(atom)))
+            .cloned()
+            .collect()
+    }
+
+    /// 拿掉共同限制後剩下的；任一選項被拿空（＝這組除了共同限制外沒有別的限制）就視為沒有剩。
+    fn residual_restrictions(alts: &[Vec<String>], common: &[String]) -> Vec<Vec<String>> {
+        let mut out: Vec<Vec<String>> = Vec::new();
+        for alt in alts {
+            let rest: Vec<String> = alt.iter().filter(|a| !common.contains(a)).cloned().collect();
+            if rest.is_empty() {
+                return Vec::new();
+            }
+            if !out.contains(&rest) {
+                out.push(rest);
+            }
+        }
+        out
+    }
+
     fn format_data_desc(row: &SkillDataDescRow) -> String {
         let group1 = Self::format_data_group(&row.condition_1, &row.precondition_1, row.ability_time_1, row.cooldown_time_1, &row.slots[0..3]);
         let group2 = Self::format_data_group(&row.condition_2, &row.precondition_2, row.ability_time_2, row.cooldown_time_2, &row.slots[3..6]);
 
-        let or_sep = Self::str("sep.or").unwrap_or_default();
-        // 一般：限制標在該組最前面（＜一哩／中距離＞）
-        let tagged = |g: &GroupParts| -> String {
-            let line = Self::render_group(g);
-            match (g.restrictions.is_empty(), Self::data_fmt("group.restriction", &Self::compact_alternatives(&g.restrictions, &or_sep))) {
-                (false, Some(tag)) => format!("{tag}{line}"),
-                _ => line
+        let tag = |alts: &[Vec<String>]| -> String {
+            if alts.is_empty() {
+                return String::new();
             }
+            Self::data_fmt("group.restriction", &Self::restriction_label(alts)).unwrap_or_default()
         };
-        // 兩組只有一組帶限制：那組是「特定情況下的加強版」（例：一般效果＋在中山賽場時另有加成）。
-        // 一般效果排前面，加強版放後面標「在中山賽場時：」，而且只寫跟一般版不同的部分。
-        let variant = |base: &GroupParts, v: &GroupParts| -> String {
-            match Self::data_fmt("group.variant", &Self::compact_alternatives(&v.restrictions, &or_sep)) {
-                Some(tag) => format!("{tag}{}", Self::render_variant_diff(base, v)),
-                None => tagged(v)
-            }
-        };
-
         // 加強版接在一般效果後面的分隔（zh-tw「；」＝同一行接下去，省掉換行留下的空白；沒設定就換行）
         let variant_join = Self::str("group.variant_join").unwrap_or_else(|| "\n".into());
 
         match (group1, group2) {
-            (Some(g1), Some(g2)) => match (g1.restrictions.is_empty(), g2.restrictions.is_empty()) {
-                (true, false) => format!("{}{variant_join}{}", Self::render_group(&g1), variant(&g1, &g2)),
-                (false, true) => format!("{}{variant_join}{}", Self::render_group(&g2), variant(&g2, &g1)),
-                _ => format!("{}\n{}", tagged(&g1), tagged(&g2))
-            },
-            (Some(g), None) | (None, Some(g)) => tagged(&g),
+            (Some(g1), Some(g2)) => {
+                // 兩組共同的限制（例：兩組都要「後追」）抽出來，放在整段最前面
+                let common = Self::common_restrictions(&g1.restrictions, &g2.restrictions);
+                let r1 = Self::residual_restrictions(&g1.restrictions, &common);
+                let r2 = Self::residual_restrictions(&g2.restrictions, &common);
+                let head = if common.is_empty() { String::new() } else { tag(&[common.clone()]) };
+
+                // 抽完只剩一組帶限制：那組是「特定情況下的加強版」（例：一般效果＋在中山賽場時另有加成）。
+                // 一般效果排前面，加強版標「中山時：」，而且只寫跟一般版不同的部分。
+                let variant = |base: &GroupParts, v: &GroupParts, rv: &[Vec<String>]| -> String {
+                    match Self::data_fmt("group.variant", &Self::restriction_label(rv)) {
+                        Some(label) => format!("{label}{}", Self::render_variant_diff(base, v, false)),
+                        None => format!("{}{}", tag(rv), Self::render_group(v))
+                    }
+                };
+                match (r1.is_empty(), r2.is_empty()) {
+                    (true, false) => format!("{head}{}{variant_join}{}", Self::render_group(&g1), variant(&g1, &g2, &r2)),
+                    (false, true) => format!("{head}{}{variant_join}{}", Self::render_group(&g2), variant(&g2, &g1, &r1)),
+                    (true, true) => {
+                        // 兩組限制相同，但一組條件只是另一組多幾項（例：多「距第1名≤5米」）→ 多的那幾項就是
+                        // 觸發加強版的情境：一般效果在前，「距第1名≤5米時：改為 …」
+                        let situational = |base: &GroupParts, v: &GroupParts| -> Option<String> {
+                            let extra = Self::situational_extra(base, v)?;
+                            let label = Self::data_fmt("group.variant", &extra)?;
+                            Some(format!("{head}{}{variant_join}{label}{}", Self::render_group(base), Self::render_variant_diff(base, v, true)))
+                        };
+                        situational(&g2, &g1)
+                            .or_else(|| situational(&g1, &g2))
+                            .unwrap_or_else(|| format!("{head}{}\n{}", Self::render_group(&g1), Self::render_group(&g2)))
+                    }
+                    // 兩組各有不同限制（互斥的兩個版本）：各自完整標示
+                    (false, false) => format!("{}{}\n{}{}",
+                        tag(&g1.restrictions), Self::render_group(&g1), tag(&g2.restrictions), Self::render_group(&g2))
+                }
+            }
+            (Some(g), None) | (None, Some(g)) => format!("{}{}", tag(&g.restrictions), Self::render_group(&g)),
             (None, None) => String::new()
         }
     }
