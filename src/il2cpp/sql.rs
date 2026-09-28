@@ -854,10 +854,13 @@ impl SkillDataDesc {
             }
         };
 
+        // 加強版接在一般效果後面的分隔（zh-tw「；」＝同一行接下去，省掉換行留下的空白；沒設定就換行）
+        let variant_join = Self::str("group.variant_join").unwrap_or_else(|| "\n".into());
+
         match (group1, group2) {
             (Some(g1), Some(g2)) => match (g1.restrictions.is_empty(), g2.restrictions.is_empty()) {
-                (true, false) => format!("{}\n{}", Self::render_group(&g1), variant(&g1, &g2)),
-                (false, true) => format!("{}\n{}", Self::render_group(&g2), variant(&g2, &g1)),
+                (true, false) => format!("{}{variant_join}{}", Self::render_group(&g1), variant(&g1, &g2)),
+                (false, true) => format!("{}{variant_join}{}", Self::render_group(&g2), variant(&g2, &g1)),
                 _ => format!("{}\n{}", tagged(&g1), tagged(&g2))
             },
             (Some(g), None) | (None, Some(g)) => tagged(&g),

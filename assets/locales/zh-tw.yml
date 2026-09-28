@@ -152,6 +152,7 @@ skill_data_desc:
   group:
     restriction: "<color=#d81b60>＜%{v}＞</color>"
     variant: "<color=#d81b60>%{v}時：</color>"
+    variant_join: "；"
     extra: "另加 "
     replace: "改為 "
     also_when: " <color=#11998e>另需</color>："
