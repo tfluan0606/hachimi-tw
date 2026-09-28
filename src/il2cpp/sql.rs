@@ -497,6 +497,39 @@ impl SkillDataDesc {
                 }
             }
         }
+        // 能力值：比較方式與數值相同的合併、取首字縮寫（速耐力根智）；五項全有寫「五圍」。
+        // 例：基礎速度≥1000、…、基礎智力≥1000 → 五圍≥1000；基礎速度≥1200、基礎力量≥1200 → 速力≥1200
+        // locale 沒有 cond.base_stat.* 就照原本逐項寫。多項合併時，第 3 項起用 usize::MAX 當「前面」只用來跳過。
+        const STATS: [&str; 5] = ["base_speed", "base_stamina", "base_power", "base_guts", "base_wiz"];
+        if Self::str("cond.base_stat.base_speed").is_some() {
+            let mut groups: Vec<((&str, i32), Vec<usize>)> = Vec::new();
+            for (i, (t, op, v)) in parsed.iter().enumerate() {
+                if !STATS.contains(t) {
+                    continue;
+                }
+                match groups.iter_mut().find(|(k, _)| *k == (*op, *v)) {
+                    Some((_, idxs)) => idxs.push(i),
+                    None => groups.push(((*op, *v), vec![i])),
+                }
+            }
+            for ((op, value), mut idxs) in groups {
+                idxs.sort_by_key(|&i| STATS.iter().position(|s| *s == parsed[i].0));
+                idxs.dedup_by_key(|i| parsed[*i].0);
+                let names = if idxs.len() == STATS.len() {
+                    Self::str("cond.base_stat.all").unwrap_or_default()
+                } else {
+                    idxs.iter().filter_map(|&i| Self::str(&format!("cond.base_stat.{}", parsed[i].0))).collect()
+                };
+                let sym = match op { ">=" => "≥", "<=" => "≤", ">" => "﹥", "<" => "﹤", "!=" => "≠", _ => "=" };
+                let text = format!("{names}{sym}{value}");
+                let first = *idxs.iter().min().unwrap();
+                let others: Vec<usize> = idxs.iter().copied().filter(|&i| i != first).collect();
+                merged.push((first, others.first().copied().unwrap_or(usize::MAX), text));
+                for &o in others.iter().skip(1) {
+                    merged.push((usize::MAX, o, String::new()));
+                }
+            }
+        }
         for (lo, (token, op, _)) in parsed.iter().enumerate() {
             if *op != ">=" || merged.iter().any(|(a, b, _)| *a == lo || *b == lo) {
                 continue;

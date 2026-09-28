@@ -216,7 +216,7 @@ skill_data_desc:
     usage19_suffix: " 若距第1名≥20米則+0.1"
   star:
     activate:
-      "1": "在以下期間超越"
+      "1": "在以下期間超車"
       "2": "在以下期間發動技能（最多3個）"
       "3": "在以下期間發動技能（最多2個）"
     usage:
@@ -228,7 +228,7 @@ skill_data_desc:
       "7": "</b>隊伍智力<b>"
       "8": "</b>隨機<b>"
       "10": "</b>勝場數<b>"
-      "11": "</b>最後彎道超越數<b>"
+      "11": "</b>最後彎道超車數<b>"
       "12": "</b>粉絲數<b>"
       "13": "</b>最高屬性<b>"
       "14": "</b>綠技數<b>"
@@ -272,6 +272,13 @@ skill_data_desc:
     random_recovery_users: "隨機%{v}名回復技能使用者"
     unknown: "未知"
   cond:
+    base_stat:
+      all: "五圍"
+      base_speed: "速"
+      base_stamina: "耐"
+      base_power: "力"
+      base_guts: "根"
+      base_wiz: "智"
     final_corner:
       on_corner: "在最後彎道上"
       on_straight: "最後彎道之後"
@@ -372,8 +379,8 @@ skill_data_desc:
           "1": "海外"
       is_activate_other_skill_detail:
         eq:
-          "1": "發動了發動條件1"
-          "2": "發動了發動條件2"
+          "1": "效果1發動後"
+          "2": "效果2發動後"
       is_badstart:
         eq:
           "0": "起步尚佳"
@@ -492,8 +499,8 @@ skill_data_desc:
       blocked_front:
         eq: "被堵（前方）"
       change_order_onetime:
-        gt: "被超越"
-        lt: "超越"
+        gt: "被超車"
+        lt: "超車"
       down_slope_random:
         eq: "下坡"
       grade:
@@ -524,7 +531,7 @@ skill_data_desc:
       is_lastspurt:
         eq: "最後衝刺"
       is_overtake:
-        eq: "正在超越他人"
+        eq: "正在超車他人"
       is_surrounded:
         eq: "被包圍"
       is_tight_track:
@@ -620,11 +627,11 @@ skill_data_desc:
       blocked_side_continuetime:
         ge: "被堵（側面）≥%{v}秒"
       change_order_up_end_after:
-        ge: "後期超越%{v}次"
+        ge: "後期超車%{v}次"
       change_order_up_finalcorner_after:
-        ge: "最後彎道後超越%{v}次"
+        ge: "最後彎道後超車%{v}次"
       change_order_up_middle:
-        ge: "中期超越%{v}次"
+        ge: "中期超車%{v}次"
       compete_fight_count:
         gt: "多於%{v}次較量"
       corner_count:
@@ -670,9 +677,9 @@ skill_data_desc:
         le: "名次≤%{v}"
         range: "第%{v}名"
       overtake_target_no_order_up_time:
-        ge: "有超越的目標≥%{v}秒"
+        ge: "有超車的目標≥%{v}秒"
       overtake_target_time:
-        ge: "成為超越目標≥%{v}秒"
+        ge: "成為超車目標≥%{v}秒"
       popularity:
         eq: "人氣第%{v}"
         ge: "人氣≥第%{v}"

@@ -18,8 +18,8 @@ extern "C" fn Awake(this: *mut Il2CppObject) {
 }
 
 /// 技能資料說明（skill_data_desc）比原文長，縮小到原字級的這個比例才塞得下。
-/// 技能資料說明（skill_data_desc）放不下（會被截斷）時，縮到原字級的這個比例。
-const SKILL_DESC_FONT_SCALE: f32 = 0.9;
+/// 技能資料說明（skill_data_desc）放不下（會被截斷）時，依序試這些字級比例，放得下就停（最小 75%）。
+const SKILL_DESC_FONT_SCALES: [f32; 4] = [0.9, 0.85, 0.8, 0.75];
 
 /// 這個 Text 目前的內容需要的高度是否超過它的框（= 會被截斷）。
 /// 方法從物件本身的類別往上找（il2cpp 會沿父類別查），取不到就當作放得下。
@@ -61,10 +61,17 @@ extern "C" fn set_text(this: *mut Il2CppObject, value: *mut Il2CppString) {
     if !sql::is_skill_data_desc_text(&text) || !text_overflows(this) {
         return;
     }
-    let size = (Text::get_fontSize(this) as f32 * SKILL_DESC_FONT_SCALE).round() as i32;
-    if size > 0 {
+    let font_size = Text::get_fontSize(this) as f32;
+    for scale in SKILL_DESC_FONT_SCALES {
+        let size = (font_size * scale).round() as i32;
+        if size <= 0 {
+            break;
+        }
         let sized = format!("<size={size}>{text}</size>").to_il2cpp_string();
         get_orig_fn!(set_text, SetTextFn)(this, sized);
+        if !text_overflows(this) {
+            break;
+        }
     }
 }
 
