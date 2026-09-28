@@ -293,14 +293,13 @@ skill_data_desc:
       name:
         "0": "初期"
         "1": "中期"
-        "2": "後期"
-        "3": "後期終段"
+        "2": "後期前半"
+        "3": "後期後半"
       le: "%{v}或更早"
       ge: "%{v}或更晚"
-      # phase：0 初期、1 中期、2 後期（End）、3 後期最後一段（遊戲 RacePhaseCalculator 的 Last）
+      # phase：0 初期、1 中期、2 後期前半（End）、3 後期後半（Last），各 1/6；後期＝2＋3。子區段用後期的 1/4、1/8 表示
       special:
         ge_2: "後期"
-        eq_2: "後期前段"
         ge_1: "中期之後"
         le_1: "初期～中期"
     ground_condition:
@@ -418,45 +417,45 @@ skill_data_desc:
       phase_corner_random:
         eq:
           "1": "中期彎道<b>隨機</b>"
-          "2": "後期彎道<b>隨機</b>"
+          "2": "後期前半彎道<b>隨機</b>"
       phase_first_half_straight_random:
         eq:
           "1": "中期前半直線<b>隨機</b>"
-          "2": "後期前半直線<b>隨機</b>"
+          "2": "後期第1/4直線<b>隨機</b>"
       phase_firsthalf:
         eq:
           "1": "中期前半"
-          "3": "後期終段前半"
+          "3": "後期第3/4"
       phase_firsthalf_random:
         eq:
           "0": "初期前半<b>隨機</b>"
           "1": "中期前半<b>隨機</b>"
-          "2": "後期前半<b>隨機</b>"
-          "3": "後期終段前半<b>隨機</b>"
+          "2": "後期第1/4<b>隨機</b>"
+          "3": "後期第3/4<b>隨機</b>"
       phase_laterhalf:
         eq:
           "0": "初期後半"
           "1": "中期後半"
-          "2": "後期後半"
+          "2": "後期第2/4"
       phase_laterhalf_random:
         eq:
           "0": "初期後半<b>隨機</b>"
           "1": "中期後半<b>隨機</b>"
-          "2": "後期後半<b>隨機</b>"
+          "2": "後期第2/4<b>隨機</b>"
       phase_latter_half_straight_random:
         eq:
           "1": "中期後半直線<b>隨機</b>"
-          "2": "後期後半直線<b>隨機</b>"
+          "2": "後期第2/4直線<b>隨機</b>"
       phase_random:
         eq:
           "0": "初期<b>隨機</b>"
           "1": "中期<b>隨機</b>"
-          "2": "後期<b>隨機</b>"
-          "3": "後期終段<b>隨機</b>"
+          "2": "後期前半<b>隨機</b>"
+          "3": "後期後半<b>隨機</b>"
       phase_straight_random:
         eq:
           "1": "中期直線<b>隨機</b>"
-          "2": "後期直線<b>隨機</b>"
+          "2": "後期前半直線<b>隨機</b>"
       rotation:
         eq:
           "1": "順時針賽道"
@@ -523,7 +522,7 @@ skill_data_desc:
       is_last_straight_onetime:
         eq: "到達最後直線"
       is_lastspurt:
-        eq: "正在最終衝刺中"
+        eq: "最後衝刺"
       is_overtake:
         eq: "正在超越他人"
       is_surrounded:
@@ -553,9 +552,9 @@ skill_data_desc:
       order_rate_out70_continue:
         eq: "保持在後30%名"
       phase_firstquarter:
-        eq: "後期前四分之一"
+        eq: "後期前1/8"
       phase_firstquarter_random:
-        eq: "後期前四分之一<b>隨機</b>"
+        eq: "後期前1/8<b>隨機</b>"
       phase_laterhalf:
         le: "中期後半或更早"
       run_at_full_speed_random:
