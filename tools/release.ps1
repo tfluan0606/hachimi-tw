@@ -16,8 +16,14 @@ Set-Location (Split-Path $PSScriptRoot -Parent)
 
 function Invoke-Native {
     param([string]$Exe, [string[]]$Arguments)
-    & $Exe @Arguments
-    if ($LASTEXITCODE -ne 0) { throw "$Exe $($Arguments -join ' ') 失敗（exit $LASTEXITCODE）" }
+    # Windows PowerShell 5.1 在 ErrorActionPreference=Stop 時會把原生程式的任何 stderr 輸出
+    # （例如 cargo 的編譯警告、git 的進度訊息）當成錯誤中止；這裡改看 exit code 判斷成敗
+    $prev = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    & $Exe @Arguments 2>&1 | ForEach-Object { "$_" }
+    $code = $LASTEXITCODE
+    $ErrorActionPreference = $prev
+    if ($code -ne 0) { throw "$Exe $($Arguments -join ' ') 失敗（exit $code）" }
 }
 
 if ($Version -notmatch '^\d+\.\d+\.\d+$') { throw "版號要是 X.Y.Z 格式，收到 '$Version'" }
