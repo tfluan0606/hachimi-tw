@@ -154,6 +154,7 @@ skill_data_desc:
     tag_strip: "在|賽場|距離=距"
     variant: "<color=#d81b60>%{v}時：</color>"
     variant_join: "；"
+    cond_instead: " <color=#11998e>條件改為</color>：%{v}"
     extra: "另加 "
     replace: "改為 "
     also_when: " <color=#11998e>另需</color>："
@@ -284,6 +285,7 @@ skill_data_desc:
       on_corner: "在最後彎道上"
       on_straight: "最後彎道之後"
       laterhalf_after: "最後彎道過半之後"
+    overtake_mid_late: "中後期超車≥%{v}次"
     time_wrap: "<color=#8e44ad>%{v}</color>"
     negate: "非%{v}"
     order_rate:

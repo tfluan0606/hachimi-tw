@@ -427,8 +427,11 @@ impl SkillDataDesc {
     /// 所以從條件裡拆出來，放在說明最前面醒目標示（遊戲原文是放在最後的「＜一哩/中距離＞」）。
     const HARD_TOKENS: [&'static str; 4] = ["running_style", "distance_type", "ground_type", "track_id"];
 
+    /// 「使用了技能 強勢領頭」：強勢領頭（202051）實質上是一種跑法（技能給的），當跑法類硬限制寫在開頭
+    const STYLE_SKILL_ATOM: &'static str = "is_used_skill_id==202051";
+
     fn is_hard_atom(atom: &str) -> bool {
-        Self::HARD_TOKENS.iter().any(|t| {
+        atom == Self::STYLE_SKILL_ATOM || Self::HARD_TOKENS.iter().any(|t| {
             atom.strip_prefix(t).is_some_and(|rest| rest.starts_with("=="))
         })
     }
@@ -441,7 +444,7 @@ impl SkillDataDesc {
             return (String::new(), Vec::new());
         }
         // 硬限制排固定順序（賽場 → 距離 → 場地 → 跑法），同樣的組合才會寫得一樣
-        const ORDER: [&str; 4] = ["track_id", "distance_type", "ground_type", "running_style"];
+        const ORDER: [&str; 5] = ["track_id", "distance_type", "ground_type", "running_style", "is_used_skill_id"];
         let rank = |a: &str| ORDER.iter().position(|t| a.starts_with(t)).unwrap_or(ORDER.len());
         let branches: Vec<(Vec<&str>, Vec<&str>)> = condition.split('@')
             .map(|g| {
@@ -587,6 +590,9 @@ impl SkillDataDesc {
     /// 限制標籤裡的單項：套 locale `group.tag_strip`（以 | 分隔；`A` = 拿掉、`A=B` = 換成 B），
     /// zh-tw 例：「在中山賽場」→「中山」、「中距離」→「中距」。處理完變空就用原文。
     fn format_tag_atom(atom: &str) -> String {
+        if let Some(name) = atom.strip_prefix("is_used_skill_id==").and_then(|v| v.parse().ok()).and_then(Self::db_skill_name) {
+            return name;
+        }
         let text = Self::format_data_atom(atom);
         let Some(strip) = Self::str("group.tag_strip") else {
             return text;
@@ -605,6 +611,56 @@ impl SkillDataDesc {
 
     /// 兩個分支除了「最後彎道後半」／「最後彎道之後」以外都一樣時，合併成一個分支＋合成 token。
     /// locale 沒有 `cond.final_corner.laterhalf_after` 就不合併（照原樣顯示兩個分支）。
+    /// 合成的條件 token：中期＋後期超車合計次數（值＝次數）。
+    const OVERTAKE_MID_LATE: &'static str = "hachimi_overtake_mid_late";
+
+    /// 分支剛好是「後期超車 a 次＋中期超車 b 次、a+b=N」的全部組合時合併成「中後期超車≥N次」：
+    /// 例：銳不可擋的快板節奏 end≥3／end≥2&mid≥1／end≥1&mid≥2／mid≥3 → 中後期超車≥3次。
+    /// 其餘條件必須每個分支都一樣。locale 沒有 cond.overtake_mid_late 就不合併。
+    fn merge_overtake(condition: &str) -> Option<String> {
+        Self::str("cond.overtake_mid_late")?;
+        let groups: Vec<Vec<&str>> = condition.split('@').map(|g| g.split('&').collect()).collect();
+        if groups.len() < 2 {
+            return None;
+        }
+        let mut pairs = Vec::new();
+        let mut rest: Option<Vec<&str>> = None;
+        for g in &groups {
+            let (mut late, mut mid) = (0, 0);
+            let mut others: Vec<&str> = Vec::new();
+            for a in g {
+                let (t, op, v) = Self::parse_atom(a);
+                match (t, op) {
+                    ("change_order_up_end_after", ">=") => late = v,
+                    ("change_order_up_middle", ">=") => mid = v,
+                    _ => others.push(a),
+                }
+            }
+            others.sort();
+            if late + mid == 0 || rest.as_ref().is_some_and(|r| *r != others) {
+                return None;
+            }
+            rest = Some(others);
+            pairs.push((late, mid));
+        }
+        let n = pairs[0].0 + pairs[0].1;
+        let all: std::collections::BTreeSet<(i32, i32)> = pairs.iter().copied().collect();
+        let expected: std::collections::BTreeSet<(i32, i32)> = (0..=n).map(|a| (a, n - a)).collect();
+        if all != expected || pairs.len() != expected.len() {
+            return None;
+        }
+        let mut atoms = rest.unwrap_or_default();
+        let merged = format!("{}>={n}", Self::OVERTAKE_MID_LATE);
+        atoms.push(&merged);
+        Some(atoms.join("&"))
+    }
+
+    /// 原始條件層級的合併（在拆硬限制、比對加強版之前做，讓後面的比對看到的是合併後的條件）
+    fn premerge(condition: &str) -> String {
+        let c = Self::merge_overtake(condition).unwrap_or_else(|| condition.to_string());
+        Self::merge_laterhalf_after(&c).unwrap_or(c)
+    }
+
     fn merge_laterhalf_after(condition: &str) -> Option<String> {
         Self::str("cond.final_corner.laterhalf_after")?;
         let groups: Vec<Vec<&str>> = condition.split('@').map(|g| g.split('&').collect()).collect();
@@ -743,6 +799,12 @@ impl SkillDataDesc {
                 if let Some(text) = Self::data_fmt(&format!("cond.ground_condition.{}", Self::op_tag(op)), &name) {
                     return text;
                 }
+            }
+        }
+
+        if token == Self::OVERTAKE_MID_LATE {
+            if let Some(text) = Self::data_fmt("cond.overtake_mid_late", &value.to_string()) {
+                return text;
             }
         }
 
@@ -911,8 +973,9 @@ impl SkillDataDesc {
             String::new()
         };
         let mut line = String::new();
-        let (condition, cond_restrictions) = Self::split_hard_conditions(condition);
-        let (precondition, pre_restrictions) = Self::split_hard_conditions(precondition);
+        let (condition, precondition) = (Self::premerge(condition), Self::premerge(precondition));
+        let (condition, cond_restrictions) = Self::split_hard_conditions(&condition);
+        let (precondition, pre_restrictions) = Self::split_hard_conditions(&precondition);
         // 條件與附加條件的限制是「且」：兩邊都有時交叉組合（後追 × 中距／長距 → 後追、中距／後追、長距），
         // 不能直接串成一串選項（會變成「後追／中距／長距」三選一）
         let restrictions: Vec<Vec<String>> = match (cond_restrictions.is_empty(), pre_restrictions.is_empty()) {
@@ -1031,6 +1094,112 @@ impl SkillDataDesc {
         Some(Self::format_and_group(&extra, &and_sep))
     }
 
+    /// v 的條件是否只是把 base 的某幾項換掉（兩邊都是單純 AND）：換掉的每一項，v 都有同種條件
+    /// （同 token，或都是時間類）取代。是的話回傳 v 換上的那幾項。
+    /// v 比 base 同時「多出幾項」又「換掉幾項」時，拆成（多出的, 換上的）。兩者都要有，否則回 None。
+    fn split_replaced<'a>(base: &'a str, v: &'a str) -> Option<(Vec<&'a str>, Vec<&'a str>)> {
+        let added = Self::replaced_conditions(base, v)?;
+        let b: Vec<&str> = base.split('&').collect();
+        let removed: Vec<&str> = b.iter().copied().filter(|a| !v.split('&').any(|x| x == *a)).collect();
+        let tok = |a: &'a str| -> &'a str { Self::parse_atom(a).0 };
+        let replaces = |a: &'a str| removed.iter().any(|r| {
+            tok(a) == tok(r) || (Self::is_timing_token(tok(a)) && Self::is_timing_token(tok(r)))
+        });
+        let (repl, extra): (Vec<&str>, Vec<&str>) = added.into_iter().partition(|a| replaces(a));
+        (!extra.is_empty() && !repl.is_empty()).then_some((extra, repl))
+    }
+
+    fn replaced_conditions<'a>(base: &'a str, v: &'a str) -> Option<Vec<&'a str>> {
+        if base == v || base.contains('@') || v.contains('@') {
+            return None;
+        }
+        let split = |c: &'a str| -> Vec<&'a str> { c.split('&').filter(|a| !a.is_empty()).collect() };
+        let (b, x) = (split(base), split(v));
+        let added: Vec<&str> = x.iter().copied().filter(|a| !b.contains(a)).collect();
+        let removed: Vec<&str> = b.iter().copied().filter(|a| !x.contains(a)).collect();
+        if added.is_empty() || removed.is_empty() {
+            return None;
+        }
+        let tok = |a: &'a str| -> &'a str { Self::parse_atom(a).0 };
+        let ok = removed.iter().all(|r| added.iter().any(|a| {
+            tok(a) == tok(r) || (Self::is_timing_token(tok(a)) && Self::is_timing_token(tok(r)))
+        }));
+        ok.then_some(added)
+    }
+
+    /// 進化技能的一般版常把「加強版的反面」逐一列成分支（不在東京、非中距／在東京、非中距／不在東京、中距）。
+    /// 找出 base 裡是 v 條件反面的那些條件（!=、互補的範圍），把那幾種條件整個拿掉，只留真正的一般條件。
+    /// 每個分支都必須含至少一個反面條件才處理（確定是在列舉反面），否則回 None。
+    fn simplify_else(v: &str, base: &str) -> Option<String> {
+        if v.is_empty() || base.is_empty() {
+            return None;
+        }
+        let v_atoms: Vec<(&str, &str, i32)> = v.split(['@', '&']).map(Self::parse_atom).collect();
+        let is_negation = |(t, op, val): (&str, &str, i32)| {
+            v_atoms.iter().any(|&(vt, vop, vval)| vt == t && match (vop, op) {
+                ("==", "!=") => val == vval,
+                (">=", "<") | ("<=", ">") | (">", "<=") | ("<", ">=") => val == vval,
+                ("==", "<=") => val == vval - 1,
+                ("==", ">=") => val == vval + 1,
+                _ => false,
+            })
+        };
+        let branches: Vec<Vec<&str>> = base.split('@').map(|g| g.split('&').collect()).collect();
+        if !branches.iter().all(|g| g.iter().any(|a| is_negation(Self::parse_atom(a)))) {
+            return None;
+        }
+        // 要拿掉的：反面條件本身，以及（同種條件裡）跟 v 一模一樣的條件（列舉裡的「在東京、非中距」的「在東京」）。
+        // 同種條件的其他門檻要留（超群的邁步：力≥1000&力﹤1200 → 拿掉 力﹤1200，留 力≥1000）
+        let neg_tokens: Vec<&str> = branches.iter().flatten()
+            .map(|a| Self::parse_atom(a))
+            .filter(|&a| is_negation(a))
+            .map(|(t, _, _)| t)
+            .collect();
+        let v_raw: Vec<&str> = v.split(['@', '&']).collect();
+        let dropped = |a: &str| {
+            let parsed = Self::parse_atom(a);
+            is_negation(parsed) || (neg_tokens.contains(&parsed.0) && v_raw.contains(&a))
+        };
+        let mut out: Vec<String> = Vec::new();
+        for g in &branches {
+            let kept: Vec<&str> = g.iter().copied().filter(|a| !dropped(a)).collect();
+            let mut key = kept.clone();
+            key.sort();
+            let joined = kept.join("&");
+            if !out.iter().any(|o| { let mut k: Vec<&str> = o.split('&').collect(); k.sort(); k == key }) {
+                out.push(joined);
+            }
+        }
+        Some(out.join("@"))
+    }
+
+    /// 兩組限制「選項」層級相同（例：＜東京、短距／東京、一哩＞與＜短距／一哩＞）：一組每個選項都多同樣幾項，
+    /// 拿掉後跟另一組的選項完全一樣 → 另一組的選項是共同限制，多的那幾項是加強版的情境。
+    /// 回傳（共同限制, a 剩下的, b 剩下的）。
+    fn common_alternatives(a: &[Vec<String>], b: &[Vec<String>]) -> Option<(Vec<Vec<String>>, Vec<Vec<String>>, Vec<Vec<String>>)> {
+        let one = |x: &[Vec<String>], y: &[Vec<String>]| -> Option<(Vec<Vec<String>>, Vec<String>)> {
+            if x.is_empty() || y.is_empty() {
+                return None;
+            }
+            let extra: Vec<String> = x[0].iter()
+                .filter(|atom| x.iter().all(|alt| alt.contains(atom)) && !y.iter().any(|alt| alt.contains(atom)))
+                .cloned().collect();
+            if extra.is_empty() {
+                return None;
+            }
+            let mut reduced: Vec<Vec<String>> = x.iter().map(|alt| alt.iter().filter(|a| !extra.contains(a)).cloned().collect()).collect();
+            let mut yy: Vec<Vec<String>> = y.to_vec();
+            reduced.sort();
+            reduced.dedup();
+            yy.sort();
+            (reduced == yy).then(|| (y.to_vec(), extra))
+        };
+        if let Some((common, extra)) = one(a, b) {
+            return Some((common, vec![extra], Vec::new()));
+        }
+        one(b, a).map(|(common, extra)| (common, Vec::new(), vec![extra]))
+    }
+
     fn join_effects(effects: &[String]) -> String {
         effects.join(&Self::str("sep.effect").unwrap_or_else(|| ", ".into()))
     }
@@ -1046,7 +1215,10 @@ impl SkillDataDesc {
     fn render_variant_diff(base: &GroupParts, v: &GroupParts, skip_cond: bool) -> String {
         // 條件跟一般版比不出「只多幾項」（例：接在條件1之後才發動的另一段效果）→ 它是獨立的效果，
         // 不是一般版的加強／替換，整行完整寫出、不加「另加／改為」
-        let independent = [(&base.cond_raw.0, &v.cond_raw.0), (&base.cond_raw.1, &v.cond_raw.1)]
+        // 加強版只是把一般版的某幾個條件換成別的（同一種條件換數值，或時間類換成另一個時間類）→「條件改為：…」
+        let replaced = Self::replaced_conditions(&base.cond_raw.0, &v.cond_raw.0)
+            .filter(|_| base.cond_raw.1 == v.cond_raw.1);
+        let independent = replaced.is_none() && [(&base.cond_raw.0, &v.cond_raw.0), (&base.cond_raw.1, &v.cond_raw.1)]
             .iter()
             .any(|(b, x)| b != x && !x.is_empty() && Self::extra_conditions(b, x).is_none());
         if independent {
@@ -1069,6 +1241,13 @@ impl SkillDataDesc {
                 out.push(' ');
             }
             out.push_str(&format!("<b>{}</b>{}", v.time, v.cd));
+        }
+        if let Some(added) = replaced.filter(|_| !skip_cond) {
+            let and_sep = Self::str("sep.and").unwrap_or_default();
+            if let Some(text) = Self::data_fmt("group.cond_instead", &Self::format_and_group(&added, &and_sep)) {
+                out.push_str(if out.is_empty() { text.trim_start() } else { &text });
+                return out;
+            }
         }
         if v.cond != base.cond && !skip_cond {
             let and_sep = Self::str("sep.and").unwrap_or_default();
@@ -1140,8 +1319,15 @@ impl SkillDataDesc {
     }
 
     fn format_data_desc(row: &SkillDataDescRow) -> String {
-        let group1 = Self::format_data_group(&row.condition_1, &row.precondition_1, row.ability_time_1, row.cooldown_time_1, &row.slots[0..3]);
-        let group2 = Self::format_data_group(&row.condition_2, &row.precondition_2, row.ability_time_2, row.cooldown_time_2, &row.slots[3..6]);
+        // 一般版列舉「加強版的反面」的分支先拿掉（對玩家沒意義，加強版標「X時：」已表達互斥）
+        let (c1, c2) = (Self::premerge(&row.condition_1), Self::premerge(&row.condition_2));
+        let (c1, c2) = match (Self::simplify_else(&c1, &c2), Self::simplify_else(&c2, &c1)) {
+            (Some(s2), _) => (c1, s2),
+            (None, Some(s1)) => (s1, c2),
+            _ => (c1, c2),
+        };
+        let group1 = Self::format_data_group(&c1, &row.precondition_1, row.ability_time_1, row.cooldown_time_1, &row.slots[0..3]);
+        let group2 = Self::format_data_group(&c2, &row.precondition_2, row.ability_time_2, row.cooldown_time_2, &row.slots[3..6]);
 
         let tag = |alts: &[Vec<String>]| -> String {
             if alts.is_empty() {
@@ -1156,9 +1342,18 @@ impl SkillDataDesc {
             (Some(g1), Some(g2)) => {
                 // 兩組共同的限制（例：兩組都要「後追」）抽出來，放在整段最前面
                 let common = Self::common_restrictions(&g1.restrictions, &g2.restrictions);
-                let r1 = Self::residual_restrictions(&g1.restrictions, &common);
-                let r2 = Self::residual_restrictions(&g2.restrictions, &common);
-                let head = if common.is_empty() { String::new() } else { tag(&[common.clone()]) };
+                let (head_alts, r1, r2) = if !common.is_empty() {
+                    let r1 = Self::residual_restrictions(&g1.restrictions, &common);
+                    let r2 = Self::residual_restrictions(&g2.restrictions, &common);
+                    (vec![common], r1, r2)
+                }
+                else if let Some(x) = Self::common_alternatives(&g1.restrictions, &g2.restrictions) {
+                    x
+                }
+                else {
+                    (Vec::new(), g1.restrictions.clone(), g2.restrictions.clone())
+                };
+                let head = tag(&head_alts);
 
                 // 抽完只剩一組帶限制：那組是「特定情況下的加強版」（例：一般效果＋在中山賽場時另有加成）。
                 // 一般效果排前面，加強版標「中山時：」，而且只寫跟一般版不同的部分。
@@ -1179,8 +1374,62 @@ impl SkillDataDesc {
                             let label = Self::data_fmt("group.variant", &extra)?;
                             Some(format!("{head}{}{variant_join}{label}{}", Self::render_group(base), Self::render_variant_diff(base, v, true)))
                         };
+                        // 多出的條件當情境、換掉的條件寫「條件改為」（例：天賦異稟的靈敏身手：
+                        // 賽程2400～2500米、耐≥1000時：改為 加速度 +0.5m/s² 條件改為：後期前1/8隨機）
+                        let situational_replace = |base: &GroupParts, v: &GroupParts| -> Option<String> {
+                            if base.cond_raw.1 != v.cond_raw.1 {
+                                return None;
+                            }
+                            let (extra, repl) = Self::split_replaced(&base.cond_raw.0, &v.cond_raw.0)?;
+                            let and_sep = Self::str("sep.and").unwrap_or_default();
+                            let label = Self::data_fmt("group.variant", &Self::format_and_group(&extra, &and_sep))?;
+                            let instead = Self::data_fmt("group.cond_instead", &Self::format_and_group(&repl, &and_sep))?;
+                            Some(format!("{head}{}{variant_join}{label}{}{instead}",
+                                Self::render_group(base), Self::render_variant_diff(base, v, true)))
+                        };
+                        // 只是同種條件換數值（超群的邁步：力≥1000 → 力≥1200）：換上的條件就是情境
+                        // （第 2 組當一般版，進化技能的慣例是第 1 組為加強版）
+                        let threshold = |base: &GroupParts, v: &GroupParts| -> Option<String> {
+                            if base.cond_raw.1 != v.cond_raw.1 {
+                                return None;
+                            }
+                            let repl = Self::replaced_conditions(&base.cond_raw.0, &v.cond_raw.0)?;
+                            let tok = |a: &str| Self::parse_atom(a).0.to_string();
+                            let removed: Vec<String> = base.cond_raw.0.split('&').filter(|a| !v.cond_raw.0.split('&').any(|x| x == *a)).map(tok).collect();
+                            if !repl.iter().all(|a| removed.contains(&tok(a))) {
+                                return None;
+                            }
+                            let and_sep = Self::str("sep.and").unwrap_or_default();
+                            let label = Self::data_fmt("group.variant", &Self::format_and_group(&repl, &and_sep))?;
+                            // 效果、時間都一樣（只有條件不同）就不是加強版，交給下面「條件合併」
+                            if v.effects == base.effects && v.time == base.time && v.cd == base.cd {
+                                return None;
+                            }
+                            Some(format!("{head}{}{variant_join}{label}{}",
+                                Self::render_group(base), Self::render_variant_diff(base, v, true)))
+                        };
+                        // 兩組效果、時間、前提都一樣，只有條件不同 → 同一個效果的兩種觸發條件，條件用「／」合併
+                        // （賭徒：人氣≥第4、隨機機率60%／人氣≤第3、隨機機率30%）
+                        let same_effect = || -> Option<String> {
+                            if g1.effects != g2.effects || g1.time != g2.time || g1.cd != g2.cd || g1.cond_raw.1 != g2.cond_raw.1 {
+                                return None;
+                            }
+                            let merged = format!("{}@{}", g1.cond_raw.0, g2.cond_raw.0);
+                            let mut out = format!("{head}<b>{} {}</b>{}", Self::join_effects(&g1.effects), g1.time, g1.cd);
+                            out.push_str(&Self::str("group.when").unwrap_or_default());
+                            out.push_str(&Self::format_data_conditions(&merged));
+                            if !g1.cond_raw.1.is_empty() {
+                                out.push_str(&Self::str("group.after").unwrap_or_default());
+                                out.push_str(&Self::format_data_conditions(&g1.cond_raw.1));
+                            }
+                            Some(out)
+                        };
                         situational(&g2, &g1)
                             .or_else(|| situational(&g1, &g2))
+                            .or_else(|| situational_replace(&g2, &g1))
+                            .or_else(|| situational_replace(&g1, &g2))
+                            .or_else(|| threshold(&g2, &g1))
+                            .or_else(same_effect)
                             .unwrap_or_else(|| format!("{head}{}{variant_join}{}", Self::render_group(&g1), Self::render_group(&g2)))
                     }
                     // 兩組各有不同限制（互斥的兩個版本）：各自完整標示
