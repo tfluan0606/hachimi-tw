@@ -1,68 +1,101 @@
-# hachimi-tw
+<img align="left" width="80" height="80" src="assets/icon.png">
+
+# Hachimi TW
 
 繁體中文 | [English below](#english)
 
-> **這是 [Hachimi](https://github.com/Hachimi-Hachimi/Hachimi) 的非官方分支（fork）**，目的是讓它能在 **UM:PD 繁中服（Komoe 代理，PC 端）** 上運作。所有核心功能、設計與絕大部分程式碼皆來自上游 Hachimi 專案，本分支只做繁中服所需的相容性調整。
->
-> Forked from **Hachimi-Hachimi/Hachimi** · Licensed under **GNU GPLv3**（與上游相同）。
+UM:PD **繁中服（Komoe 代理，PC 端）**專用的遊戲增強 mod。
+
+> 本專案是 [Hachimi](https://github.com/Hachimi-Hachimi/Hachimi) 的分支（fork），核心架構與大部分底層程式碼來自上游 Hachimi；
+> 部分功能移植自其後繼專案 [Hachimi-Edge](https://github.com/kairusds/Hachimi-Edge)。授權沿用 **GNU GPLv3**。
 
 ---
 
 ## ⚠️ 使用前須知
 
-- 本專案本質上違反遊戲 TOS，**使用風險自負，封號責任自負**。請勿在公開場合大肆宣傳、連結本 repo 或原版 Hachimi（沿用上游立場，避免搜尋引擎收錄；提到遊戲時請用「UM:PD」或代稱）。
-- 這是為個人研究/自用而做的相容性移植，**不提供支援、不保證穩定、不接受「幫我裝」類請求**。
-- 上游完整功能文件請見 Hachimi 官方站；本 README 只說明「繁中服跟上游有什麼不同」。
+- 使用 mod 本質上違反遊戲 TOS，**使用風險與封號責任自負**。
+- 請勿在公開場合大肆宣傳或連結本專案；提到遊戲時請用「UM:PD」或代稱。
+- 個人維護的專案，不保證穩定，也不提供安裝協助。
 
-## 繁中服做了哪些調整（相對上游）
+## 功能
 
-上游 Hachimi 針對日服/國際服，直接套到繁中服會閃退或功能失效。本分支的改動集中在 `src/windows/`：
+**繁中服相容**
+- 以 `version.dll` 代理注入，直接解析繁中服 `GameAssembly.dll` 的標準 il2cpp 匯出，不依賴綁定特定版本的位址表
+- 繁中服的遊戲視窗、區域判定、各項 hook 簽章都照台服實際簽章調整
 
-| 檔案 | 調整內容 |
-|------|----------|
-| `proxy/version.rs`（新增） | 以 **version.dll 劫持**做早期注入：轉發 17 個 version.dll 匯出到 System32 真檔，DllMain 先裝轉發再進 Hachimi 初始化。 |
-| `proxy/mod.rs`、`proxy/exports.def` | 掛上 version.dll proxy 模組與匯出表。 |
-| `main.rs`、`hook.rs` | DllMain 先呼叫 `proxy::version::init()`；早期載入路徑改走 version.dll proxy，等 `cri_ware_unity.dll` 載入時觸發 il2cpp hook。 |
-| `symbols_impl.rs` | **關鍵修正**：繁中服 `GameAssembly.dll` 用「標準」`il2cpp_*` 匯出名（未混淆），改為直接 `GetProcAddress` 解析。移除上游那套從 `UnityPlayer.dll` 寫死 RVA 還原混淆名的機制——該 RVA 綁定特定 build，在繁中服會越界 panic（`bounds check failed`）。 |
-| `game_impl.rs` | 新增 `Region::Taiwan`，對應 `komoeumamusume.exe`。 |
-| `wnd_hook.rs` | 繁中服遊戲視窗為 `class=UnityWndClass`、`title=komoeumamusume`（啟動器是另一個 class `CGameLauncherWnd`，不會誤抓）。 |
-| `log_impl.rs` | 改用檔案 logger（`hachimi_tw_<exe>.log`），依 exe 名分檔，避免啟動器與遊戲本體共寫。 |
+**遊戲資訊**
+- **技能詳細數據**：技能說明改為顯示實際的發動條件與效果數值（讀取遊戲資料庫），並整理成易讀的格式：
+  跑法／距離等限制標在開頭、時間條件以顏色標示、加強版只寫差異等。設定編輯器「顯示技能詳細數據」開啟（預設關）
+- **因子卡片**：收集練成馬娘的因子資料並在遊戲內產生卡片圖
+- **比賽擷取**：自動存下練習賽、自訂配對賽、群英聯賽的結果封包，逐幀比賽資料已解碼成 JSON（存於 `hachimi/race_capture/`）
+
+**畫面與操作**
+- FPS 上限、垂直同步、解析度縮放、畫質設定
+- Live 播放速度與進度顯示
+- UI 動畫加速、劇情文字速度、劇情選項自動選擇延遲
+- 隱藏遊戲自訂游標、視窗置頂、自訂視窗標題
+- 遊戲內設定選單：GUI 縮放、選單熱鍵自訂、Windows 輸入法支援
+
+**其他**
+- **Discord Rich Presence**：顯示目前所在的遊戲畫面與首頁代表馬娘（預設關）
+- **自動更新**：從本專案的 GitHub release 下載新版並以 blake3 校驗；可選擇自動下載或只通知
+
+## 安裝
+
+1. 從 [Releases](https://github.com/tfluan0606/hachimi-tw/releases) 下載 `version.dll`。
+2. **完全關閉遊戲與啟動器**。
+3. 把 `version.dll` 放進遊戲本體目錄（與 `komoeumamusume.exe` 同一層）。
+4. 啟動遊戲，按 **→（右方向鍵）** 開啟選單。
+
+移除：刪掉遊戲目錄下的 `version.dll` 即可，遊戲原始檔案不受影響。
+
+設定檔在遊戲目錄的 `hachimi/config.json`，大部分選項可在遊戲內選單的設定編輯器調整。
+
+## 自動更新
+
+- 遊戲啟動時會檢查本專案最新的 release，有新版時通知。
+- 設定編輯器勾選「自動更新」後，會在背景下載並校驗，完成後提示重開遊戲。
+- 從**更早的版本**升級時，舊版的更新器可能指向別的地方，需要手動換一次 `version.dll`，之後就會自動更新。
 
 ## 建置
 
-需要 Rust + MSVC toolchain（`x86_64-pc-windows-msvc`）。
+需要 Rust 與 MSVC toolchain（`x86_64-pc-windows-msvc`）。
 
 ```powershell
-git clone --recursive https://github.com/tfluan0606/hachimi-tw.git
+git clone https://github.com/tfluan0606/hachimi-tw.git
 cd hachimi-tw
 cargo build --release
 ```
 
-產出 `target/release/hachimi.dll`。
+產出 `target/release/hachimi.dll`，改名為 `version.dll` 使用。
 
-## 部署
+發版：`.\tools\release.ps1 <版號>`（改版號、測試、打 tag、推送），GitHub Actions 會自動建置並發布 release。
 
-1. 完全關閉遊戲與啟動器。
-2. 把 `hachimi.dll` 複製到遊戲本體目錄，**改名為 `version.dll`**。
-3. （可選）在遊戲目錄下建 `hachimi/config.json` 設定 `target_fps`、`disable_gui` 等。
-4. 啟動遊戲；預設按 **→（右方向鍵）** 呼出設定選單。
+## 特別感謝
 
-> 移除：刪掉 `version.dll` 即可，遊戲原始檔案不受影響（真 version.dll 由 System32 提供）。
+- [Hachimi](https://github.com/Hachimi-Hachimi/Hachimi)（LeadRDRK 及貢獻者）：本專案的基礎
+- [Hachimi-Edge](https://github.com/kairusds/Hachimi-Edge)：技能詳細數據等功能的移植來源
+- [GameTora](https://gametora.com/umamusume/skills)、[UmaTL hachimi-sd](https://github.com/UmaTL/hachimi-sd)：技能資料格式的參考（經由 Hachimi-Edge）
+- 上游 Hachimi 致謝的各專案：Trainers' Legend G、umamusume-localify、Carotenify、umamusu-translate、frida-il2cpp-bridge
+
+## 授權
+
+[GNU GPLv3](LICENSE)
+
+© 2024-2025 LeadRDRK and contributors
+© 2026 Micky (tfluan0606)
 
 ---
 
 ## English
 
-**Unofficial fork of [Hachimi](https://github.com/Hachimi-Hachimi/Hachimi)** that makes it run on the **UM:PD Traditional-Chinese client (Komoe, PC)**. All core functionality and the vast majority of the code come from the upstream Hachimi project; this fork only adds the compatibility changes needed for the TW client. Licensed under **GNU GPLv3**, same as upstream.
+**Hachimi TW** is a game enhancement mod for the **UM:PD Traditional Chinese client (Komoe, PC)**.
+It is a fork of [Hachimi](https://github.com/Hachimi-Hachimi/Hachimi), with some features ported from [Hachimi-Edge](https://github.com/kairusds/Hachimi-Edge). Licensed under **GNU GPLv3**, same as upstream.
 
-Please refer to the [upstream repository](https://github.com/Hachimi-Hachimi/Hachimi) for full feature documentation. See the table above for what differs on the TW client (version.dll-hijack injection, standard il2cpp export resolution, TW region/window detection, per-exe file logging).
+Highlights: TW client compatibility (version.dll proxy injection, standard il2cpp export resolution), in-game skill data descriptions,
+factor cards, race packet capture, Discord Rich Presence, graphics/playback options and a self-hosted auto-updater.
 
-Use at your own risk — this violates the game's TOS. Do not publicly advertise or link this repo.
+Install: download `version.dll` from [Releases](https://github.com/tfluan0606/hachimi-tw/releases), close the game and launcher,
+put it next to `komoeumamusume.exe`, then press → in game to open the menu.
 
-## Credits
-
-Built entirely on top of **[Hachimi](https://github.com/Hachimi-Hachimi/Hachimi)** by the Hachimi authors. All upstream special-thanks still apply (Trainers' Legend G, umamusume-localify(-android), Carotenify, umamusu-translate, frida-il2cpp-bridge).
-
-## License
-
-[GNU GPLv3](LICENSE) — inherited from upstream Hachimi. Any distribution of this fork must remain GPLv3 and retain the original copyright notices.
+Use at your own risk — using mods violates the game's TOS. Please don't publicly advertise or link this project.

@@ -1,4 +1,4 @@
-hachimi: "Hachimi"
+hachimi: "Hachimi TW"
 
 windows:
   menu_open_key: "Right arrow"
@@ -89,7 +89,7 @@ first_time_setup:
 
 about:
   title: "About"
-  copyright: "© 2024-2025 LeadRDRK and contributors"
+  copyright: "© 2024-2025 LeadRDRK and contributors\n© 2026 Micky (tfluan0606)"
   view_license: "View license"
   check_for_updates: "Check for updates"
 

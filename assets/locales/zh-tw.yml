@@ -1,4 +1,4 @@
-hachimi: "Hachimi"
+hachimi: "Hachimi TW"
 
 windows:
   menu_open_key: "右方向鍵"
@@ -85,7 +85,7 @@ first_time_setup:
 
 about:
   title: "關於"
-  copyright: "© 2024-2025 LeadRDRK and contributors"
+  copyright: "© 2024-2025 LeadRDRK and contributors\n© 2026 Micky (tfluan0606)"
   view_license: "查看許可證"
   check_for_updates: "檢查更新"
 

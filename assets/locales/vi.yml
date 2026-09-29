@@ -1,4 +1,4 @@
-hachimi: "Hachimi"
+hachimi: "Hachimi TW"
 
 windows:
   menu_open_key: "Mũi tên phải"
@@ -83,7 +83,7 @@ first_time_setup:
 
 about:
   title: "Giới thiệu"
-  copyright: "© 2024-2025 LeadRDRK and contributors"
+  copyright: "© 2024-2025 LeadRDRK and contributors\n© 2026 Micky (tfluan0606)"
   view_license: "Xem bản quyền"
   check_for_updates: "Kiểm tra cập nhật"
 

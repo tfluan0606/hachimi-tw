@@ -238,7 +238,7 @@ impl Gui {
             .show(ui, |ui| {
                 ui.horizontal(|ui| {
                     ui.add(Self::icon());
-                    ui.heading("Hachimi");
+                    ui.heading(t!("hachimi"));
                     // splash／關於只顯示乾淨版本號；完整含 git hash 的版本只寫在 log 開頭（除錯用）
                     ui.label(concat!("v", env!("CARGO_PKG_VERSION")));
                 });
