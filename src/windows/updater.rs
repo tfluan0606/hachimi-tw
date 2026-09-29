@@ -72,9 +72,7 @@ impl Updater {
             }
         }
 
-        let url = Hachimi::instance().config.load().update_check_url.clone()
-            .unwrap_or_else(|| format!("https://api.github.com/repos/{}/releases/latest", REPO_PATH));
-        let latest: Release = http::get_json(&url)?;
+        let latest = fetch_latest_release()?;
         if latest.is_newer_version() {
             let mut dll_url = None;
             let mut hash_url = None;
@@ -214,6 +212,39 @@ impl Updater {
     }
 }
 
+/// 查最新 release。
+/// - 設了 `update_check_url`（測試用）：照舊讀 GitHub API 格式的 JSON
+/// - 否則先走網頁網址 `github.com/<repo>/releases/latest`：它會 302 轉到 `/releases/tag/<tag>`，從轉址讀出
+///   版號，asset 網址也是固定格式 `/releases/download/<tag>/<name>`。**不經過 GitHub API**——API 未登入時
+///   每個 IP 每小時只有 60 次，共用對外 IP（家用網路常見）時很容易被別人用光而回 403。
+/// - 網頁網址失敗才退回 API
+fn fetch_latest_release() -> Result<Release, Error> {
+    if let Some(url) = Hachimi::instance().config.load().update_check_url.clone() {
+        return http::get_json(&url);
+    }
+    match latest_release_via_web(REPO_PATH) {
+        Ok(release) => Ok(release),
+        Err(e) => {
+            warn!("Update check via release page failed ({}), falling back to GitHub API", e);
+            http::get_json(&format!("https://api.github.com/repos/{}/releases/latest", REPO_PATH))
+        }
+    }
+}
+
+fn latest_release_via_web(repo: &str) -> Result<Release, Error> {
+    let agent = ureq::AgentBuilder::new().redirects(0).build();
+    let res = agent.get(&format!("https://github.com/{}/releases/latest", repo)).call()?;
+    let location = res.header("location").unwrap_or_default();
+    let Some(tag) = location.split("/releases/tag/").nth(1).map(|t| t.trim_end_matches('/')).filter(|t| !t.is_empty()) else {
+        return Err(Error::RuntimeError(format!("unexpected releases/latest response (status {}, location '{}')", res.status(), location)));
+    };
+    let asset = |name: &str| ReleaseAsset {
+        name: name.to_owned(),
+        browser_download_url: format!("https://github.com/{}/releases/download/{}/{}", repo, tag, name)
+    };
+    Ok(Release { tag_name: tag.to_owned(), assets: vec![asset(DLL_ASSET_NAME), asset(HASH_ASSET_NAME)] })
+}
+
 /// 開機時清掉上次更新留下的 `version.dll.old`（此時它已不再被載入，可以安全刪除）。
 pub fn cleanup_old_dll() {
     let Ok(dll_path) = current_dll_path() else {
@@ -278,6 +309,16 @@ fn parse_version(s: &str) -> Option<(u64, u64, u64)> {
 #[cfg(test)]
 mod tests {
     use super::parse_version;
+
+    /// 實際連 GitHub（網頁網址，不耗 API 額度）確認能讀出最新 tag。需要網路，預設不跑：
+    /// `cargo test --lib latest_release_via_web -- --ignored --nocapture`
+    #[test]
+    #[ignore]
+    fn latest_release_via_web() {
+        let r = super::latest_release_via_web(super::REPO_PATH).unwrap();
+        eprintln!("latest tag = {}, assets = {:?}", r.tag_name, r.assets.iter().map(|a| &a.browser_download_url).collect::<Vec<_>>());
+        assert!(r.tag_name.starts_with('v'));
+    }
 
     #[test]
     fn parses_release_tags() {
