@@ -213,7 +213,10 @@ impl SkillDataDesc {
                 while Query::Step(query) {
                     let row = Self::get_data_row(query);
                     let desc = Self::format_data_desc(&row);
-                    descs.insert(row.id, desc);
+                    // 產生不出說明（例：活動專用技能）就不收，遊戲照原本顯示
+                    if !desc.is_empty() {
+                        descs.insert(row.id, desc);
+                    }
                 }
                 Query::Dispose_orig(query);
             }
@@ -332,8 +335,14 @@ impl SkillDataDesc {
             32 => ("all_stats", "stat", 10000, 2),
             35 => ("target_lane", "stat", 10000, 2),
             37 => ("activate_rare_skill", "stat", 10000, 2),
-            42 | 48 | 49 => ("special", "stat", 10000, 2),
-            501 => ("event_specific", "stat", 10000, 2),
+            // 42：此技能與已進化技能的效果時間倍率（台服僅 Weaving History，數值 2.0 ＝ 2 倍）
+            42 => match Self::data_fmt("effect.fixed.duration_mult", &Self::format_data_number(slot.ability_value, 10000, 2)) {
+                Some(text) => return Some(text),
+                None => ("special", "stat", 10000, 2)
+            },
+            48 | 49 => ("special", "stat", 10000, 2),
+            // 501～503：活動（競速狂歡節）專用，實際數值由活動決定、master.mdb 沒有 → 不產生說明，保留遊戲原文
+            501 | 502 => return None,
 
             6 => return Self::str("effect.fixed.aggressive_strategy"),
             38 => return Self::str("effect.fixed.debuff_immunity"),

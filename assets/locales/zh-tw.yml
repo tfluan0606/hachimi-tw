@@ -205,6 +205,7 @@ skill_data_desc:
       mps: "m/s"
       mps2: "m/s²"
     fixed:
+      duration_mult: "</b><color=#1e88e5>效果時間</color><b> ×%{v}（含已進化技能）"
       aggressive_strategy: "切換為極具攻擊性的跑法"
       debuff_immunity: "免疫減益"
       sympathy_all: "對所有人發動共鳴"
@@ -286,10 +287,10 @@ skill_data_desc:
     time_wrap: "<color=#8e44ad>%{v}</color>"
     negate: "非%{v}"
     order_rate:
-      gt: "名次>%{v}%"
+      gt: "名次﹥%{v}%"
       ge: "名次≥%{v}%"
       le: "名次≤%{v}%"
-      lt: "名次<%{v}%"
+      lt: "名次﹤%{v}%"
       range: "名次%{v}%"
     corner:
       straight: "在直線上"
@@ -612,10 +613,10 @@ skill_data_desc:
         ge: "基礎智力≥%{v}"
         lt: "基礎智力﹤%{v}"
       bashin_diff_behind:
-        ge: "領先≥%{v}馬身"
-        le: "領先≤%{v}馬身"
+        ge: "領先≥%{v}身距"
+        le: "領先≤%{v}身距"
       bashin_diff_infront:
-        le: "落後≤%{v}馬身"
+        le: "落後≤%{v}身距"
       behind_near_lane_time:
         ge: "對手近距離在後%{v}秒"
       behind_near_lane_time_set1:
