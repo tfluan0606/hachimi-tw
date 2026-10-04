@@ -123,7 +123,9 @@ impl Hachimi {
         let config_path = data_dir.join("config.json");
         if fs::metadata(&config_path).is_ok() {
             let json = fs::read_to_string(&config_path)?;
-            Ok(serde_json::from_str(&json)?)
+            let mut config: Config = serde_json::from_str(&json)?;
+            config.migrate();
+            Ok(config)
         }
         else {
             Ok(Config::default())
@@ -296,6 +298,16 @@ pub struct Config {
     /// 技能說明改成顯示實際發動條件與效果數值（讀 master.mdb 的 skill_data，移植自 Edge）。預設關。
     #[serde(default)]
     pub skill_data_desc: bool,
+    /// 舊版（單一清單）的一鍵學習設定，只讀不寫：載入時搬進 `auto_skill_profiles` 的第一個設定檔。
+    #[serde(default, skip_serializing)]
+    pub auto_skill_list: Vec<String>,
+    /// 育成技能學習頁「一鍵學習」的設定檔。每個設定檔有主要／次要兩份清單，依優先順序；
+    /// 每一項純數字＝技能 ID，其餘＝技能名稱（完全比對）。
+    #[serde(default)]
+    pub auto_skill_profiles: Vec<AutoSkillProfile>,
+    /// 目前使用的設定檔（`auto_skill_profiles` 的索引）
+    #[serde(default)]
+    pub auto_skill_active_profile: usize,
     #[serde(default)]
     pub live_theater_allow_same_chara: bool,
     #[serde(default)]
@@ -324,6 +336,34 @@ impl Config {
     fn default_story_choice_auto_select_delay() -> f32 { 0.75 }
     fn default_story_tcps_multiplier() -> f32 { 1.0 }
     fn default_ui_animation_scale() -> f32 { 1.0 }
+}
+
+/// 一鍵學習的一組清單（例：「長距離逃」「短英大賽」）
+#[derive(Serialize, Deserialize, Clone, Default, Debug)]
+pub struct AutoSkillProfile {
+    pub name: String,
+    #[serde(default)]
+    pub primary: Vec<String>,
+    #[serde(default)]
+    pub secondary: Vec<String>,
+}
+
+impl Config {
+    fn migrate(&mut self) {
+        if !self.auto_skill_list.is_empty() && self.auto_skill_profiles.is_empty() {
+            self.auto_skill_profiles.push(AutoSkillProfile {
+                name: "預設".to_owned(),
+                primary: std::mem::take(&mut self.auto_skill_list),
+                secondary: Vec::new(),
+            });
+        }
+    }
+
+    /// 目前使用的一鍵學習設定檔（索引越界時退回第一個）
+    pub fn active_auto_skill_profile(&self) -> Option<&AutoSkillProfile> {
+        self.auto_skill_profiles.get(self.auto_skill_active_profile)
+            .or_else(|| self.auto_skill_profiles.first())
+    }
 }
 
 impl Default for Config {

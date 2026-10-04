@@ -956,6 +956,138 @@ impl ConfigEditor {
         }
     }
 
+    /// 一鍵學習：設定檔選擇／新增／複製／改名／刪除
+    #[cfg(target_os = "windows")]
+    fn run_auto_skill_profiles(ui: &mut egui::Ui, config: &mut hachimi::Config) {
+        use hachimi::AutoSkillProfile;
+
+        let profiles = &mut config.auto_skill_profiles;
+        if profiles.is_empty() {
+            profiles.push(AutoSkillProfile { name: "預設".to_owned(), ..Default::default() });
+        }
+        let active = &mut config.auto_skill_active_profile;
+        if *active >= profiles.len() {
+            *active = 0;
+        }
+
+        ui.vertical(|ui| {
+            egui::ComboBox::from_id_source("auto_skill_profile")
+                .width(140.0)
+                .selected_text(profiles[*active].name.clone())
+                .show_ui(ui, |ui| {
+                    for (i, p) in profiles.iter().enumerate() {
+                        ui.selectable_value(active, i, p.name.clone());
+                    }
+                });
+            ui.horizontal(|ui| {
+                if ui.button("新增").clicked() {
+                    profiles.push(AutoSkillProfile {
+                        name: format!("設定檔 {}", profiles.len() + 1),
+                        ..Default::default()
+                    });
+                    *active = profiles.len() - 1;
+                }
+                if ui.button("複製").clicked() {
+                    let mut copy = profiles[*active].clone();
+                    copy.name = format!("{} 複本", copy.name);
+                    profiles.push(copy);
+                    *active = profiles.len() - 1;
+                }
+                if ui.add_enabled(profiles.len() > 1, egui::Button::new("刪除")).clicked() {
+                    profiles.remove(*active);
+                    *active = active.saturating_sub(1);
+                }
+            });
+            ui.horizontal(|ui| {
+                ui.label("名稱");
+                ui.add(egui::TextEdit::singleline(&mut profiles[*active].name).desired_width(140.0));
+            });
+        });
+    }
+
+    /// 一鍵學習的一份清單：一列一個技能，可上下移、刪除；可手動加一筆或從技能頁匯入。
+    /// `key` 區分主要／次要（各自的輸入框與匯入目標）。
+    #[cfg(target_os = "windows")]
+    fn run_auto_skill_list(ui: &mut egui::Ui, key: &'static str, list: &mut Vec<String>) {
+        use crate::il2cpp::hook::umamusume::SingleModeSkillLearningViewController as auto_skill;
+
+        // 匯入結果在主執行緒算完後才回來，這裡每幀輪詢；只有發出匯入的那份清單收結果
+        static IMPORT_TARGET: Mutex<Option<&'static str>> = Mutex::new(None);
+        static STATUS: Mutex<(&'static str, String)> = Mutex::new(("", String::new()));
+        if *IMPORT_TARGET.lock().unwrap() == Some(key) {
+            if let Some(res) = auto_skill::take_import_result() {
+                *IMPORT_TARGET.lock().unwrap() = None;
+                let msg = match res {
+                    Ok(names) => {
+                        let before = list.len();
+                        for n in names {
+                            if !list.iter().any(|s| s.trim() == n) {
+                                list.push(n);
+                            }
+                        }
+                        format!("加入 {} 個技能", list.len() - before)
+                    }
+                    Err(e) => e,
+                };
+                *STATUS.lock().unwrap() = (key, msg);
+            }
+        }
+        list.retain(|s| !s.trim().is_empty());
+
+        let entry_id = ui.id().with(("auto_skill_entry", key));
+        ui.vertical(|ui| {
+            ui.horizontal(|ui| {
+                if ui.button("從技能頁匯入").clicked() {
+                    *IMPORT_TARGET.lock().unwrap() = Some(key);
+                    *STATUS.lock().unwrap() = (key, "讀取中…".into());
+                    auto_skill::request_import();
+                }
+                if ui.button("清空").clicked() {
+                    list.clear();
+                }
+            });
+            {
+                let status = STATUS.lock().unwrap();
+                if status.0 == key && !status.1.is_empty() {
+                    ui.label(status.1.clone());
+                }
+            }
+
+            let mut action: Option<(usize, i32)> = None; // (index, -1 上移 / 1 下移 / 0 刪除)
+            egui::ScrollArea::vertical()
+                .id_source(("auto_skill_list", key))
+                .max_height(200.0)
+                .show(ui, |ui| {
+                    for (i, name) in list.iter().enumerate() {
+                        ui.horizontal(|ui| {
+                            ui.label(format!("{}.", i + 1));
+                            // FontAwesome：arrow-up / arrow-down / times
+                            if ui.small_button("\u{f062}").clicked() { action = Some((i, -1)); }
+                            if ui.small_button("\u{f063}").clicked() { action = Some((i, 1)); }
+                            if ui.small_button("\u{f00d}").clicked() { action = Some((i, 0)); }
+                            ui.label(name);
+                        });
+                    }
+                });
+            match action {
+                Some((i, 0)) => { list.remove(i); }
+                Some((i, -1)) if i > 0 => list.swap(i, i - 1),
+                Some((i, 1)) if i + 1 < list.len() => list.swap(i, i + 1),
+                _ => {}
+            }
+
+            ui.horizontal(|ui| {
+                let mut entry = ui.data_mut(|d| d.get_temp::<String>(entry_id)).unwrap_or_default();
+                ui.add(egui::TextEdit::singleline(&mut entry).hint_text("技能名稱或 ID").desired_width(120.0));
+                if ui.button("加入").clicked() && !entry.trim().is_empty() {
+                    list.push(entry.trim().to_owned());
+                    entry.clear();
+                }
+                ui.data_mut(|d| d.insert_temp(entry_id, entry));
+            });
+        });
+    }
+
     fn run_options_grid(config: &mut hachimi::Config, ui: &mut egui::Ui, tab: ConfigEditorTab) {
         match tab {
             ConfigEditorTab::General => {
@@ -1133,6 +1265,28 @@ impl ConfigEditor {
                     .on_hover_text(t!("config_editor.skill_data_desc_hint"));
                 ui.checkbox(&mut config.skill_data_desc, "");
                 ui.end_row();
+
+                #[cfg(target_os = "windows")]
+                {
+                    ui.label("一鍵學習設定檔")
+                        .on_hover_text("育成技能學習頁「決定」左邊的「一鍵學習」按鈕，按下去選主要或次要，\n\
+                            依那份清單由上往下點技能，點數不夠的跳過，最後跳出遊戲的確認視窗。\n\
+                            用的是這裡選中的設定檔。");
+                    Self::run_auto_skill_profiles(ui, config);
+                    ui.end_row();
+
+                    let active = config.auto_skill_active_profile;
+                    if let Some(profile) = config.auto_skill_profiles.get_mut(active) {
+                        ui.label("主要清單")
+                            .on_hover_text("「從技能頁匯入」會把最後開過的技能頁上還沒學的技能加進來（已在清單的不重複）。");
+                        Self::run_auto_skill_list(ui, "primary", &mut profile.primary);
+                        ui.end_row();
+
+                        ui.label("次要清單");
+                        Self::run_auto_skill_list(ui, "secondary", &mut profile.secondary);
+                        ui.end_row();
+                    }
+                }
 
                 ui.label(t!("config_editor.live_theater_allow_same_chara"));
                 ui.checkbox(&mut config.live_theater_allow_same_chara, "");

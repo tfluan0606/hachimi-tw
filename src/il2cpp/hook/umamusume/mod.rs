@@ -40,6 +40,10 @@ mod PaymentUtility;
 #[cfg(target_os = "windows")]
 pub mod DialogTrainedCharacterDetail;
 
+// 育成技能學習頁的「自動學習」按鈕
+#[cfg(target_os = "windows")]
+pub mod SingleModeSkillLearningViewController;
+
 pub mod HttpHelper;
 
 // 技能資料說明（skill_data_desc）的換行：避免遊戲把 rich text 標籤切斷
@@ -89,6 +93,7 @@ pub fn init() {
         SceneManager::init(image);
         HomeCharacterCreator::init(image);
         PaymentUtility::init(image);
+        SingleModeSkillLearningViewController::init(image);
     }
     } // end #[cfg(not(feature = "capture-only"))]
 }
