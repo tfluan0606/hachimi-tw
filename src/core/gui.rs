@@ -202,6 +202,10 @@ impl Gui {
         // Store this as an atomic value so the input thread can check it without locking the gui
         IS_CONSUMING_INPUT.store(self.is_consuming_input(), atomic::Ordering::Relaxed);
 
+        // 輸入框有焦點時替遊戲視窗打開輸入法（Unity 平常會把它關掉）
+        #[cfg(target_os = "windows")]
+        crate::windows::wnd_hook::set_ime_wanted(self.context.wants_keyboard_input());
+
         self.context.end_frame()
     }
 
@@ -718,11 +722,13 @@ pub trait Window {
 
 // Shared window creation function
 fn new_window<'a>(ctx: &egui::Context, title: impl Into<egui::WidgetText>) -> egui::Window<'a> {
+    // 遊戲視窗很窄（直式）或介面縮放調大時，固定尺寸會超出畫面；上限跟著畫面大小走
+    let screen = ctx.screen_rect();
     egui::Window::new(title)
     .pivot(egui::Align2::CENTER_CENTER)
-    .fixed_pos(ctx.screen_rect().max / 2.0)
-    .max_width(320.0)
-    .max_height(250.0)
+    .fixed_pos(screen.max / 2.0)
+    .max_width(320.0f32.min(screen.width() - 24.0))
+    .max_height(250.0f32.min(screen.height() - 80.0))
     .collapsible(false)
     .resizable(false)
 }
@@ -1191,7 +1197,8 @@ impl Window for ConfigEditor {
 
                     ui.add_space(4.0);
 
-                    egui::ScrollArea::vertical()
+                    // 雙向捲動：內容比視窗寬時在裡面橫捲，而不是把視窗撐出畫面
+                    egui::ScrollArea::both()
                     .id_source("body_scroll")
                     .show(ui, |ui| {
                         egui::Frame::none()

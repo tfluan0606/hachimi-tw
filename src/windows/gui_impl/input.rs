@@ -1,11 +1,12 @@
 // Originally from sy1ntexx/egui-d3d11
 use egui::{Event, Key, Modifiers, PointerButton, Pos2, RawInput, Vec2};
-use std::ffi::CStr;
+
 use windows::Win32::{
-    Foundation::HWND,
+    Foundation::{HGLOBAL, HWND},
     System::{
         DataExchange::{CloseClipboard, GetClipboardData, OpenClipboard},
-        Ole::CF_TEXT,
+        Memory::{GlobalLock, GlobalUnlock},
+        Ole::CF_UNICODETEXT,
         SystemServices::{MK_CONTROL, MK_SHIFT}
     },
     UI::{
@@ -289,8 +290,9 @@ fn get_key_modifiers(msg: u32) -> Modifiers {
 
 fn get_key(wparam: usize) -> Option<Key> {
     match wparam {
-        0x30..=0x39 => unsafe { Some(std::mem::transmute::<_, Key>(wparam as u8 - 0x21)) },
-        0x41..=0x5A => unsafe { Some(std::mem::transmute::<_, Key>(wparam as u8 - 0x28)) },
+        // 以前用「VK 減一個偏移量再 transmute」，那是舊版 egui 的 Key 排列；0.27 已經不同，
+        // 字母全部錯位（V 變 E），Ctrl+V/C/X 因此從來沒作用過。改成照名稱查。
+        0x30..=0x39 | 0x41..=0x5A => Key::from_name(&(wparam as u8 as char).to_string()),
         _ => match VIRTUAL_KEY(wparam as u16) {
             VK_DOWN => Some(Key::ArrowDown),
             VK_LEFT => Some(Key::ArrowLeft),
@@ -312,17 +314,27 @@ fn get_key(wparam: usize) -> Option<Key> {
     }
 }
 
+/// 讀剪貼簿文字。要用 `CF_UNICODETEXT`：`CF_TEXT` 是系統 ANSI 碼頁（繁中 Windows＝Big5），
+/// 中文不是合法 UTF-8，以前整段解碼失敗就貼不上。
 fn get_clipboard_text() -> Option<String> {
     unsafe {
-        if OpenClipboard(HWND::default()).is_ok() {
-            if let Ok(handle) = GetClipboardData(CF_TEXT.0 as u32) {
-                let txt = handle.0 as *const i8;
-                let data = Some(CStr::from_ptr(txt).to_str().ok()?.to_string());
-                CloseClipboard().ok();
-                return data;
+        OpenClipboard(HWND::default()).ok()?;
+        let data = GetClipboardData(CF_UNICODETEXT.0 as u32).ok().and_then(|handle| {
+            let ptr = GlobalLock(HGLOBAL(handle.0 as _)) as *const u16;
+            if ptr.is_null() {
+                return None;
             }
-        }
-
-        None
+            let mut len = 0;
+            while *ptr.add(len) != 0 {
+                len += 1;
+            }
+            let text = String::from_utf16_lossy(std::slice::from_raw_parts(ptr, len));
+            _ = GlobalUnlock(HGLOBAL(handle.0 as _));
+            // egui 的單行輸入框不吃換行，貼一行字時常會帶到行尾的 \r\n
+            Some(text.replace("\r\n", "\n"))
+        });
+        // 不論成功與否都要關，否則剪貼簿會被一直佔住
+        _ = CloseClipboard();
+        data
     }
 }

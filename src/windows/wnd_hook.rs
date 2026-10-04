@@ -1,20 +1,23 @@
-use std::{os::raw::c_uint, sync::atomic::{self, AtomicBool, AtomicIsize, AtomicU32}};
+use std::{os::raw::c_uint, sync::atomic::{self, AtomicBool, AtomicI32, AtomicIsize, AtomicU32}};
 
 use egui::mutex::Mutex;
 use once_cell::sync::Lazy;
 use widestring::U16CString;
 use windows::{core::{w, PCWSTR}, Win32::{
     Foundation::{HWND, LPARAM, LRESULT, WPARAM},
+    Globalization::HIMC,
+    UI::Input::Ime::{ImmAssociateContext, ImmAssociateContextEx, IACE_DEFAULT},
+    UI::Input::{GetRawInputData, HRAWINPUT, RAWINPUTHEADER, RID_HEADER, RIM_TYPEKEYBOARD},
     System::Threading::GetCurrentThreadId,
     UI::Input::KeyboardAndMouse::{GetKeyNameTextW, MapVirtualKeyW, MAPVK_VK_TO_VSC},
     UI::WindowsAndMessaging::{
         CallNextHookEx, DefWindowProcW, FindWindowW, GetWindowLongPtrW, GetWindowTextLengthW, GetWindowTextW,
         PostMessageW, SetWindowsHookExW, SetWindowTextW, UnhookWindowsHookEx, GWLP_WNDPROC, HCBT_MINMAX, HHOOK,
-        SW_RESTORE, WH_CBT, WM_APP, WM_CLOSE, WM_KEYDOWN, WM_SYSKEYDOWN, WM_SIZE, WNDPROC
+        SW_RESTORE, WH_CBT, WM_APP, WM_CLOSE, WM_INPUT, WM_KEYDOWN, WM_SYSKEYDOWN, WM_SIZE, WNDPROC
     }
 }};
 
-use crate::{core::{game::Region, Gui, Hachimi}, il2cpp::{hook::UnityEngine_CoreModule, symbols::Thread}, windows::utils};
+use crate::{core::{game::Region, Gui, Hachimi}, il2cpp::{api::il2cpp_resolve_icall, hook::UnityEngine_CoreModule, symbols::Thread}, windows::utils};
 
 use super::gui_impl::input;
 
@@ -22,6 +25,8 @@ use super::gui_impl::input;
 const WM_HACHIMI_APPLY_TITLE: c_uint = WM_APP + 1;
 /// 同上，套用「視窗置頂」。`wparam` 非 0 ＝置頂。
 const WM_HACHIMI_APPLY_TOPMOST: c_uint = WM_APP + 2;
+/// GUI 輸入框焦點變了，開關輸入法。`wparam` 非 0 ＝要打開。見 set_ime_wanted。
+const WM_HACHIMI_SET_IME: c_uint = WM_APP + 3;
 
 struct WndProcCall {
     hwnd: HWND,
@@ -46,6 +51,8 @@ pub fn mark_size_ready() {
 }
 
 static WM_SIZE_BUFFER: Lazy<Mutex<Vec<WndProcCall>>> = Lazy::new(|| Mutex::default());
+/// IME 事件依到達順序排隊（見 wndproc 裡的說明）
+static IME_QUEUE: Lazy<Mutex<Vec<input::ImeInput>>> = Lazy::new(|| Mutex::default());
 pub fn drain_wm_size_buffer() {
     let Some(orig_fn) = (unsafe { std::mem::transmute::<isize, WNDPROC>(WNDPROC_ORIG) }) else {
         return;
@@ -103,6 +110,81 @@ pub fn get_target_hwnd() -> HWND {
     HWND(TARGET_HWND.load(atomic::Ordering::Relaxed))
 }
 
+/// GUI 的輸入框有沒有焦點（上一次送出的狀態，避免每幀都 post）
+static IME_WANTED: AtomicBool = AtomicBool::new(false);
+/// 是我們替遊戲打開的輸入法（離開輸入框時要關回去）
+static IME_ENABLED_BY_US: AtomicBool = AtomicBool::new(false);
+
+/// GUI 每幀呼叫：輸入框取得／失去焦點時通知視窗執行緒開關輸入法。
+///
+/// Unity 在遊戲內沒有選中輸入框時會把視窗的 IME context 拿掉，這時 Windows 根本不送組字訊息，
+/// 注音只會變成英文字母。Imm* 綁視窗執行緒，所以跟視窗標題一樣 post 過去做。
+pub fn set_ime_wanted(wanted: bool) {
+    if IME_WANTED.swap(wanted, atomic::Ordering::AcqRel) == wanted {
+        return;
+    }
+    let hwnd = get_target_hwnd();
+    if hwnd.0 != 0 {
+        unsafe { _ = PostMessageW(hwnd, WM_HACHIMI_SET_IME, WPARAM(wanted as usize), LPARAM(0)); }
+    }
+}
+
+/// 打開輸入法前遊戲原本的 `Input.imeCompositionMode`（Auto=0 / On=1 / Off=2），關回去時還原
+static IME_PREV_MODE: AtomicI32 = AtomicI32::new(0);
+
+/// 在視窗執行緒（＝Unity 主執行緒）上開關輸入法。
+///
+/// 只用 Win32 `ImmAssociateContextEx` 不夠：Unity 下一幀就會依 `Input.imeCompositionMode`
+/// 把 context 拿掉（實測打開後下一個按鍵 `ImmGetContext` 就是空的）。所以主要靠 Unity 自己的
+/// API 設成 On，Win32 那步只是讓它立即生效。
+fn apply_ime(hwnd: HWND, wanted: bool) {
+    static GET_MODE: Lazy<usize> = Lazy::new(|| il2cpp_resolve_icall(
+        c"UnityEngine.Input::get_imeCompositionMode()".as_ptr()));
+    static SET_MODE: Lazy<usize> = Lazy::new(|| il2cpp_resolve_icall(
+        c"UnityEngine.Input::set_imeCompositionMode(UnityEngine.IMECompositionMode)".as_ptr()));
+    const IME_MODE_ON: i32 = 1;
+
+    let (get_mode, set_mode) = (*GET_MODE, *SET_MODE);
+    unsafe {
+        if wanted {
+            if IME_ENABLED_BY_US.swap(true, atomic::Ordering::AcqRel) {
+                return;
+            }
+            if get_mode != 0 && set_mode != 0 {
+                let get: extern "C" fn() -> i32 = std::mem::transmute(get_mode);
+                let set: extern "C" fn(i32) = std::mem::transmute(set_mode);
+                IME_PREV_MODE.store(get(), atomic::Ordering::Release);
+                set(IME_MODE_ON);
+            }
+            let ok = ImmAssociateContextEx(hwnd, HIMC(0), IACE_DEFAULT).as_bool();
+            debug!("IME: on (unity api={}, prev mode={}, win32={})",
+                set_mode != 0, IME_PREV_MODE.load(atomic::Ordering::Relaxed), ok);
+        }
+        else if IME_ENABLED_BY_US.swap(false, atomic::Ordering::AcqRel) {
+            if set_mode != 0 {
+                let set: extern "C" fn(i32) = std::mem::transmute(set_mode);
+                set(IME_PREV_MODE.load(atomic::Ordering::Acquire));
+            }
+            else {
+                ImmAssociateContext(hwnd, HIMC(0));
+            }
+            debug!("IME: restored");
+        }
+    }
+}
+
+/// 這則 WM_INPUT 是不是鍵盤。遊戲用 Unity 新版 Input System，它讀鍵盤走 Raw Input，
+/// 不經過我們已經攔下的 WM_KEYDOWN——所以 Hachimi 開著時要另外擋。
+fn is_raw_keyboard(lparam: LPARAM) -> bool {
+    let mut header = RAWINPUTHEADER::default();
+    let mut size = std::mem::size_of::<RAWINPUTHEADER>() as u32;
+    let read = unsafe {
+        GetRawInputData(HRAWINPUT(lparam.0), RID_HEADER, Some(&mut header as *mut _ as *mut _), &mut size,
+            std::mem::size_of::<RAWINPUTHEADER>() as u32)
+    };
+    read != u32::MAX && header.dwType == RIM_TYPEKEYBOARD.0
+}
+
 // Safety: only modified once on init
 static mut WNDPROC_ORIG: isize = 0;
 static mut WNDPROC_RECALL: usize = 0;
@@ -140,6 +222,15 @@ extern "system" fn wnd_proc(hwnd: HWND, umsg: c_uint, wparam: WPARAM, lparam: LP
             unsafe { _ = utils::set_window_topmost(hwnd, wparam.0 != 0); }
             return LRESULT(0);
         },
+        WM_HACHIMI_SET_IME => {
+            apply_ime(hwnd, wparam.0 != 0);
+            return LRESULT(0);
+        },
+        // Hachimi 選單／視窗開著時，鍵盤的 Raw Input 不給遊戲（否則打字會觸發遊戲的快捷鍵）。
+        // WM_INPUT 不交給原 wndproc 時仍要走 DefWindowProc 做清理。
+        WM_INPUT if Gui::is_consuming_input_atomic() && is_raw_keyboard(lparam) => {
+            return unsafe { DefWindowProcW(hwnd, umsg, wparam, lparam) };
+        },
         WM_CLOSE => {
             if let Some(hook) = Hachimi::instance().interceptor.unhook(wnd_proc as _) {
                 unsafe { WNDPROC_RECALL = hook.orig_addr; }
@@ -174,13 +265,18 @@ extern "system" fn wnd_proc(hwnd: HWND, umsg: c_uint, wparam: WPARAM, lparam: LP
     // IME 要在這條執行緒上處理——Imm* 是綁視窗執行緒的，丟到別的執行緒去問會拿到空字串。
     // 這裡取完字串才交給下面的處理執行緒。訊息**不能**往下傳給遊戲：轉出去的話
     // Windows 會為了組好的字再送一次 WM_CHAR，變成重複輸入。
+    // 先依到達順序排進佇列，再由拿到 GUI 鎖的那條執行緒整批照順序送出。以前一則訊息開一條執行緒
+    // 各自搶鎖，順序不保證：「送出」若比「開始組字」先到，egui 會把字丟掉。
     if input::is_ime_msg(umsg) {
         if let Some(ime) = input::read_ime_event(hwnd, umsg, lparam.0) {
-            std::thread::spawn(move || {
+            IME_QUEUE.lock().push(ime);
+            std::thread::spawn(|| {
                 let Some(mut gui) = Gui::instance().map(|m| m.lock().unwrap()) else {
                     return;
                 };
-                input::push_ime(&mut gui.input, ime);
+                for ime in IME_QUEUE.lock().drain(..) {
+                    input::push_ime(&mut gui.input, ime);
+                }
             });
         }
         return LRESULT(0);
