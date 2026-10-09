@@ -660,6 +660,22 @@ fn new_window<'a>(ctx: &egui::Context, title: impl Into<egui::WidgetText>) -> eg
     .resizable(false)
 }
 
+/// 技能稀有度的小標籤（白／金／繼承）；不知道稀有度就留一樣寬的空位，名稱才對得齊
+fn rarity_badge(ui: &mut egui::Ui, rarity: Option<i32>) {
+    let Some(rarity) = rarity else {
+        ui.add_space(34.0);
+        return;
+    };
+    let (text, fill) = super::skill_catalog::rarity_label(rarity);
+    egui::Frame::NONE
+    .fill(fill)
+    .corner_radius(egui::CornerRadius::same(3))
+    .inner_margin(egui::Margin::symmetric(4, 1))
+    .show(ui, |ui| {
+        ui.label(egui::RichText::new(text).small().color(egui::Color32::from_gray(235)));
+    });
+}
+
 /// 選單上的小標題
 fn menu_heading(ui: &mut egui::Ui, text: &str) {
     ui.add_space(6.0);
@@ -1141,12 +1157,27 @@ impl ConfigEditor {
         let active = config.auto_skill_active_profile;
         if let Some(profile) = config.auto_skill_profiles.get_mut(active) {
             ui.add_space(8.0);
-            ui.label(egui::RichText::new("主要清單").strong())
-                .on_hover_text("「從技能頁匯入」會把最後開過的技能頁上還沒學的技能加進來（已在清單的不重複）。");
-            Self::run_auto_skill_list(ui, "primary", &mut profile.primary);
-            ui.add_space(8.0);
-            ui.label(egui::RichText::new("次要清單").strong());
-            Self::run_auto_skill_list(ui, "secondary", &mut profile.secondary);
+            let primary = |ui: &mut egui::Ui, list: &mut Vec<String>| {
+                ui.label(egui::RichText::new("主要清單").strong())
+                    .on_hover_text("「從技能頁匯入」會把最後開過的技能頁上還沒學的技能加進來（已在清單的不重複）。");
+                Self::run_auto_skill_list(ui, "primary", list);
+            };
+            let secondary = |ui: &mut egui::Ui, list: &mut Vec<String>| {
+                ui.label(egui::RichText::new("次要清單").strong());
+                Self::run_auto_skill_list(ui, "secondary", list);
+            };
+            // 夠寬（獨立設定視窗）就左右並排，窄的時候上下排
+            if ui.available_width() >= 640.0 {
+                ui.columns(2, |cols| {
+                    primary(&mut cols[0], &mut profile.primary);
+                    secondary(&mut cols[1], &mut profile.secondary);
+                });
+            }
+            else {
+                primary(ui, &mut profile.primary);
+                ui.add_space(8.0);
+                secondary(ui, &mut profile.secondary);
+            }
         }
     }
 
@@ -1307,8 +1338,8 @@ impl ConfigEditor {
         });
     }
 
-    /// 一鍵學習的一份清單：一列一個技能，可上下移、刪除；可手動加一筆或從技能頁匯入。
-    /// `key` 區分主要／次要（各自的輸入框與匯入目標）。
+    /// 一鍵學習的一份清單：搜尋技能名稱加入（名稱和稀有度來自 master.mdb，見 skill_catalog）、
+    /// 拖 ≡ 排序、✕ 移除，或從技能頁匯入。`key` 區分主要／次要（各自的搜尋框、匯入目標、拖曳來源）。
     #[cfg(target_os = "windows")]
     fn run_auto_skill_list(ui: &mut egui::Ui, key: &'static str, list: &mut Vec<String>) {
         use crate::il2cpp::hook::umamusume::SingleModeSkillLearningViewController as auto_skill;
@@ -1336,7 +1367,9 @@ impl ConfigEditor {
         }
         list.retain(|s| !s.trim().is_empty());
 
-        let entry_id = ui.id().with(("auto_skill_entry", key));
+        let catalog = super::skill_catalog::get();
+        let query_id = ui.id().with(("auto_skill_query", key));
+
         ui.vertical(|ui| {
             ui.horizontal(|ui| {
                 if ui.button("從技能頁匯入").clicked() {
@@ -1355,38 +1388,96 @@ impl ConfigEditor {
                 }
             }
 
-            let mut action: Option<(usize, i32)> = None; // (index, -1 上移 / 1 下移 / 0 刪除)
-            egui::ScrollArea::vertical()
-                .id_salt(("auto_skill_list", key))
-                .max_height(200.0)
+            // 搜尋加入：打幾個字就列出相符的技能，點一下加入；Enter 加第一筆
+            let mut query = ui.data_mut(|d| d.get_temp::<String>(query_id)).unwrap_or_default();
+            let hint = if catalog.is_some() { "搜尋技能名稱，按 Enter 加入第一筆" } else { "技能清單載入中…（也可以直接輸入名稱）" };
+            let response = ui.add(egui::TextEdit::singleline(&mut query).hint_text(hint).desired_width(f32::INFINITY));
+            let enter = response.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter));
+            let q = query.trim().to_owned();
+            let mut add: Option<String> = None;
+            if !q.is_empty() {
+                let hits: Vec<&(String, i32)> = catalog
+                    .map(|c| c.search(&q, 12))
+                    .unwrap_or_default()
+                    .into_iter()
+                    .filter(|(name, _)| !list.iter().any(|s| s.trim() == name))
+                    .take(8)
+                    .collect();
+                egui::Frame::NONE
+                .fill(ui.visuals().extreme_bg_color)
+                .inner_margin(egui::Margin::same(4))
                 .show(ui, |ui| {
-                    for (i, name) in list.iter().enumerate() {
-                        ui.horizontal(|ui| {
-                            ui.label(format!("{}.", i + 1));
-                            // FontAwesome：arrow-up / arrow-down / times
-                            if ui.small_button("\u{f062}").clicked() { action = Some((i, -1)); }
-                            if ui.small_button("\u{f063}").clicked() { action = Some((i, 1)); }
-                            if ui.small_button("\u{f00d}").clicked() { action = Some((i, 0)); }
-                            ui.label(name);
-                        });
+                    for (name, rarity) in &hits {
+                        let clicked = ui.horizontal(|ui| {
+                            rarity_badge(ui, Some(*rarity));
+                            ui.add(egui::Button::selectable(false, name.as_str())).clicked()
+                        }).inner;
+                        if clicked {
+                            add = Some(name.clone());
+                        }
+                    }
+                    // 目錄裡找不到（或還沒載入）時，照字面加入，比對時以遊戲顯示的名稱為準
+                    let exact = catalog.is_some_and(|c| c.rarity(&q).is_some());
+                    if !exact && ui.button(format!("照字面加入「{q}」")).clicked() {
+                        add = Some(q.clone());
                     }
                 });
-            match action {
-                Some((i, 0)) => { list.remove(i); }
-                Some((i, -1)) if i > 0 => list.swap(i, i - 1),
-                Some((i, 1)) if i + 1 < list.len() => list.swap(i, i + 1),
-                _ => {}
-            }
-
-            ui.horizontal(|ui| {
-                let mut entry = ui.data_mut(|d| d.get_temp::<String>(entry_id)).unwrap_or_default();
-                ui.add(egui::TextEdit::singleline(&mut entry).hint_text("技能名稱或 ID").desired_width(120.0));
-                if ui.button("加入").clicked() && !entry.trim().is_empty() {
-                    list.push(entry.trim().to_owned());
-                    entry.clear();
+                if enter && add.is_none() {
+                    add = Some(hits.first().map(|(n, _)| n.clone()).unwrap_or_else(|| q.clone()));
                 }
-                ui.data_mut(|d| d.insert_temp(entry_id, entry));
-            });
+            }
+            if let Some(name) = add {
+                if !list.iter().any(|s| s.trim() == name) {
+                    list.push(name);
+                }
+                query.clear();
+                response.request_focus();
+            }
+            ui.data_mut(|d| d.insert_temp(query_id, query));
+
+            // 清單：拖 ≡ 排序，✕ 移除
+            let mut remove: Option<usize> = None;
+            let mut moved: Option<(usize, usize)> = None;
+            for (i, name) in list.iter().enumerate() {
+                let row = ui.horizontal(|ui| {
+                    ui.dnd_drag_source(ui.id().with(("auto_skill_drag", key, i)), (key, i), |ui| {
+                        ui.label(egui::RichText::new("≡").weak()).on_hover_cursor(egui::CursorIcon::Grab);
+                    });
+                    ui.label(egui::RichText::new(format!("{:>2}.", i + 1)).weak());
+                    rarity_badge(ui, catalog.and_then(|c| c.rarity(name)));
+                    ui.label(name);
+                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                        if ui.small_button("\u{f00d}").on_hover_text("移除").clicked() {
+                            remove = Some(i);
+                        }
+                    });
+                }).response;
+
+                // 放下的位置：只接受同一份清單拖來的
+                if let Some(payload) = row.dnd_hover_payload::<(&'static str, usize)>() {
+                    if payload.0 == key {
+                        let y = if payload.1 < i { row.rect.bottom() } else { row.rect.top() };
+                        ui.painter().hline(row.rect.x_range(), y, ui.visuals().selection.stroke);
+                    }
+                }
+                if let Some(payload) = row.dnd_release_payload::<(&'static str, usize)>() {
+                    if payload.0 == key {
+                        moved = Some((payload.1, i));
+                    }
+                }
+            }
+            if let Some(i) = remove {
+                list.remove(i);
+            }
+            else if let Some((from, to)) = moved {
+                if from != to && from < list.len() && to < list.len() {
+                    let item = list.remove(from);
+                    list.insert(to, item);
+                }
+            }
+            if list.is_empty() {
+                ui.label(egui::RichText::new("（還沒有技能）").weak());
+            }
         });
     }
 

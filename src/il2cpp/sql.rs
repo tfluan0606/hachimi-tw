@@ -178,6 +178,57 @@ struct SkillDataDescSlot {
     target_value: i32
 }
 
+/// 技能目錄裡「繼承固有」的稀有度代碼（skill_data 沒有這個值，是我們自己標的）
+pub const RARITY_INHERITED_UNIQUE: i32 = 100;
+
+/// 技能目錄（一鍵學習清單的搜尋用）：技能頁上買得到的技能，去重後的 (名稱, 稀有度)，依 id 順序。
+/// 只收白（rarity 1）、金（rarity 2）；固有本體（3～5）、進化（6）、負面的 × 技能都買不到，不收。
+/// 繼承固有在資料裡是 rarity 1、名稱和固有本體相同，標成 [`RARITY_INHERITED_UNIQUE`]。
+/// 呼叫遊戲的 SQLite（il2cpp），**只能在遊戲主執行緒呼叫**。
+pub fn load_skill_catalog() -> Vec<(String, i32)> {
+    let mut out: Vec<(String, i32)> = Vec::new();
+    let mut index: FnvHashMap<String, usize> = FnvHashMap::default();
+    let mut unique_names: std::collections::HashSet<String> = Default::default();
+
+    let conn = Connection::new();
+    if !Connection::Open(conn, get_masterdb_path().to_il2cpp_string(), ptr::null_mut(), ptr::null_mut(), 0) {
+        warn!("[skill_catalog] master.mdb 開不了（{}）", get_masterdb_path());
+        return out;
+    }
+    let sql = "SELECT s.id, s.rarity, t.text FROM skill_data s \
+        JOIN text_data t ON t.\"index\" = s.id AND t.category = 47 ORDER BY s.id";
+    let query = Connection::Query_orig(conn, sql.to_il2cpp_string());
+    if !query.is_null() {
+        while Query::Step(query) {
+            let rarity = Query::GetInt(query, 1);
+            let name = SkillDataDesc::get_data_text(query, 2).trim().to_owned();
+            if name.is_empty() {
+                continue;
+            }
+            if (3..=5).contains(&rarity) {
+                unique_names.insert(name);
+                continue;
+            }
+            if !(1..=2).contains(&rarity) || name.ends_with('×') {
+                continue;
+            }
+            if !index.contains_key(&name) {
+                index.insert(name.clone(), out.len());
+                out.push((name, rarity));
+            }
+        }
+        Query::Dispose_orig(query);
+    }
+    for (name, rarity) in out.iter_mut() {
+        if *rarity == 1 && unique_names.contains(name) {
+            *rarity = RARITY_INHERITED_UNIQUE;
+        }
+    }
+    Connection::CloseDB(conn);
+    info!("[skill_catalog] {} 個技能名稱", out.len());
+    out
+}
+
 impl SkillDataDesc {
     pub fn load_from_db() -> Self {
         let mut descs = FnvHashMap::default();
