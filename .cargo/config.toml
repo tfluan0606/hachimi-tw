@@ -1,0 +1,6 @@
+# C 執行階段（VCRUNTIME140.dll）直接編進 DLL。
+# 預設是動態連結，要求電腦裝有「Visual C++ 可轉散發套件」；遊戲本身（UnityPlayer.dll）不依賴它，
+# 所以能玩遊戲不代表有裝。沒裝的電腦上 version.dll 載入失敗，連遊戲都開不起來。
+# cc 編的 C 程式碼（minhook 等）會跟著這個 target feature 改用 /MT。
+[target.x86_64-pc-windows-msvc]
+rustflags = ["-C", "target-feature=+crt-static"]

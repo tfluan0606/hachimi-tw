@@ -47,7 +47,17 @@ jobs:
           cargo run --locked -p blake3json --release -- out/version.dll -o out/blake3.json
           Get-Content out/blake3.json
 
+      # 說明會顯示在遊戲內的「發現新版本」詢問視窗裡：有 release-notes/<tag>.md 就用它，
+      # 沒有才讓 GitHub 自動產生（直接推 main、沒有 PR 時只會有一行比較連結）
       - name: 開 release
+        shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "${{ github.ref_name }}" out/version.dll out/blake3.json --title "${{ github.ref_name }}" --generate-notes
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $notes = "release-notes/$tag.md"
+          if (Test-Path $notes) {
+            gh release create $tag out/version.dll out/blake3.json --title $tag --notes-file $notes
+          } else {
+            gh release create $tag out/version.dll out/blake3.json --title $tag --generate-notes
+          }
