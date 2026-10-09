@@ -5,15 +5,13 @@ use once_cell::sync::Lazy;
 use widestring::U16CString;
 use windows::{core::{w, PCWSTR}, Win32::{
     Foundation::{HWND, LPARAM, LRESULT, WPARAM},
-    Globalization::HIMC,
-    UI::Input::Ime::{ImmAssociateContext, ImmAssociateContextEx, IACE_DEFAULT},
-    UI::Input::{GetRawInputData, HRAWINPUT, RAWINPUTHEADER, RID_HEADER, RIM_TYPEKEYBOARD},
+    UI::Input::Ime::{ImmAssociateContext, ImmAssociateContextEx, HIMC, IACE_DEFAULT},
     System::Threading::GetCurrentThreadId,
     UI::Input::KeyboardAndMouse::{GetKeyNameTextW, MapVirtualKeyW, MAPVK_VK_TO_VSC},
     UI::WindowsAndMessaging::{
         CallNextHookEx, DefWindowProcW, FindWindowW, GetWindowLongPtrW, GetWindowTextLengthW, GetWindowTextW,
         PostMessageW, SetWindowsHookExW, SetWindowTextW, UnhookWindowsHookEx, GWLP_WNDPROC, HCBT_MINMAX, HHOOK,
-        SW_RESTORE, WH_CBT, WM_APP, WM_CLOSE, WM_INPUT, WM_KEYDOWN, WM_SYSKEYDOWN, WM_SIZE, WNDPROC
+        SW_RESTORE, WH_CBT, WM_APP, WM_CLOSE, WM_INPUT, WM_KEYDOWN, WM_SYSKEYDOWN, WM_SYSKEYUP, WM_SIZE, WNDPROC
     }
 }};
 
@@ -34,6 +32,8 @@ struct WndProcCall {
     wparam: WPARAM,
     lparam: LPARAM
 }
+// windows 0.62 起 HWND 包的是裸指標（不是 Send）；這裡只是把視窗訊息暫存起來，之後在同一個視窗上重送
+unsafe impl Send for WndProcCall {}
 
 // WM_SIZE 放行閘門。啟動極早期（第一次 Present 前）先緩衝 WM_SIZE，避免早期 init 出問題；
 // 一旦開始 Present 就永久放行並補送緩衝內容。
@@ -107,7 +107,7 @@ pub fn key_display_name(vk: u16) -> String {
 
 static TARGET_HWND: AtomicIsize = AtomicIsize::new(0);
 pub fn get_target_hwnd() -> HWND {
-    HWND(TARGET_HWND.load(atomic::Ordering::Relaxed))
+    HWND(TARGET_HWND.load(atomic::Ordering::Relaxed) as *mut _)
 }
 
 /// GUI 的輸入框有沒有焦點（上一次送出的狀態，避免每幀都 post）
@@ -124,8 +124,8 @@ pub fn set_ime_wanted(wanted: bool) {
         return;
     }
     let hwnd = get_target_hwnd();
-    if hwnd.0 != 0 {
-        unsafe { _ = PostMessageW(hwnd, WM_HACHIMI_SET_IME, WPARAM(wanted as usize), LPARAM(0)); }
+    if !hwnd.is_invalid() {
+        unsafe { _ = PostMessageW(Some(hwnd), WM_HACHIMI_SET_IME, WPARAM(wanted as usize), LPARAM(0)); }
     }
 }
 
@@ -156,7 +156,7 @@ fn apply_ime(hwnd: HWND, wanted: bool) {
                 IME_PREV_MODE.store(get(), atomic::Ordering::Release);
                 set(IME_MODE_ON);
             }
-            let ok = ImmAssociateContextEx(hwnd, HIMC(0), IACE_DEFAULT).as_bool();
+            let ok = ImmAssociateContextEx(hwnd, HIMC::default(), IACE_DEFAULT).as_bool();
             debug!("IME: on (unity api={}, prev mode={}, win32={})",
                 set_mode != 0, IME_PREV_MODE.load(atomic::Ordering::Relaxed), ok);
         }
@@ -166,23 +166,11 @@ fn apply_ime(hwnd: HWND, wanted: bool) {
                 set(IME_PREV_MODE.load(atomic::Ordering::Acquire));
             }
             else {
-                ImmAssociateContext(hwnd, HIMC(0));
+                ImmAssociateContext(hwnd, HIMC::default());
             }
             debug!("IME: restored");
         }
     }
-}
-
-/// 這則 WM_INPUT 是不是鍵盤。遊戲用 Unity 新版 Input System，它讀鍵盤走 Raw Input，
-/// 不經過我們已經攔下的 WM_KEYDOWN——所以 Hachimi 開著時要另外擋。
-fn is_raw_keyboard(lparam: LPARAM) -> bool {
-    let mut header = RAWINPUTHEADER::default();
-    let mut size = std::mem::size_of::<RAWINPUTHEADER>() as u32;
-    let read = unsafe {
-        GetRawInputData(HRAWINPUT(lparam.0), RID_HEADER, Some(&mut header as *mut _ as *mut _), &mut size,
-            std::mem::size_of::<RAWINPUTHEADER>() as u32)
-    };
-    read != u32::MAX && header.dwType == RIM_TYPEKEYBOARD.0
 }
 
 // Safety: only modified once on init
@@ -226,9 +214,10 @@ extern "system" fn wnd_proc(hwnd: HWND, umsg: c_uint, wparam: WPARAM, lparam: LP
             apply_ime(hwnd, wparam.0 != 0);
             return LRESULT(0);
         },
-        // Hachimi 選單／視窗開著時，鍵盤的 Raw Input 不給遊戲（否則打字會觸發遊戲的快捷鍵）。
+        // Hachimi 選單／視窗開著時，Raw Input（鍵盤、滑鼠）不給遊戲：遊戲用新版 Input System，
+        // 讀鍵盤滑鼠走這條，不經過我們已攔下的 WM_KEYDOWN / WM_MOUSEMOVE。
         // WM_INPUT 不交給原 wndproc 時仍要走 DefWindowProc 做清理。
-        WM_INPUT if Gui::is_consuming_input_atomic() && is_raw_keyboard(lparam) => {
+        WM_INPUT if Gui::is_consuming_input_atomic() => {
             return unsafe { DefWindowProcW(hwnd, umsg, wparam, lparam) };
         },
         WM_CLOSE => {
@@ -284,6 +273,11 @@ extern "system" fn wnd_proc(hwnd: HWND, umsg: c_uint, wparam: WPARAM, lparam: LP
 
     // Check if the input processor handles this message
     if !input::is_handled_msg(umsg) {
+        // GUI 開著時，我們不處理的輸入訊息（觸控、Pointer、滑鼠懸停／離開、其他按鍵訊息）
+        // 也不給遊戲。走 DefWindowProc：Pointer 訊息會被轉成一般滑鼠訊息再回到這裡被攔下。
+        if is_game_input_msg(umsg) {
+            return unsafe { DefWindowProcW(hwnd, umsg, wparam, lparam) };
+        }
         return unsafe { orig_fn(hwnd, umsg, wparam, lparam) };
     }
 
@@ -295,14 +289,28 @@ extern "system" fn wnd_proc(hwnd: HWND, umsg: c_uint, wparam: WPARAM, lparam: LP
             return;
         };
 
-        let zoom_factor = gui.context.zoom_factor();
-        input::process(&mut gui.input, zoom_factor, umsg, wparam.0, lparam.0);
+        let pixels_per_point = gui.context.pixels_per_point();
+        input::process(&mut gui.input, pixels_per_point, umsg, wparam.0, lparam.0);
     });
 
+    // 系統按鍵交給 DefWindowProc，Alt+F4 才關得掉遊戲（不會經過遊戲本身的 wndproc）
+    if matches!(umsg, WM_SYSKEYDOWN | WM_SYSKEYUP) {
+        return unsafe { DefWindowProcW(hwnd, umsg, wparam, lparam) };
+    }
     LRESULT(0)
 }
 
-static mut HCBTHOOK: HHOOK = HHOOK(0);
+/// 遊戲讀得到的輸入訊息（GUI 開著時一律不給遊戲）
+fn is_game_input_msg(umsg: c_uint) -> bool {
+    matches!(umsg,
+        0x0100..=0x0109 |   // WM_KEYFIRST..WM_KEYLAST
+        0x0200..=0x020E |   // WM_MOUSEFIRST..WM_MOUSELAST
+        0x0240..=0x024F |   // WM_TOUCH、WM_POINTER*
+        0x02A1 | 0x02A3     // WM_MOUSEHOVER、WM_MOUSELEAVE
+    )
+}
+
+static mut HCBTHOOK: HHOOK = HHOOK(std::ptr::null_mut());
 extern "system" fn cbt_proc(ncode: i32, wparam: WPARAM, lparam: LPARAM) -> LRESULT {
     if ncode == HCBT_MINMAX as i32 &&
         lparam.0 as i32 != SW_RESTORE.0 &&
@@ -312,7 +320,7 @@ extern "system" fn cbt_proc(ncode: i32, wparam: WPARAM, lparam: LPARAM) -> LRESU
         return LRESULT(1);
     }
 
-    unsafe { CallNextHookEx(HCBTHOOK, ncode, wparam, lparam) }
+    unsafe { CallNextHookEx(Some(HCBTHOOK), ncode, wparam, lparam) }
 }
 
 /// wndproc + CBT hook 只裝一次的閘門。
@@ -324,7 +332,7 @@ pub fn init() {
     // 那才是最可靠的來源。遊戲更新後視窗標題／建立時序改變，FindWindowW 會失效（＝之前的
     // 「Failed to find game window」，連帶 overlay 因 TARGET_HWND=0 而完全不渲染）。
     let hwnd = find_window_by_title();
-    if hwnd.0 != 0 {
+    if !hwnd.is_invalid() {
         ensure_installed(hwnd);
     }
     else {
@@ -344,14 +352,14 @@ fn find_window_by_title() -> HWND {
     else {
         w!("umamusume")
     };
-    unsafe { FindWindowW(w!("UnityWndClass"), window_name) }
+    unsafe { FindWindowW(w!("UnityWndClass"), window_name) }.unwrap_or_default()
 }
 
 /// 記住目標視窗並裝上 wndproc + CBT hook。**冪等**——只有第一次真正執行。
 /// 由 [`init`] 早期嘗試，或（更可靠地）由 render_hook 首次 Present 用 swapchain 的
 /// OutputWindow 呼叫。
 pub fn ensure_installed(hwnd: HWND) {
-    if hwnd.0 == 0 {
+    if hwnd.is_invalid() {
         return;
     }
     if INSTALLED.swap(true, atomic::Ordering::AcqRel) {
@@ -359,7 +367,7 @@ pub fn ensure_installed(hwnd: HWND) {
     }
     unsafe {
         let hachimi = Hachimi::instance();
-        TARGET_HWND.store(hwnd.0, atomic::Ordering::Relaxed);
+        TARGET_HWND.store(hwnd.0 as isize, atomic::Ordering::Relaxed);
 
         info!("Hooking WndProc");
         let wnd_proc_addr = GetWindowLongPtrW(hwnd, GWLP_WNDPROC);
@@ -375,7 +383,7 @@ pub fn ensure_installed(hwnd: HWND) {
 
         // Apply always on top（同樣不能在這條執行緒上直接做，見 apply_custom_title）
         if hachimi.window_always_on_top.load(atomic::Ordering::Relaxed) {
-            _ = PostMessageW(hwnd, WM_HACHIMI_APPLY_TOPMOST, WPARAM(1), LPARAM(0));
+            _ = PostMessageW(Some(hwnd), WM_HACHIMI_APPLY_TOPMOST, WPARAM(1), LPARAM(0));
         }
     }
 
@@ -411,11 +419,11 @@ fn read_window_title(hwnd: HWND) -> Option<String> {
 /// 所以裝 hook 一定走 Present 那條路，一定會踩到。
 pub fn apply_custom_title() {
     let hwnd = get_target_hwnd();
-    if hwnd.0 == 0 {
+    if hwnd.is_invalid() {
         return;
     }
     unsafe {
-        _ = PostMessageW(hwnd, WM_HACHIMI_APPLY_TITLE, WPARAM(0), LPARAM(0));
+        _ = PostMessageW(Some(hwnd), WM_HACHIMI_APPLY_TITLE, WPARAM(0), LPARAM(0));
     }
 }
 
@@ -448,12 +456,12 @@ fn apply_custom_title_now(hwnd: HWND) {
 
 pub fn uninit() {
     unsafe {
-        if HCBTHOOK.0 != 0 {
+        if !HCBTHOOK.is_invalid() {
             info!("Removing CBT hook");
             if let Err(e) = UnhookWindowsHookEx(HCBTHOOK) {
                 error!("Failed to remove CBT hook: {}", e);
             }
-            HCBTHOOK = HHOOK(0);
+            HCBTHOOK = HHOOK(std::ptr::null_mut());
         }
     }
 }

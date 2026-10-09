@@ -1,7 +1,7 @@
 use std::os::raw::{c_ulong, c_void};
 
 use widestring::U16CString;
-use windows::{core::PCWSTR, Win32::{Foundation::{BOOL, HMODULE, TRUE}, System::LibraryLoader::LoadLibraryW}};
+use windows::{core::{BOOL, PCWSTR}, Win32::{Foundation::{HMODULE, TRUE}, System::LibraryLoader::LoadLibraryW}};
 
 use crate::{core::{plugin_api::Plugin, Hachimi}, windows::utils};
 

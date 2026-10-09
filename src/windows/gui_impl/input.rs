@@ -1,5 +1,5 @@
 // Originally from sy1ntexx/egui-d3d11
-use egui::{Event, Key, Modifiers, PointerButton, Pos2, RawInput, Vec2};
+use egui::{Event, ImeEvent, Key, Modifiers, MouseWheelUnit, PointerButton, Pos2, RawInput, TouchPhase, Vec2};
 
 use windows::Win32::{
     Foundation::{HGLOBAL, HWND},
@@ -43,15 +43,15 @@ pub enum InputResult {
     Key,
 }
 
-pub fn process(input: &mut RawInput, zoom_factor: f32, umsg: u32, wparam: usize, lparam: isize) -> InputResult {
+pub fn process(input: &mut RawInput, pixels_per_point: f32, umsg: u32, wparam: usize, lparam: isize) -> InputResult {
     match umsg {
         WM_MOUSEMOVE => {
-            input.events.push(Event::PointerMoved(get_pos(lparam) / zoom_factor));
+            input.events.push(Event::PointerMoved(get_pos(lparam) / pixels_per_point));
             InputResult::MouseMove
         }
         WM_LBUTTONDOWN | WM_LBUTTONDBLCLK => {
             input.events.push(Event::PointerButton {
-                pos: get_pos(lparam) / zoom_factor,
+                pos: get_pos(lparam) / pixels_per_point,
                 button: PointerButton::Primary,
                 pressed: true,
                 modifiers: get_modifiers(wparam),
@@ -60,7 +60,7 @@ pub fn process(input: &mut RawInput, zoom_factor: f32, umsg: u32, wparam: usize,
         }
         WM_LBUTTONUP => {
             input.events.push(Event::PointerButton {
-                pos: get_pos(lparam) / zoom_factor,
+                pos: get_pos(lparam) / pixels_per_point,
                 button: PointerButton::Primary,
                 pressed: false,
                 modifiers: get_modifiers(wparam),
@@ -69,7 +69,7 @@ pub fn process(input: &mut RawInput, zoom_factor: f32, umsg: u32, wparam: usize,
         }
         WM_RBUTTONDOWN | WM_RBUTTONDBLCLK => {
             input.events.push(Event::PointerButton {
-                pos: get_pos(lparam) / zoom_factor,
+                pos: get_pos(lparam) / pixels_per_point,
                 button: PointerButton::Secondary,
                 pressed: true,
                 modifiers: get_modifiers(wparam),
@@ -78,7 +78,7 @@ pub fn process(input: &mut RawInput, zoom_factor: f32, umsg: u32, wparam: usize,
         }
         WM_RBUTTONUP => {
             input.events.push(Event::PointerButton {
-                pos: get_pos(lparam) / zoom_factor,
+                pos: get_pos(lparam) / pixels_per_point,
                 button: PointerButton::Secondary,
                 pressed: false,
                 modifiers: get_modifiers(wparam),
@@ -87,7 +87,7 @@ pub fn process(input: &mut RawInput, zoom_factor: f32, umsg: u32, wparam: usize,
         }
         WM_MBUTTONDOWN | WM_MBUTTONDBLCLK => {
             input.events.push(Event::PointerButton {
-                pos: get_pos(lparam) / zoom_factor,
+                pos: get_pos(lparam) / pixels_per_point,
                 button: PointerButton::Middle,
                 pressed: true,
                 modifiers: get_modifiers(wparam),
@@ -96,7 +96,7 @@ pub fn process(input: &mut RawInput, zoom_factor: f32, umsg: u32, wparam: usize,
         }
         WM_MBUTTONUP => {
             input.events.push(Event::PointerButton {
-                pos: get_pos(lparam) / zoom_factor,
+                pos: get_pos(lparam) / pixels_per_point,
                 button: PointerButton::Middle,
                 pressed: false,
                 modifiers: get_modifiers(wparam),
@@ -118,7 +118,7 @@ pub fn process(input: &mut RawInput, zoom_factor: f32, umsg: u32, wparam: usize,
                 input.events.push(Event::Zoom(if delta > 0. { 1.5 } else { 0.5 }));
                 InputResult::Zoom
             } else {
-                input.events.push(Event::Scroll(Vec2::new(0., delta)));
+                input.events.push(wheel_event(Vec2::new(0., delta), wparam));
                 InputResult::Scroll
             }
         }
@@ -129,7 +129,7 @@ pub fn process(input: &mut RawInput, zoom_factor: f32, umsg: u32, wparam: usize,
                 input.events.push(Event::Zoom(if delta > 0. { 1.5 } else { 0.5 }));
                 InputResult::Zoom
             } else {
-                input.events.push(Event::Scroll(Vec2::new(delta, 0.)));
+                input.events.push(wheel_event(Vec2::new(delta, 0.), wparam));
                 InputResult::Scroll
             }
         }
@@ -212,7 +212,7 @@ pub fn read_ime_event(hwnd: HWND, umsg: u32, lparam: isize) -> Option<ImeInput> 
 fn get_composition_string(hwnd: HWND, index: IME_COMPOSITION_STRING) -> Option<String> {
     unsafe {
         let himc = ImmGetContext(hwnd);
-        if himc.0 == 0 {
+        if himc.is_invalid() {
             return None;
         }
 
@@ -237,11 +237,23 @@ fn get_composition_string(hwnd: HWND, index: IME_COMPOSITION_STRING) -> Option<S
 }
 
 pub fn push_ime(input: &mut RawInput, ime: ImeInput) {
-    input.events.push(match ime {
-        ImeInput::Start => Event::CompositionStart,
-        ImeInput::Update(text) => Event::CompositionUpdate(text),
-        ImeInput::Commit(text) => Event::CompositionEnd(text)
-    });
+    // egui 0.35 不再需要「開始組字」事件：Preedit 非空＝組字中，空字串＝取消
+    let event = match ime {
+        ImeInput::Start => return,
+        ImeInput::Update(text) => ImeEvent::Preedit { text, active_range_chars: None },
+        ImeInput::Commit(text) => ImeEvent::Commit(text)
+    };
+    input.events.push(Event::Ime(event));
+}
+
+/// 滾輪。舊版的 `Event::Scroll` 單位就是 point，沿用同樣的位移量。
+fn wheel_event(delta: Vec2, wparam: usize) -> Event {
+    Event::MouseWheel {
+        unit: MouseWheelUnit::Point,
+        delta,
+        phase: TouchPhase::Move,
+        modifiers: get_modifiers(wparam)
+    }
 }
 
 pub fn is_ime_msg(umsg: u32) -> bool {
@@ -318,7 +330,7 @@ fn get_key(wparam: usize) -> Option<Key> {
 /// 中文不是合法 UTF-8，以前整段解碼失敗就貼不上。
 fn get_clipboard_text() -> Option<String> {
     unsafe {
-        OpenClipboard(HWND::default()).ok()?;
+        OpenClipboard(None).ok()?;
         let data = GetClipboardData(CF_UNICODETEXT.0 as u32).ok().and_then(|handle| {
             let ptr = GlobalLock(HGLOBAL(handle.0 as _)) as *const u16;
             if ptr.is_null() {

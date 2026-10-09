@@ -262,7 +262,7 @@ pub fn cleanup_old_dll() {
 
 fn current_dll_path() -> Result<PathBuf, Error> {
     let mut buf = [0u16; MAX_PATH as usize];
-    let len = unsafe { GetModuleFileNameW(DLL_HMODULE, &mut buf) } as usize;
+    let len = unsafe { GetModuleFileNameW(Some(DLL_HMODULE), &mut buf) } as usize;
     if len == 0 || len >= buf.len() {
         return Err(Error::RuntimeError("Failed to get current DLL path".to_owned()));
     }

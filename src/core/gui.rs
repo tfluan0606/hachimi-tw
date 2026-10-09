@@ -24,7 +24,7 @@ macro_rules! add_font {
     ($fonts:expr, $family_fonts:expr, $filename:literal) => {
         $fonts.font_data.insert(
             $filename.to_owned(),
-            egui::FontData::from_static(include_bytes!(concat!("../../assets/fonts/", $filename)))
+            std::sync::Arc::new(egui::FontData::from_static(include_bytes!(concat!("../../assets/fonts/", $filename))))
         );
         $family_fonts.push($filename.to_owned());
     };
@@ -83,7 +83,7 @@ impl Gui {
         let mut style = egui::Style::default();
         style.spacing.button_padding = egui::Vec2::new(8.0, 5.0);
         style.interaction.selectable_labels = false;
-        context.set_style(style);
+        context.set_global_style(style);
 
         let mut visuals = egui::Visuals::dark();
         visuals.panel_fill = BACKGROUND_COLOR;
@@ -151,18 +151,19 @@ impl Gui {
     pub fn set_screen_size(&mut self, width: i32, height: i32) {
         let main_axis_size = if width < height { width } else { height };
         // 每幀都會走到這裡，所以縮放直接乘進來就能即時生效，不必額外記狀態。
-        // 乘在 pixels_per_point 上而不是縮放 Style，連 screen_rect 和 input.rs 換算滑鼠座標
-        // 用的 zoom_factor 都會跟著對，不會出現「畫面放大了但點擊位置沒跟著」。
+        //
+        // 倍率當成「螢幕 DPI」（native_pixels_per_point）給 egui，zoom_factor 維持 1。
+        // 不能用 set_pixels_per_point：那會換算成 zoom_factor，而 egui-directx11 0.13 畫頂點時
+        // pixels_per_point 和 zoom_factor 各乘一次，縮放被套兩次（畫面放大、字糊、滑鼠對不準）。
+        // input.rs 換算滑鼠座標也用同一個 pixels_per_point。
         let gui_scale = Hachimi::instance().config.load().gui_scale.clamp(0.5, 3.0);
         let pixels_per_point = main_axis_size as f32 * PIXELS_PER_POINT_RATIO * gui_scale;
-        self.context.set_pixels_per_point(pixels_per_point);
+        self.input.viewports.entry(egui::ViewportId::ROOT).or_default().native_pixels_per_point =
+            Some(pixels_per_point);
 
         self.input.screen_rect = Some(egui::Rect {
             min: egui::Pos2::default(),
-            max: egui::Pos2::new(
-                width as f32 / self.context.pixels_per_point(),
-                height as f32 / self.context.pixels_per_point()
-            )
+            max: egui::Pos2::new(width as f32 / pixels_per_point, height as f32 / pixels_per_point)
         });
 
         self.prev_main_axis_size = main_axis_size;
@@ -190,9 +191,19 @@ impl Gui {
         self.update_fps();
         let input = self.take_input();
 
-        self.context.begin_frame(input);
-        
-        if self.menu_visible { self.run_menu(); }
+        self.context.begin_pass(input);
+
+        if self.menu_visible {
+            // egui 0.35 的 Panel 只能放在 Ui 裡；照 Context::run_ui 的做法建一個蓋滿畫面的根 Ui
+            let mut root_ui = egui::Ui::new(
+                self.context.clone(),
+                egui::Id::new("hachimi_root_ui"),
+                egui::UiBuilder::new()
+                    .layer_id(egui::LayerId::background())
+                    .max_rect(self.context.viewport_rect()),
+            );
+            self.run_menu(&mut root_ui);
+        }
 
         self.run_windows();
         self.run_notifications();
@@ -204,9 +215,9 @@ impl Gui {
 
         // 輸入框有焦點時替遊戲視窗打開輸入法（Unity 平常會把它關掉）
         #[cfg(target_os = "windows")]
-        crate::windows::wnd_hook::set_ime_wanted(self.context.wants_keyboard_input());
+        crate::windows::wnd_hook::set_ime_wanted(self.context.egui_wants_keyboard_input());
 
-        self.context.end_frame()
+        self.context.end_pass()
     }
 
     const ICON_IMAGE: egui::ImageSource<'static> = egui::include_image!("../../assets/icon.png");
@@ -236,9 +247,9 @@ impl Gui {
             y: 16.0
         })
         .show(ctx, |ui| {
-            egui::Frame::none()
+            egui::Frame::NONE
             .fill(BACKGROUND_COLOR)
-            .inner_margin(egui::Margin::same(10.0))
+            .inner_margin(egui::Margin::same(10))
             .show(ui, |ui| {
                 ui.horizontal(|ui| {
                     ui.add(Self::icon());
@@ -251,13 +262,14 @@ impl Gui {
         });
     }
 
-    fn run_menu(&mut self) {
-        let ctx = &self.context;
+    fn run_menu(&mut self, root_ui: &mut egui::Ui) {
+        let ctx = &self.context.clone();
         let hachimi = Hachimi::instance();
 
         let mut show_notification: Option<Cow<'_, str>> = None;
         let mut show_window: Option<BoxedWindow> = None;
-        egui::SidePanel::left("hachimi_menu").show_animated(ctx, self.show_menu, |ui| {
+        let mut show_menu = self.show_menu;
+        egui::Panel::left("hachimi_menu").show_collapsible(root_ui, &mut show_menu, |ui| {
             ui.with_layout(egui::Layout::top_down_justified(egui::Align::TOP), |ui| {
                 // ASKR 牛逼！banner
                 ui.vertical_centered(|ui| {
@@ -484,7 +496,7 @@ impl Gui {
 
         if !self.show_menu {
             if let Some(time) = self.menu_anim_time {
-                if time.elapsed().as_secs_f32() >= ctx.style().animation_time {
+                if time.elapsed().as_secs_f32() >= ctx.global_style().animation_time {
                     self.menu_visible = false;
                 }
             }
@@ -543,7 +555,7 @@ impl Gui {
 
     fn run_combo<T: PartialEq + Copy>(
         ui: &mut egui::Ui,
-        id_child: impl std::hash::Hash,
+        id_child: impl std::hash::Hash + std::fmt::Debug,
         value: &mut T,
         choices: &[(T, &str)]
     ) -> bool {
@@ -669,7 +681,7 @@ impl TweenInOutWithDelay {
 
 // quick n dirty random id generator
 fn random_id() -> egui::Id {
-    egui::Id::new(egui::epaint::ahash::RandomState::new().hash_one(0))
+    egui::Id::new(std::hash::BuildHasher::hash_one(&std::collections::hash_map::RandomState::new(), 0))
 }
 
 struct Notification {
@@ -702,9 +714,9 @@ impl Notification {
             )
         )
         .show(ctx, |ui| {
-            egui::Frame::none()
+            egui::Frame::NONE
             .fill(BACKGROUND_COLOR)
-            .inner_margin(egui::Margin::symmetric(10.0, 8.0))
+            .inner_margin(egui::Margin::symmetric(10, 8))
             .show(ui, |ui| {
                 ui.set_width(Self::WIDTH);
                 ui.label(&self.content);
@@ -723,7 +735,7 @@ pub trait Window {
 // Shared window creation function
 fn new_window<'a>(ctx: &egui::Context, title: impl Into<egui::WidgetText>) -> egui::Window<'a> {
     // 遊戲視窗很窄（直式）或介面縮放調大時，固定尺寸會超出畫面；上限跟著畫面大小走
-    let screen = ctx.screen_rect();
+    let screen = ctx.content_rect();
     egui::Window::new(title)
     .pivot(egui::Align2::CENTER_CENTER)
     .fixed_pos(screen.max / 2.0)
@@ -735,8 +747,8 @@ fn new_window<'a>(ctx: &egui::Context, title: impl Into<egui::WidgetText>) -> eg
 
 fn simple_window_layout(ui: &mut egui::Ui, id: egui::Id, add_contents: impl FnOnce(&mut egui::Ui), add_buttons: impl FnOnce(&mut egui::Ui)) {
     add_contents(ui);
-    egui::TopBottomPanel::bottom(id.with("bottom_panel"))
-    .show_inside(ui, |ui| {
+    egui::Panel::bottom(id.with("bottom_panel"))
+    .show(ui, |ui| {
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Min), add_buttons)
     });
 }
@@ -971,7 +983,7 @@ impl ConfigEditor {
         }
 
         ui.vertical(|ui| {
-            egui::ComboBox::from_id_source("auto_skill_profile")
+            egui::ComboBox::from_id_salt("auto_skill_profile")
                 .width(140.0)
                 .selected_text(profiles[*active].name.clone())
                 .show_ui(ui, |ui| {
@@ -1055,7 +1067,7 @@ impl ConfigEditor {
 
             let mut action: Option<(usize, i32)> = None; // (index, -1 上移 / 1 下移 / 0 刪除)
             egui::ScrollArea::vertical()
-                .id_source(("auto_skill_list", key))
+                .id_salt(("auto_skill_list", key))
                 .max_height(200.0)
                 .show(ui, |ui| {
                     for (i, name) in list.iter().enumerate() {
@@ -1330,16 +1342,16 @@ impl Window for ConfigEditor {
             simple_window_layout(ui, self.id,
                 |ui| {
                     egui::ScrollArea::horizontal()
-                    .id_source("tabs_scroll")
+                    .id_salt("tabs_scroll")
                     .show(ui, |ui| {
                         ui.horizontal(|ui| {
                             let style = ui.style_mut();
                             style.spacing.button_padding = egui::vec2(8.0, 5.0);
                             style.spacing.item_spacing = egui::Vec2::ZERO;
                             let widgets = &mut style.visuals.widgets;
-                            widgets.inactive.rounding = egui::Rounding::ZERO;
-                            widgets.hovered.rounding = egui::Rounding::ZERO;
-                            widgets.active.rounding = egui::Rounding::ZERO;
+                            widgets.inactive.corner_radius = egui::CornerRadius::ZERO;
+                            widgets.hovered.corner_radius = egui::CornerRadius::ZERO;
+                            widgets.active.corner_radius = egui::CornerRadius::ZERO;
 
                             for (tab, label) in ConfigEditorTab::display_list() {
                                 if ui.selectable_label(self.current_tab == tab, label.as_ref()).clicked() {
@@ -1353,10 +1365,10 @@ impl Window for ConfigEditor {
 
                     // 雙向捲動：內容比視窗寬時在裡面橫捲，而不是把視窗撐出畫面
                     egui::ScrollArea::both()
-                    .id_source("body_scroll")
+                    .id_salt("body_scroll")
                     .show(ui, |ui| {
-                        egui::Frame::none()
-                        .inner_margin(egui::Margin::symmetric(8.0, 0.0))
+                        egui::Frame::NONE
+                        .inner_margin(egui::Margin::symmetric(8, 0))
                         .show(ui, |ui| {
                             egui::Grid::new(self.id.with("options_grid"))
                             .striped(true)

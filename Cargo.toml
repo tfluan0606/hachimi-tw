@@ -34,9 +34,11 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 fnv = "1.0"
 widestring = "1.1"
-egui = { version = "0.27", default-features = false }
-egui_extras = { version = "0.27", default-features = false, features = ["image"] }
+egui = { version = "0.35", default-features = false }
+egui_extras = { version = "0.35", default-features = false, features = ["image"] }
 image = { version = "0.24", default-features = false, features = ["png"] }
+# egui_extras 0.35 用 image 0.25 且關掉預設功能，不開 png 的話選單圖示全部載入失敗（紅色三角形）
+image025 = { package = "image", version = "0.25", default-features = false, features = ["png"] }
 png = "0.17"
 sqlparser = "0.43"
 textwrap = "0.16"
@@ -73,11 +75,11 @@ factor-card = { path = "crates/factor-card" }
 windebug_logger = "0.1"
 minhook = "0.5"
 discord-rich-presence = "1.0"
-egui-directx11 = "0.4"
+egui-directx11 = "0.13"
 pelite = "0.10"
 
 [target.'cfg(target_os = "windows")'.dependencies.windows]
-version = "0.56"
+version = "0.62"
 features = [
     "Win32_System_LibraryLoader",
     "Win32_System_Memory",

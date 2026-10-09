@@ -5,7 +5,7 @@ use once_cell::sync::OnceCell;
 use windows::{
     core::{w, Interface, HRESULT},
     Win32::{
-        Foundation::{HWND, LPARAM, LRESULT, RECT, WPARAM}, Graphics::{
+        Foundation::{HMODULE, HWND, LPARAM, LRESULT, RECT, WPARAM}, Graphics::{
             Direct3D::{D3D_DRIVER_TYPE_HARDWARE, D3D_FEATURE_LEVEL, D3D_FEATURE_LEVEL_11_0},
             Direct3D11::{D3D11CreateDeviceAndSwapChain, ID3D11Device, D3D11_CREATE_DEVICE_FLAG, D3D11_SDK_VERSION},
             Dxgi::{
@@ -28,20 +28,17 @@ use super::d3d11_painter::D3D11Painter;
 
 fn check_hwnd(this: *mut c_void) -> HWND {
     let swap_chain = unsafe { IDXGISwapChain::from_raw(this) };
-    let mut desc = DXGI_SWAP_CHAIN_DESC::default();
-    unsafe {
-        if swap_chain.GetDesc(&mut desc).is_err() {
-            return HWND(0);
-        }
-    }
+    let Ok(desc) = (unsafe { swap_chain.GetDesc() }) else {
+        return HWND::default();
+    };
 
     let out = desc.OutputWindow;
-    if out.0 == 0 {
-        return HWND(0);
+    if out.is_invalid() {
+        return HWND::default();
     }
 
     let target = wnd_hook::get_target_hwnd();
-    if target.0 == 0 {
+    if target.is_invalid() {
         // wnd_hook::init 沒能用標題找到視窗（遊戲更新後標題／時序改變）。swapchain 的
         // OutputWindow 就是遊戲視窗——採用它並補裝 wndproc hook（冪等）。這是最可靠的來源，
         // 首次 Present 時視窗一定存在。
@@ -53,7 +50,7 @@ fn check_hwnd(this: *mut c_void) -> HWND {
         target
     }
     else {
-        HWND(0)
+        HWND::default()
     }
 }
 
@@ -63,7 +60,7 @@ extern "C" fn IDXGISwapChain_Present(this: *mut c_void, sync_interval: c_uint, f
     let orig_fn: PresentFn = unsafe { std::mem::transmute(PRESENT_ADDR) };
 
     let hwnd = check_hwnd(this);
-    if hwnd.0 == 0 {
+    if hwnd.is_invalid() {
         return orig_fn(this, sync_interval, flags);
     }
 
@@ -110,7 +107,7 @@ extern "C" fn IDXGISwapChain_Present(this: *mut c_void, sync_interval: c_uint, f
     // Run and render the GUI
     let output = gui.run();
     let renderer_output = egui_directx11::split_output(output).0;
-    if let Err(e) = painter.present(&gui.context, renderer_output, 1.0) {
+    if let Err(e) = painter.present(&gui.context, renderer_output) {
         error!("Failed to render GUI: {}", e);
     }
 
@@ -130,7 +127,7 @@ extern "C" fn IDXGISwapChain_ResizeBuffers(
 
     // Make sure that a swap chain has the right HWND first before initing the painter,
     // even if we don't use it here.
-    if check_hwnd(this).0 == 0 {
+    if check_hwnd(this).is_invalid() {
         return orig_fn(this, buffer_count, width, height, new_format, swap_chain_flags);
     }
 
@@ -184,9 +181,9 @@ fn get_swap_chain_vtable() -> Result<*mut usize, Error> {
 
     let hwnd = unsafe {
         CreateWindowExW(WINDOW_EX_STYLE(0), wc.lpszClassName, w!(""), WS_DISABLED, 0, 0, 0, 0, None, None, None, None)
-    };
+    }.unwrap_or_default();
 
-    if hwnd.0 == 0 {
+    if hwnd.is_invalid() {
         return Err(Error::RuntimeError("Failed to create dummy window".to_string()));
     }
 
@@ -204,14 +201,14 @@ fn get_swap_chain_vtable() -> Result<*mut usize, Error> {
 
     unsafe {
         D3D11CreateDeviceAndSwapChain(
-            None, D3D_DRIVER_TYPE_HARDWARE, None, D3D11_CREATE_DEVICE_FLAG(0), Some(&[D3D_FEATURE_LEVEL_11_0]),
+            None, D3D_DRIVER_TYPE_HARDWARE, HMODULE::default(), D3D11_CREATE_DEVICE_FLAG(0), Some(&[D3D_FEATURE_LEVEL_11_0]),
             D3D11_SDK_VERSION, Some(&swap_chain_desc), Some(&mut p_swap_chain), Some(&mut p_device),
             Some(&mut feature_level), None
         )
     }.map_err(|e| {
         unsafe {
             _ = DestroyWindow(hwnd);
-            _ = UnregisterClassW(wc.lpszClassName, hmodule);
+            _ = UnregisterClassW(wc.lpszClassName, Some(hmodule.into()));
         }
         Error::RuntimeError(e.to_string())
     })?;
@@ -223,7 +220,7 @@ fn get_swap_chain_vtable() -> Result<*mut usize, Error> {
 
     unsafe {
         _ = DestroyWindow(hwnd);
-        _ = UnregisterClassW(wc.lpszClassName, hmodule);
+        _ = UnregisterClassW(wc.lpszClassName, Some(hmodule.into()));
     }
 
     Ok(swap_chain_vtable.unwrap_or(0 as _))

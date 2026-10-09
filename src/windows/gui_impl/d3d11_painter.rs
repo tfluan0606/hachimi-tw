@@ -3,7 +3,7 @@ use windows::{core::HRESULT, Win32::Graphics::{
         ID3D11Device, ID3D11DeviceContext, ID3D11RenderTargetView, ID3D11Texture2D,
         D3D11_RENDER_TARGET_VIEW_DESC, D3D11_RTV_DIMENSION_TEXTURE2D
     },
-    Dxgi::{Common::DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, IDXGISwapChain}
+    Dxgi::{Common::DXGI_FORMAT_R8G8B8A8_UNORM, IDXGISwapChain}
 }};
 
 use crate::core::Error;
@@ -78,7 +78,8 @@ impl D3D11Painter {
         };
 
         let mut render_target_desc = D3D11_RENDER_TARGET_VIEW_DESC::default();
-        render_target_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+        // egui-directx11 0.10 起要求 gamma 空間、非 sRGB-aware 的 render target（舊版正好相反）
+        render_target_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
         render_target_desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
         if let Err(e) = unsafe { device.CreateRenderTargetView(
             &backbuffer,
@@ -92,7 +93,7 @@ impl D3D11Painter {
 
     /// Call this in the Present hook, before calling the orig fn
     pub fn present(
-        &mut self, egui_ctx: &egui::Context, egui_output: egui_directx11::RendererOutput, scale_factor: f32
+        &mut self, egui_ctx: &egui::Context, egui_output: egui_directx11::RendererOutput
     ) -> Result<(), Error> {
         let Some(render_target) = &self.render_target else {
             return Ok(());
@@ -101,7 +102,7 @@ impl D3D11Painter {
         let device_context = Self::get_device_context(&self.get_device()?)?;
         unsafe { self.backup_state.save(&device_context); }
 
-        if let Err(e) = self.renderer.render(&device_context, render_target, egui_ctx, egui_output, scale_factor) {
+        if let Err(e) = self.renderer.render(&device_context, render_target, egui_ctx, egui_output) {
             return Err(Error::RuntimeError(e.to_string()));
         }
 
