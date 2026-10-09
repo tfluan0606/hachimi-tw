@@ -56,14 +56,9 @@ pub fn set_output_dir(dir: &str) {
     update_config(|c| c.factor_card_output_dir = value.clone());
 }
 
-/// 改一項設定並寫回 config.json
+/// 改一項設定。走 settings：記憶體裡的 config 也要更新（以前只寫檔，改輸出位置要重開才生效）。
 fn update_config(f: impl FnOnce(&mut super::hachimi::Config)) {
-    let hachimi = Hachimi::instance();
-    let mut config = (**hachimi.config.load()).clone();
-    f(&mut config);
-    if let Err(e) = hachimi.save_config(&config) {
-        warn!("[factor_card] 設定寫入失敗：{e}");
-    }
+    super::settings::update(f);
 }
 
 /// 玩家的追蹤者數（好友頁 API 才會帶）

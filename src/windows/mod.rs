@@ -11,5 +11,6 @@ pub mod gui_impl;
 pub mod updater;
 pub mod wnd_hook;
 pub mod discord;
+pub mod settings_window;
 mod ffi;
 pub mod steamworks;

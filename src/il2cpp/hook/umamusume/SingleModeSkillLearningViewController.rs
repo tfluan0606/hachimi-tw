@@ -39,7 +39,7 @@ use crate::{
         hook::UnityEngine_CoreModule::{Component, GameObject, Transform},
         symbols::{
             create_delegate, find_nested_class, get_assembly_image, get_class, get_method, get_method_addr,
-            get_method_overload_addr, GCHandle, IList, Thread,
+            get_method_overload_addr, GCHandle, IList,
         },
         types::*,
     },
@@ -524,7 +524,8 @@ static IMPORT_RESULT: Mutex<Option<Result<Vec<String>, String>>> = Mutex::new(No
 /// 要求在主執行緒讀一次「最後開過的技能頁」上還沒學的技能，結果用 [`take_import_result`] 拿。
 pub fn request_import() {
     *IMPORT_RESULT.lock().unwrap() = None;
-    Thread::main_thread().schedule(|| {
+    // 設定視窗的執行緒沒有 attach il2cpp，不能直接 schedule，排隊交給遊戲內 GUI 的執行緒
+    crate::core::main_thread::post(|| {
         *IMPORT_RESULT.lock().unwrap() = Some(read_learnable());
     });
 }

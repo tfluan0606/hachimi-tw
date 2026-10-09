@@ -77,6 +77,17 @@ pub fn cancel_key_capture() {
     CAPTURING_KEY.store(false, atomic::Ordering::Release);
 }
 
+/// 改鍵模式下，把這個按鍵當成新的熱鍵收下（獨立設定視窗有焦點時，按鍵不會進遊戲的 wndproc）。
+pub fn capture_key_if_active(vk: u16) -> bool {
+    if CAPTURING_KEY.swap(false, atomic::Ordering::AcqRel) {
+        CAPTURED_KEY.store(vk as u32, atomic::Ordering::Release);
+        true
+    }
+    else {
+        false
+    }
+}
+
 pub fn is_capturing_key() -> bool {
     CAPTURING_KEY.load(atomic::Ordering::Acquire)
 }

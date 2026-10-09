@@ -326,6 +326,31 @@ fn get_key(wparam: usize) -> Option<Key> {
     }
 }
 
+/// 把文字放進剪貼簿（egui 的複製）。
+pub fn set_clipboard_text(text: &str) {
+    use windows::Win32::{
+        Foundation::HANDLE,
+        System::{DataExchange::{EmptyClipboard, SetClipboardData}, Memory::{GlobalAlloc, GMEM_MOVEABLE}},
+    };
+    let utf16: Vec<u16> = text.encode_utf16().chain(std::iter::once(0)).collect();
+    unsafe {
+        if OpenClipboard(None).is_err() {
+            return;
+        }
+        _ = EmptyClipboard();
+        if let Ok(mem) = GlobalAlloc(GMEM_MOVEABLE, utf16.len() * 2) {
+            let ptr = GlobalLock(mem) as *mut u16;
+            if !ptr.is_null() {
+                std::ptr::copy_nonoverlapping(utf16.as_ptr(), ptr, utf16.len());
+                _ = GlobalUnlock(mem);
+                // 成功後記憶體歸剪貼簿所有，不要自己釋放
+                _ = SetClipboardData(CF_UNICODETEXT.0 as u32, Some(HANDLE(mem.0)));
+            }
+        }
+        _ = CloseClipboard();
+    }
+}
+
 /// 讀剪貼簿文字。要用 `CF_UNICODETEXT`：`CF_TEXT` 是系統 ANSI 碼頁（繁中 Windows＝Big5），
 /// 中文不是合法 UTF-8，以前整段解碼失敗就貼不上。
 fn get_clipboard_text() -> Option<String> {

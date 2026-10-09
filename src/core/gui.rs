@@ -7,7 +7,6 @@ use rust_i18n::t;
 use crate::il2cpp::{
     hook::{
         umamusume::{CySpringController::SpringUpdateMode, GameSystem, GraphicSettings::GraphicsQuality},
-        UnityEngine_CoreModule::Application
     },
     symbols::Thread
 };
@@ -15,8 +14,6 @@ use crate::il2cpp::{
 #[cfg(not(target_os = "windows"))]
 use crate::il2cpp::hook::umamusume::WebViewManager;
 
-#[cfg(target_os = "windows")]
-use crate::il2cpp::hook::UnityEngine_CoreModule::QualitySettings;
 
 use super::{hachimi::{self, Language}, Hachimi};
 
@@ -48,10 +45,6 @@ pub struct Gui {
 
     menu_visible: bool,
     menu_anim_time: Option<Instant>,
-    menu_fps_value: i32,
-
-    #[cfg(target_os = "windows")]
-    menu_vsync_value: i32,
 
     notifications: Vec<Notification>,
     windows: Vec<BoxedWindow>
@@ -76,24 +69,7 @@ impl Gui {
         let hachimi = Hachimi::instance();
 
         let context = egui::Context::default();
-        egui_extras::install_image_loaders(&context);
-
-        context.set_fonts(Self::get_font_definitions());
-
-        let mut style = egui::Style::default();
-        style.spacing.button_padding = egui::Vec2::new(8.0, 5.0);
-        style.interaction.selectable_labels = false;
-        context.set_global_style(style);
-
-        let mut visuals = egui::Visuals::dark();
-        visuals.panel_fill = BACKGROUND_COLOR;
-        visuals.widgets.noninteractive.fg_stroke = egui::Stroke::new(1.0, TEXT_COLOR);
-        context.set_visuals(visuals);
-
-        let mut fps_value = hachimi.target_fps.load(atomic::Ordering::Relaxed);
-        if fps_value == -1 {
-            fps_value = 30;
-        }
+        Self::setup_context(&context);
 
         let windows: Vec<BoxedWindow> = Vec::new();
 
@@ -115,10 +91,6 @@ impl Gui {
 
             menu_visible: false,
             menu_anim_time: None,
-            menu_fps_value: fps_value,
-
-            #[cfg(target_os = "windows")]
-            menu_vsync_value: hachimi.vsync_count.load(atomic::Ordering::Relaxed),
 
             notifications: Vec::new(),
             windows
@@ -135,6 +107,23 @@ impl Gui {
 
     pub fn instance() -> Option<&'static Mutex<Gui>> {
         INSTANCE.get()
+    }
+
+    /// 字型、樣式、圖片載入器。遊戲內選單和獨立設定視窗共用，外觀才一致。
+    pub(crate) fn setup_context(context: &egui::Context) {
+        egui_extras::install_image_loaders(context);
+
+        context.set_fonts(Self::get_font_definitions());
+
+        let mut style = egui::Style::default();
+        style.spacing.button_padding = egui::Vec2::new(8.0, 5.0);
+        style.interaction.selectable_labels = false;
+        context.set_global_style(style);
+
+        let mut visuals = egui::Visuals::dark();
+        visuals.panel_fill = BACKGROUND_COLOR;
+        visuals.widgets.noninteractive.fg_stroke = egui::Stroke::new(1.0, TEXT_COLOR);
+        context.set_visuals(visuals);
     }
 
     fn get_font_definitions() -> egui::FontDefinitions {
@@ -207,11 +196,17 @@ impl Gui {
 
         self.run_windows();
         self.run_notifications();
+        super::settings::autosave_tick();
+        super::main_thread::drain();
 
         if self.splash_visible { self.run_splash(); }
 
         // Store this as an atomic value so the input thread can check it without locking the gui
-        IS_CONSUMING_INPUT.store(self.is_consuming_input(), atomic::Ordering::Relaxed);
+        #[cfg(target_os = "windows")]
+        let consuming = self.is_consuming_input() || crate::windows::settings_window::is_foreground();
+        #[cfg(not(target_os = "windows"))]
+        let consuming = self.is_consuming_input();
+        IS_CONSUMING_INPUT.store(consuming, atomic::Ordering::Relaxed);
 
         // 輸入框有焦點時替遊戲視窗打開輸入法（Unity 平常會把它關掉）
         #[cfg(target_os = "windows")]
@@ -262,97 +257,113 @@ impl Gui {
         });
     }
 
+    /// 遊戲內選單：只放玩的當下會用到的東西，其餘都在「設定」裡。
+    /// 這裡的開關和設定視窗改的是同一份 config（走 settings），改了即時生效、自動存檔。
     fn run_menu(&mut self, root_ui: &mut egui::Ui) {
+        use super::settings;
+
         let ctx = &self.context.clone();
-        let hachimi = Hachimi::instance();
+        let config = Hachimi::instance().config.load_full();
 
         let mut show_notification: Option<Cow<'_, str>> = None;
         let mut show_window: Option<BoxedWindow> = None;
         let mut show_menu = self.show_menu;
         egui::Panel::left("hachimi_menu").show_collapsible(root_ui, &mut show_menu, |ui| {
             ui.with_layout(egui::Layout::top_down_justified(egui::Align::TOP), |ui| {
-                // ASKR 牛逼！banner
+                // ASKR 牛逼！banner（也是「有載入成功」的記號）
                 ui.vertical_centered(|ui| {
-                    ui.add(egui::Image::new(Self::BANNER_IMAGE).fit_to_exact_size(egui::Vec2::splat(96.0)));
+                    ui.add(egui::Image::new(Self::BANNER_IMAGE).fit_to_exact_size(egui::Vec2::splat(72.0)));
                 });
-                ui.add_space(4.0);
                 ui.horizontal(|ui| {
                     ui.add(Self::icon());
-                    ui.heading(t!("hachimi"));
-                    if ui.button(" \u{f29c} ").clicked() {
-                        show_window = Some(Box::new(AboutWindow::new()));
+                    ui.vertical(|ui| {
+                        ui.heading(t!("hachimi"));
+                        ui.small(format!("v{} · {}", env!("CARGO_PKG_VERSION"), self.fps_text));
+                    });
+                });
+                ui.horizontal(|ui| {
+                    if ui.button("\u{f013} 設定").clicked() {
+                        #[cfg(target_os = "windows")]
+                        if config.windows.settings_in_game {
+                            show_window = Some(Box::new(ConfigEditor::new()));
+                        }
+                        else {
+                            crate::windows::settings_window::open();
+                        }
+                        #[cfg(not(target_os = "windows"))]
+                        {
+                            show_window = Some(Box::new(ConfigEditor::new()));
+                        }
+                    }
+                    if ui.button(t!("menu.close_menu")).clicked() {
+                        self.show_menu = false;
+                        self.menu_anim_time = None;
                     }
                 });
-                ui.label("ASKR牛逼");
-                if ui.button(t!("menu.close_menu")).clicked() {
-                    self.show_menu = false;
-                    self.menu_anim_time = None;
-                }
                 ui.separator();
 
                 egui::ScrollArea::vertical().show(ui, |ui| {
-                    ui.heading(t!("menu.stats_heading"));
-                    ui.label(&self.fps_text);
-                    ui.separator();
-
-                    ui.heading(t!("menu.config_heading"));
-                    if ui.button(t!("menu.open_config_editor")).clicked() {
-                        show_window = Some(Box::new(ConfigEditor::new()));
+                    menu_heading(ui, "常用");
+                    ui.horizontal(|ui| {
+                        ui.label("FPS 上限");
+                        // None＝交給遊戲；滑桿一動就改成指定值
+                        let mut fps = config.target_fps.unwrap_or(60);
+                        if ui.add(egui::Slider::new(&mut fps, 30..=240)).changed() {
+                            settings::update(|c| c.target_fps = Some(fps));
+                        }
+                    });
+                    if config.target_fps.is_none() {
+                        ui.small("目前沒有限制（遊戲預設）");
                     }
-                    if ui.button(t!("menu.reload_config")).clicked() {
-                        hachimi.reload_config();
-                        show_notification = Some(t!("notification.config_reloaded"));
+                    #[cfg(target_os = "windows")]
+                    {
+                        let mut topmost = config.windows.window_always_on_top;
+                        if ui.checkbox(&mut topmost, t!("menu.stay_on_top")).changed() {
+                            settings::update(|c| c.windows.window_always_on_top = topmost);
+                        }
+                        let mut hide_cursor = config.windows.disable_game_cursor;
+                        if ui.checkbox(&mut hide_cursor, "隱藏遊戲游標").changed() {
+                            settings::update(|c| c.windows.disable_game_cursor = hide_cursor);
+                        }
                     }
-                    ui.separator();
 
                     #[cfg(target_os = "windows")]
                     {
                         use crate::core::factor_card;
 
-                        ui.heading("因子卡片");
-                        ui.label(format!("已收集 {} 隻練成角色", factor_card::stored_count()));
+                        menu_heading(ui, "因子卡片");
                         ui.label(match factor_card::last_viewed_label() {
-                            Some(label) => format!("目前目標：{label}"),
-                            None => "目前目標：（先點開一隻馬的詳細視窗）".to_owned()
+                            Some(label) => format!("目標：{label}"),
+                            None => "目標：（先點開一隻馬的詳細視窗）".to_owned()
                         });
                         ui.horizontal(|ui| {
-                            let mut light = factor_card::light_theme();
-                            ui.label("卡片主題");
-                            if ui.selectable_label(!light, "暗色").clicked() {
-                                light = false;
+                            if ui.button("擷取卡片").clicked() {
+                                capture_factor_card();
                             }
-                            if ui.selectable_label(light, "亮色").clicked() {
-                                light = true;
-                            }
-                            factor_card::set_light_theme(light);
-                        });
-                        ui.horizontal(|ui| {
-                            if ui.button("設定輸出位置").clicked() {
-                                show_window = Some(Box::new(FactorCardOutputDirWindow::new()));
-                            }
-                            if ui.button("開啟輸出資料夾").clicked() {
-                                let dir = factor_card::output_dir();
-                                _ = std::fs::create_dir_all(&dir);
-                                _ = std::process::Command::new("explorer").arg(&dir).spawn();
+                            if ui.button("開資料夾").clicked() {
+                                open_folder(&factor_card::output_dir());
                             }
                         });
-                        if ui.button("擷取目前這隻的因子卡片").clicked() {
-                            // 下載立繪＋繪圖可能要一點時間，丟到背景執行緒
-                            std::thread::spawn(|| {
-                                let msg = match factor_card::capture(None) {
-                                    Ok(path) => format!(
-                                        "因子卡片已存到 {}",
-                                        path.file_name().map(|n| n.to_string_lossy().into_owned())
-                                            .unwrap_or_else(|| path.to_string_lossy().into_owned())
-                                    ),
-                                    Err(e) => format!("因子卡片失敗：{e}")
-                                };
-                                if let Some(mutex) = Gui::instance() {
-                                    mutex.lock().unwrap().show_notification(&msg);
+                    }
+
+                    {
+                        use crate::core::api_packet::practice_race;
+
+                        menu_heading(ui, "比賽擷取");
+                        let mut on = practice_race::capture_enabled();
+                        if ui.checkbox(&mut on, "自動存練習賽封包").changed() {
+                            practice_race::set_capture_enabled(on);
+                            show_notification = Some(if on { "比賽擷取已開啟".into() } else { "比賽擷取已關閉".into() });
+                        }
+                        if on {
+                            ui.horizontal(|ui| {
+                                ui.small(format!("本次已存 {} 場", practice_race::capture_count()));
+                                #[cfg(target_os = "windows")]
+                                if ui.small_button("開資料夾").clicked() {
+                                    open_folder(&practice_race::capture_dir());
                                 }
                             });
                         }
-                        ui.separator();
                     }
 
                     // 全量 API 擷取（datamine）：分享版不編入，選單看不到。
@@ -360,136 +371,40 @@ impl Gui {
                     {
                         use crate::core::api_packet;
 
-                        ui.heading("API 擷取");
+                        menu_heading(ui, "API 擷取");
                         let mut on = api_packet::capture_enabled();
                         if ui.checkbox(&mut on, "把 API 回傳的 JSON 全部存檔").changed() {
                             api_packet::set_capture_enabled(on);
-                            show_notification = Some(if on {
-                                "API 擷取已開啟".into()
-                            } else {
-                                "API 擷取已關閉".into()
-                            });
+                            show_notification = Some(if on { "API 擷取已開啟".into() } else { "API 擷取已關閉".into() });
                         }
                         if on {
-                            ui.label(format!(r"已抓 {} 筆 → hachimi\api_capture", api_packet::capture_count()));
-                            ui.label("檔案很大而且含帳號明文資料，用完記得關");
+                            ui.small(format!("已抓 {} 筆。檔案很大而且含帳號明文資料，用完記得關", api_packet::capture_count()));
                         }
-                        #[cfg(target_os = "windows")]
-                        if ui.button("開啟擷取資料夾").clicked() {
-                            let dir = api_packet::capture_dir();
-                            _ = std::fs::create_dir_all(&dir);
-                            _ = std::process::Command::new("explorer").arg(&dir).spawn();
-                        }
-                        ui.separator();
                     }
 
-                    {
-                        use crate::core::api_packet::practice_race;
-
-                        ui.heading("比賽擷取");
-                        let mut on = practice_race::capture_enabled();
-                        if ui.checkbox(&mut on, "跑練習賽／自訂配對賽時自動存下該場封包").changed() {
-                            practice_race::set_capture_enabled(on);
-                            show_notification = Some(if on {
-                                "比賽擷取已開啟".into()
-                            } else {
-                                "比賽擷取已關閉".into()
-                            });
+                    ui.add_space(6.0);
+                    egui::CollapsingHeader::new("更多").default_open(false).show(ui, |ui| {
+                        if ui.button(t!("menu.toggle_game_ui")).clicked() {
+                            Thread::main_thread().schedule(Self::toggle_game_ui);
                         }
-                        if on {
-                            ui.label(format!(
-                                r"本次已存 {} 場 → hachimi\race_capture",
-                                practice_race::capture_count()
-                            ));
-                            ui.label("練習賽＋自訂配對賽＋群英聯賽；逐幀資料已解好塞進 JSON，其他封包不理");
+                        #[cfg(not(target_os = "windows"))]
+                        if ui.button(t!("menu.open_in_game_browser")).clicked() {
+                            show_window = Some(Box::new(SimpleYesNoDialog::new(&t!("confirm_dialog_title"), &t!("in_game_browser_confirm_content"), |ok| {
+                                if !ok { return; }
+                                Thread::main_thread().schedule(|| {
+                                    WebViewManager::quick_open(&t!("browser_dialog_title"), &Hachimi::instance().config.load().open_browser_url);
+                                });
+                            })));
                         }
-                        #[cfg(target_os = "windows")]
-                        if ui.button("開啟練習賽資料夾").clicked() {
-                            let dir = practice_race::capture_dir();
-                            _ = std::fs::create_dir_all(&dir);
-                            _ = std::process::Command::new("explorer").arg(&dir).spawn();
-                        }
-                        ui.separator();
-                    }
-
-                    ui.heading(t!("menu.graphics_heading"));
-                    ui.horizontal(|ui| {
-                        ui.label(t!("menu.fps_label"));
-                        let res = ui.add(egui::Slider::new(&mut self.menu_fps_value, 30..=240));
-                        if res.lost_focus() || res.drag_stopped() {
-                            hachimi.target_fps.store(self.menu_fps_value, atomic::Ordering::Relaxed);
-                            Thread::main_thread().schedule(|| {
-                                // doesnt matter which value's used here, hook will override it
-                                Application::set_targetFrameRate(30);
-                            });
+                        if ui.button(format!("{}…", t!("menu.soft_restart"))).clicked() {
+                            show_window = Some(Box::new(SimpleYesNoDialog::new(&t!("confirm_dialog_title"), &t!("soft_restart_confirm_content"), |ok| {
+                                if !ok { return; }
+                                Thread::main_thread().schedule(|| {
+                                    GameSystem::SoftwareReset(GameSystem::instance());
+                                });
+                            })));
                         }
                     });
-                    #[cfg(target_os = "windows")]
-                    {
-                        use crate::windows::{utils::set_window_topmost, wnd_hook};
-
-                        ui.horizontal(|ui| {
-                            let prev_value = self.menu_vsync_value;
-
-                            ui.label(t!("menu.vsync_label"));
-                            Self::run_vsync_combo(ui, &mut self.menu_vsync_value);
-
-                            if prev_value != self.menu_vsync_value {
-                                hachimi.vsync_count.store(self.menu_vsync_value, atomic::Ordering::Relaxed);
-                                Thread::main_thread().schedule(|| {
-                                    QualitySettings::set_vSyncCount(1);
-                                });
-                            }
-                        });
-                        ui.horizontal(|ui| {
-                            let mut value = hachimi.window_always_on_top.load(atomic::Ordering::Relaxed);
-
-                            ui.label(t!("menu.stay_on_top"));
-                            if ui.checkbox(&mut value, "").changed() {
-                                hachimi.window_always_on_top.store(value, atomic::Ordering::Relaxed);
-                                Thread::main_thread().schedule(|| {
-                                    let topmost = Hachimi::instance().window_always_on_top.load(atomic::Ordering::Relaxed);
-                                    unsafe { _ = set_window_topmost(wnd_hook::get_target_hwnd(), topmost); }
-                                });
-                            }
-                        });
-                        ui.horizontal(|ui| {
-                            use crate::il2cpp::hook::UnityEngine_CoreModule::Cursor;
-
-                            let mut value = hachimi.disable_game_cursor.load(atomic::Ordering::Relaxed);
-
-                            ui.label("隱藏遊戲游標");
-                            if ui.checkbox(&mut value, "").changed() {
-                                hachimi.disable_game_cursor.store(value, atomic::Ordering::Relaxed);
-                                // 開啟時立即還原成系統游標；關閉時遊戲會在下次重設游標時恢復自訂圖
-                                Cursor::apply();
-                            }
-                        });
-                    }
-                    ui.separator();
-
-                    ui.heading(t!("menu.danger_zone_heading"));
-                    ui.label(t!("menu.danger_zone_warning"));
-                    if ui.button(t!("menu.soft_restart")).clicked() {
-                        show_window = Some(Box::new(SimpleYesNoDialog::new(&t!("confirm_dialog_title"), &t!("soft_restart_confirm_content"), |ok| {
-                            if !ok { return; }
-                            Thread::main_thread().schedule(|| {
-                                GameSystem::SoftwareReset(GameSystem::instance());
-                            });
-                        })));
-                    }
-                    #[cfg(not(target_os = "windows"))]
-                    if ui.button(t!("menu.open_in_game_browser")).clicked() {
-                        show_window = Some(Box::new(SimpleYesNoDialog::new(&t!("confirm_dialog_title"), &t!("in_game_browser_confirm_content"), |ok| {
-                            if !ok { return; }
-                            Thread::main_thread().schedule(|| {
-                                WebViewManager::quick_open(&t!("browser_dialog_title"), &Hachimi::instance().config.load().open_browser_url);
-                            });
-                        })));
-                    }
-                    if ui.button(t!("menu.toggle_game_ui")).clicked() {
-                        Thread::main_thread().schedule(Self::toggle_game_ui);
-                    }
                 });
             });
         });
@@ -745,68 +660,49 @@ fn new_window<'a>(ctx: &egui::Context, title: impl Into<egui::WidgetText>) -> eg
     .resizable(false)
 }
 
-fn simple_window_layout(ui: &mut egui::Ui, id: egui::Id, add_contents: impl FnOnce(&mut egui::Ui), add_buttons: impl FnOnce(&mut egui::Ui)) {
-    add_contents(ui);
-    egui::Panel::bottom(id.with("bottom_panel"))
-    .show(ui, |ui| {
-        ui.with_layout(egui::Layout::right_to_left(egui::Align::Min), add_buttons)
+/// 選單上的小標題
+fn menu_heading(ui: &mut egui::Ui, text: &str) {
+    ui.add_space(6.0);
+    ui.label(egui::RichText::new(text).strong());
+}
+
+#[cfg(target_os = "windows")]
+fn open_folder(dir: &std::path::Path) {
+    _ = std::fs::create_dir_all(dir);
+    _ = std::process::Command::new("explorer").arg(dir).spawn();
+}
+
+/// 擷取目前目標的因子卡片。下載立繪＋繪圖要一點時間，丟到背景執行緒。
+#[cfg(target_os = "windows")]
+fn capture_factor_card() {
+    std::thread::spawn(|| {
+        let msg = match super::factor_card::capture(None) {
+            Ok(path) => format!(
+                "因子卡片已存到 {}",
+                path.file_name().map(|n| n.to_string_lossy().into_owned())
+                    .unwrap_or_else(|| path.to_string_lossy().into_owned())
+            ),
+            Err(e) => format!("因子卡片失敗：{e}")
+        };
+        if let Some(mutex) = Gui::instance() {
+            mutex.lock().unwrap().show_notification(&msg);
+        }
     });
 }
 
-/// 設定因子卡片輸出資料夾
-#[cfg(target_os = "windows")]
-struct FactorCardOutputDirWindow {
-    path: String,
-    id: egui::Id
-}
-
-#[cfg(target_os = "windows")]
-impl FactorCardOutputDirWindow {
-    fn new() -> FactorCardOutputDirWindow {
-        FactorCardOutputDirWindow {
-            path: super::factor_card::output_dir().to_string_lossy().into_owned(),
-            id: random_id()
-        }
-    }
-}
-
-#[cfg(target_os = "windows")]
-impl Window for FactorCardOutputDirWindow {
-    fn run(&mut self, ctx: &egui::Context) -> bool {
-        let mut open = true;
-        let mut keep = true;
-        let mut save = false;
-        // 借用檢查：兩個 closure 不能同時碰 self，先把路徑搬出來
-        let mut path = std::mem::take(&mut self.path);
-
-        new_window(ctx, "因子卡片輸出位置")
-        .id(self.id)
-        .open(&mut open)
-        .show(ctx, |ui| {
-            simple_window_layout(ui, self.id,
-                |ui| {
-                    ui.label("卡片存放的資料夾（留空＝預設 hachimi\\factor_card）");
-                    ui.add(egui::TextEdit::singleline(&mut path).desired_width(f32::INFINITY));
-                },
-                |ui| {
-                    if ui.button(t!("cancel")).clicked() {
-                        keep = false;
-                    }
-                    if ui.button(t!("save")).clicked() {
-                        save = true;
-                        keep = false;
-                    }
-                }
-            );
-        });
-
-        if save {
-            super::factor_card::set_output_dir(&path);
-        }
-        self.path = path;
-
-        open && keep
-    }
+/// 置中的對話框（egui Modal：底下其他東西都點不到，按鈕列不會被擠掉）。
+/// 回傳 `should_close`（按 Esc 或點背景）。
+fn modal_dialog(
+    ctx: &egui::Context, id: egui::Id, title: &str, content: &str, add_buttons: impl FnOnce(&mut egui::Ui)
+) -> bool {
+    egui::Modal::new(id).show(ctx, |ui| {
+        ui.set_width(280.0f32.min(ctx.content_rect().width() - 48.0));
+        ui.heading(title);
+        ui.add_space(6.0);
+        ui.label(content);
+        ui.add_space(12.0);
+        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), add_buttons);
+    }).should_close()
 }
 
 pub struct SimpleYesNoDialog {
@@ -829,38 +725,25 @@ impl SimpleYesNoDialog {
 
 impl Window for SimpleYesNoDialog {
     fn run(&mut self, ctx: &egui::Context) -> bool {
-        let mut open = true;
-        let mut open2 = true;
-        let mut result = false;
-
-        new_window(ctx, &self.title)
-        .id(self.id)
-        .open(&mut open)
-        .show(ctx, |ui| {
-            simple_window_layout(ui, self.id,
-                |ui| {
-                    ui.centered_and_justified(|ui| {
-                        ui.label(&self.content);
-                    });
-                },
-                |ui| {
-                    if ui.button(t!("no")).clicked() {
-                        open2 = false;
-                    }
-                    if ui.button(t!("yes")).clicked() {
-                        result = true;
-                        open2 = false;
-                    }
-                }
-            );
+        let mut answer: Option<bool> = None;
+        let dismissed = modal_dialog(ctx, self.id, &self.title, &self.content, |ui| {
+            if ui.button(t!("yes")).clicked() {
+                answer = Some(true);
+            }
+            if ui.button(t!("no")).clicked() {
+                answer = Some(false);
+            }
         });
-
-        if open && open2 {
-            true
+        if dismissed && answer.is_none() {
+            answer = Some(false);
         }
-        else {
-            (self.callback)(result);
-            false
+
+        match answer {
+            Some(result) => {
+                (self.callback)(result);
+                false
+            }
+            None => true
         }
     }
 }
@@ -885,67 +768,474 @@ impl SimpleOkDialog {
 
 impl Window for SimpleOkDialog {
     fn run(&mut self, ctx: &egui::Context) -> bool {
-        let mut open = true;
-        let mut open2 = true;
-
-        new_window(ctx, &self.title)
-        .id(self.id)
-        .open(&mut open)
-        .show(ctx, |ui| {
-            simple_window_layout(ui, self.id,
-                |ui| {
-                    ui.centered_and_justified(|ui| {
-                        ui.label(&self.content);
-                    });
-                },
-                |ui| {
-                    if ui.button(t!("ok")).clicked() {
-                        open2 = false;
-                    }
-                }
-            );
+        let mut done = false;
+        let dismissed = modal_dialog(ctx, self.id, &self.title, &self.content, |ui| {
+            if ui.button(t!("ok")).clicked() {
+                done = true;
+            }
         });
 
-        if open && open2 {
-            true
-        }
-        else {
+        if done || dismissed {
             (self.callback)();
             false
+        }
+        else {
+            true
         }
     }
 }
 
-struct ConfigEditor {
-    config: hachimi::Config,
+pub struct PersistentMessageWindow {
     id: egui::Id,
-    current_tab: ConfigEditorTab
+    title: String,
+    content: String,
+    show: Arc<AtomicBool>
+}
+
+impl PersistentMessageWindow {
+    pub fn new(title: &str, content: &str, show: Arc<AtomicBool>) -> PersistentMessageWindow {
+        PersistentMessageWindow {
+            id: random_id(),
+            title: title.to_owned(),
+            content: content.to_owned(),
+            show
+        }
+    }
+}
+
+impl Window for PersistentMessageWindow {
+    fn run(&mut self, ctx: &egui::Context) -> bool {
+        // 沒有按鈕、也不能用 Esc 關：由呼叫端把 show 設成 false 才消失
+        modal_dialog(ctx, self.id, &self.title, &self.content, |_| {});
+        self.show.load(atomic::Ordering::Relaxed)
+    }
+}
+
+/// 設定的內容（導覽＋各頁）。每個設定只在這裡有一個家；改了即時生效、自動存檔（走 settings），
+/// 沒有儲存／取消。遊戲內是包在 egui Window 裡（`impl Window`），獨立設定視窗則直接畫 `show`。
+pub(crate) struct ConfigEditor {
+    id: egui::Id,
+    page: SettingsPage
 }
 
 #[derive(Eq, PartialEq, Clone, Copy)]
-enum ConfigEditorTab {
+pub(crate) enum SettingsPage {
     General,
-    Graphics,
-    Gameplay
+    Display,
+    Game,
+    #[cfg(target_os = "windows")]
+    AutoSkill,
+    #[cfg(target_os = "windows")]
+    FactorCard,
+    Capture,
+    About
 }
 
-impl ConfigEditorTab {
-    fn display_list() -> [(ConfigEditorTab, Cow<'static, str>); 3] {
-        [
-            (ConfigEditorTab::General, t!("config_editor.general_tab")),
-            (ConfigEditorTab::Graphics, t!("config_editor.graphics_tab")),
-            (ConfigEditorTab::Gameplay, t!("config_editor.gameplay_tab"))
+impl SettingsPage {
+    fn all() -> Vec<(SettingsPage, &'static str)> {
+        vec![
+            (SettingsPage::General, "一般"),
+            (SettingsPage::Display, "畫面"),
+            (SettingsPage::Game, "遊戲"),
+            #[cfg(target_os = "windows")]
+            (SettingsPage::AutoSkill, "一鍵學習"),
+            #[cfg(target_os = "windows")]
+            (SettingsPage::FactorCard, "因子卡片"),
+            (SettingsPage::Capture, "擷取"),
+            (SettingsPage::About, "關於"),
         ]
     }
 }
 
+/// 兩欄（標籤｜控制項）的設定列表
+fn settings_grid(ui: &mut egui::Ui, id: egui::Id, add_rows: impl FnOnce(&mut egui::Ui)) {
+    egui::Grid::new(id)
+    .striped(true)
+    .num_columns(2)
+    .spacing([24.0, 8.0])
+    .show(ui, add_rows);
+}
+
 impl ConfigEditor {
-    pub fn new() -> ConfigEditor {
+    pub(crate) fn new() -> ConfigEditor {
         ConfigEditor {
-            config: (**Hachimi::instance().config.load()).clone(),
             id: random_id(),
-            current_tab: ConfigEditorTab::General
+            page: SettingsPage::General
         }
+    }
+
+    /// 畫導覽和目前這一頁，有改就 commit。寬度不夠放左側導覽時改成上方分頁。
+    pub(crate) fn show(&mut self, ui: &mut egui::Ui) {
+        let before = Hachimi::instance().config.load_full();
+        // 每幀從目前的設定拷一份來改，選單那邊同時改的值也看得到，不會被這裡蓋回去
+        let mut config = (*before).clone();
+
+        if ui.available_width() < 440.0 {
+            ui.horizontal_wrapped(|ui| {
+                for (page, label) in SettingsPage::all() {
+                    ui.selectable_value(&mut self.page, page, label);
+                }
+            });
+            ui.separator();
+            self.run_page_scroll(ui, &mut config);
+        }
+        else {
+            ui.horizontal_top(|ui| {
+                ui.vertical(|ui| {
+                    ui.set_width(92.0);
+                    for (page, label) in SettingsPage::all() {
+                        if ui.add_sized([92.0, 30.0], egui::Button::selectable(self.page == page, label)).clicked() {
+                            self.page = page;
+                        }
+                    }
+                });
+                ui.separator();
+                // 外層是水平排列（導覽｜內容），內容要自己開一個垂直排列，否則整頁會排成一長條橫列
+                ui.vertical(|ui| self.run_page_scroll(ui, &mut config));
+            });
+        }
+
+        // 有改才 commit（比對序列化結果，Config 沒有實作 PartialEq）
+        if serde_json::to_string(&*before).ok() != serde_json::to_string(&config).ok() {
+            super::settings::commit(config);
+        }
+    }
+
+    /// 內容區：只上下捲動、填滿剩下的空間，文字依寬度自動換行
+    fn run_page_scroll(&mut self, ui: &mut egui::Ui, config: &mut hachimi::Config) {
+        egui::ScrollArea::vertical()
+        .id_salt("settings_body")
+        .auto_shrink([false, false])
+        .show(ui, |ui| {
+            ui.set_max_width(ui.available_width());
+            self.run_page(ui, config);
+        });
+    }
+
+    fn run_page(&mut self, ui: &mut egui::Ui, config: &mut hachimi::Config) {
+        let grid_id = self.id.with(("grid", self.page as u8));
+        match self.page {
+            SettingsPage::General => settings_grid(ui, grid_id, |ui| Self::page_general(ui, config)),
+            SettingsPage::Display => settings_grid(ui, grid_id, |ui| Self::page_display(ui, config)),
+            SettingsPage::Game => settings_grid(ui, grid_id, |ui| Self::page_game(ui, config)),
+            #[cfg(target_os = "windows")]
+            SettingsPage::AutoSkill => Self::page_auto_skill(ui, config),
+            #[cfg(target_os = "windows")]
+            SettingsPage::FactorCard => Self::page_factor_card(ui),
+            SettingsPage::Capture => Self::page_capture(ui),
+            SettingsPage::About => Self::page_about(ui),
+        }
+    }
+
+    fn page_general(ui: &mut egui::Ui, config: &mut hachimi::Config) {
+        ui.label(t!("config_editor.language"));
+        Gui::run_combo(ui, "language", &mut config.language, Language::CHOICES);
+        ui.end_row();
+
+        #[cfg(target_os = "windows")]
+        {
+            use crate::windows::wnd_hook;
+
+            ui.label("開啟選單的按鍵");
+            // 按下按鈕後由 wndproc 攔下一個按鍵，這裡每幀輪詢結果
+            if let Some(key) = wnd_hook::take_captured_key() {
+                config.windows.menu_open_key = key;
+            }
+            let capturing = wnd_hook::is_capturing_key();
+            let label = if capturing {
+                "請按下新按鍵…".to_owned()
+            }
+            else {
+                wnd_hook::key_display_name(config.windows.menu_open_key)
+            };
+            if ui.button(label).clicked() {
+                if capturing { wnd_hook::cancel_key_capture(); }
+                else { wnd_hook::begin_key_capture(); }
+            }
+            ui.end_row();
+        }
+
+        ui.label("自動更新")
+            .on_hover_text("開：發現新版自動背景下載，完成後通知重開遊戲。\n關：只在右下角通知有新版，不下載。");
+        ui.checkbox(&mut config.auto_update, "");
+        ui.end_row();
+
+        #[cfg(target_os = "windows")]
+        {
+            ui.label("視窗標題");
+            let mut title = config.windows.custom_title_name.clone().unwrap_or_default();
+            if ui.add(egui::TextEdit::singleline(&mut title).desired_width(150.0)).changed() {
+                config.windows.custom_title_name =
+                    (!title.trim().is_empty()).then(|| title.trim().to_owned());
+            }
+            ui.end_row();
+
+            ui.label("Discord 顯示遊戲活動");
+            ui.checkbox(&mut config.windows.enable_discord_rpc, "");
+            ui.end_row();
+        }
+
+        ui.label("選單縮放");
+        ui.add(egui::Slider::new(&mut config.gui_scale, 0.5..=3.0).step_by(0.05));
+        ui.end_row();
+
+        #[cfg(target_os = "windows")]
+        {
+            ui.label("設定開在遊戲內")
+                .on_hover_text("預設會開一個獨立的設定視窗。用獨佔全螢幕時切到別的視窗遊戲會縮小，可以改開在遊戲畫面裡。");
+            ui.checkbox(&mut config.windows.settings_in_game, "");
+            ui.end_row();
+        }
+
+        ui.label(t!("config_editor.disable_overlay"));
+        if ui.checkbox(&mut config.disable_gui, "").clicked() && config.disable_gui {
+            thread::spawn(|| {
+                Gui::instance().unwrap()
+                .lock().unwrap()
+                .show_window(Box::new(SimpleOkDialog::new(
+                    &t!("warning"),
+                    &t!("config_editor.disable_overlay_warning"),
+                    || {}
+                )));
+            });
+        }
+        ui.end_row();
+
+        ui.label(t!("config_editor.debug_mode"));
+        ui.checkbox(&mut config.debug_mode, "");
+        ui.end_row();
+
+        ui.label("");
+        if ui.button("從 config.json 重新載入")
+            .on_hover_text("手動改過 config.json 時用")
+            .clicked()
+        {
+            Hachimi::instance().reload_config();
+        }
+        ui.end_row();
+    }
+
+    fn page_display(ui: &mut egui::Ui, config: &mut hachimi::Config) {
+        Self::option_slider(ui, &t!("config_editor.target_fps"), &mut config.target_fps, 30..=240);
+
+        #[cfg(target_os = "windows")]
+        {
+            use crate::windows::hachimi_impl::{FullScreenMode, ResolutionScaling};
+
+            ui.label(t!("config_editor.vsync"));
+            Gui::run_vsync_combo(ui, &mut config.windows.vsync_count);
+            ui.end_row();
+
+            ui.label(t!("config_editor.window_always_on_top"));
+            ui.checkbox(&mut config.windows.window_always_on_top, "");
+            ui.end_row();
+
+            ui.label("隱藏遊戲游標");
+            ui.checkbox(&mut config.windows.disable_game_cursor, "");
+            ui.end_row();
+
+            ui.label(t!("config_editor.auto_full_screen"));
+            ui.checkbox(&mut config.windows.auto_full_screen, "");
+            ui.end_row();
+
+            ui.label(t!("config_editor.full_screen_mode"));
+            Gui::run_combo(ui, "full_screen_mode", &mut config.windows.full_screen_mode, &[
+                (FullScreenMode::ExclusiveFullScreen, &t!("config_editor.full_screen_mode_exclusive")),
+                (FullScreenMode::FullScreenWindow, &t!("config_editor.full_screen_mode_borderless"))
+            ]);
+            ui.end_row();
+
+            ui.label(t!("config_editor.block_minimize_in_full_screen"));
+            ui.checkbox(&mut config.windows.block_minimize_in_full_screen, "");
+            ui.end_row();
+
+            ui.label(t!("config_editor.resolution_scaling"));
+            Gui::run_combo(ui, "resolution_scaling", &mut config.windows.resolution_scaling, &[
+                (ResolutionScaling::Default, &t!("config_editor.resolution_scaling_default")),
+                (ResolutionScaling::ScaleToScreenSize, &t!("config_editor.resolution_scaling_ssize")),
+                (ResolutionScaling::ScaleToWindowSize, &t!("config_editor.resolution_scaling_wsize"))
+            ]);
+            ui.end_row();
+        }
+
+        ui.label(t!("config_editor.virtual_resolution_multiplier"));
+        ui.add(egui::Slider::new(&mut config.virtual_res_mult, 1.0..=4.0).step_by(0.1));
+        ui.end_row();
+
+        ui.label(t!("config_editor.ui_scale"));
+        ui.add(egui::Slider::new(&mut config.ui_scale, 0.1..=10.0).step_by(0.05));
+        ui.end_row();
+
+        ui.label(t!("config_editor.ui_animation_scale"));
+        ui.add(egui::Slider::new(&mut config.ui_animation_scale, 0.1..=10.0).step_by(0.1));
+        ui.end_row();
+
+        ui.label(t!("config_editor.graphics_quality"));
+        Gui::run_combo(ui, "graphics_quality", &mut config.graphics_quality, &[
+            (GraphicsQuality::Default, &t!("default")),
+            (GraphicsQuality::Toon1280, "Toon1280"),
+            (GraphicsQuality::Toon1280x2, "Toon1280x2"),
+            (GraphicsQuality::Toon1280x4, "Toon1280x4"),
+            (GraphicsQuality::ToonFull, "ToonFull"),
+            (GraphicsQuality::Max, "Max")
+        ]);
+        ui.end_row();
+    }
+
+    fn page_game(ui: &mut egui::Ui, config: &mut hachimi::Config) {
+        ui.label(t!("config_editor.story_text_speed_multiplier"));
+        ui.add(egui::Slider::new(&mut config.story_tcps_multiplier, 0.1..=10.0).step_by(0.1));
+        ui.end_row();
+
+        ui.label(t!("config_editor.story_choice_auto_select_delay"));
+        ui.add(egui::Slider::new(&mut config.story_choice_auto_select_delay, 0.1..=10.0).step_by(0.05));
+        ui.end_row();
+
+        ui.label(t!("config_editor.skill_data_desc"))
+            .on_hover_text(t!("config_editor.skill_data_desc_hint"));
+        ui.checkbox(&mut config.skill_data_desc, "");
+        ui.end_row();
+
+        ui.label(t!("config_editor.force_allow_dynamic_camera"));
+        ui.checkbox(&mut config.force_allow_dynamic_camera, "");
+        ui.end_row();
+
+        ui.label(t!("config_editor.physics_update_mode"));
+        Gui::run_combo(ui, "physics_update_mode", &mut config.physics_update_mode, &[
+            (None, &t!("default")),
+            (SpringUpdateMode::ModeNormal.into(), "ModeNormal"),
+            (SpringUpdateMode::Mode60FPS.into(), "Mode60FPS"),
+            (SpringUpdateMode::SkipFrame.into(), "SkipFrame"),
+            (SpringUpdateMode::SkipFramePostAlways.into(), "SkipFramePostAlways")
+        ]);
+        ui.end_row();
+
+        ui.label(t!("config_editor.live_theater_allow_same_chara"));
+        ui.checkbox(&mut config.live_theater_allow_same_chara, "");
+        ui.end_row();
+
+        ui.label("演唱會播放速度");
+        ui.add(egui::Slider::new(&mut config.live_playback_speed, 0.1..=4.0).step_by(0.05));
+        ui.end_row();
+
+        // 只在真的在播的時候顯示進度，其他畫面掛一條不動的條沒有意義
+        {
+            use crate::il2cpp::hook::umamusume::Director;
+            if Director::is_live_active() {
+                let (current, total) = Director::live_progress();
+                ui.label("播放進度");
+                ui.label(format!("{:.0}:{:02.0} / {:.0}:{:02.0}",
+                    current / 60.0, current % 60.0, total / 60.0, total % 60.0));
+                ui.end_row();
+            }
+        }
+    }
+
+    #[cfg(target_os = "windows")]
+    fn page_auto_skill(ui: &mut egui::Ui, config: &mut hachimi::Config) {
+        ui.label("在育成技能頁按「一鍵學習」→ 選主要或次要，依清單由上往下點技能，點數不夠的跳過，最後跳出遊戲的確認視窗。");
+        ui.add_space(6.0);
+        ui.label(egui::RichText::new("設定檔").strong());
+        Self::run_auto_skill_profiles(ui, config);
+
+        let active = config.auto_skill_active_profile;
+        if let Some(profile) = config.auto_skill_profiles.get_mut(active) {
+            ui.add_space(8.0);
+            ui.label(egui::RichText::new("主要清單").strong())
+                .on_hover_text("「從技能頁匯入」會把最後開過的技能頁上還沒學的技能加進來（已在清單的不重複）。");
+            Self::run_auto_skill_list(ui, "primary", &mut profile.primary);
+            ui.add_space(8.0);
+            ui.label(egui::RichText::new("次要清單").strong());
+            Self::run_auto_skill_list(ui, "secondary", &mut profile.secondary);
+        }
+    }
+
+    #[cfg(target_os = "windows")]
+    fn page_factor_card(ui: &mut egui::Ui) {
+        use crate::core::factor_card;
+
+        ui.label(format!("已收集 {} 隻練成角色", factor_card::stored_count()));
+        ui.add_space(6.0);
+        ui.horizontal(|ui| {
+            ui.label("卡片主題");
+            let mut light = factor_card::light_theme();
+            let before = light;
+            ui.selectable_value(&mut light, false, "暗色");
+            ui.selectable_value(&mut light, true, "亮色");
+            if light != before {
+                factor_card::set_light_theme(light);
+            }
+        });
+        ui.add_space(6.0);
+        ui.label("輸出位置（留空＝預設 hachimi\\factor_card）");
+        // 打字中先放在 egui 暫存，按「套用」才寫進設定，免得每打一個字就改一次資料夾
+        let id = ui.id().with("factor_card_dir");
+        let mut path = ui.data_mut(|d| d.get_temp::<String>(id))
+            .unwrap_or_else(|| Hachimi::instance().config.load().factor_card_output_dir.clone().unwrap_or_default());
+        ui.add(egui::TextEdit::singleline(&mut path).desired_width(f32::INFINITY));
+        ui.horizontal(|ui| {
+            if ui.button("套用").clicked() {
+                factor_card::set_output_dir(&path);
+            }
+            if ui.button("開資料夾").clicked() {
+                open_folder(&factor_card::output_dir());
+            }
+        });
+        ui.data_mut(|d| d.insert_temp(id, path));
+    }
+
+    fn page_capture(ui: &mut egui::Ui) {
+        use crate::core::api_packet::practice_race;
+
+        let mut on = practice_race::capture_enabled();
+        if ui.checkbox(&mut on, "跑練習賽／自訂配對賽時自動存下該場封包").changed() {
+            practice_race::set_capture_enabled(on);
+        }
+        ui.small("練習賽、自訂配對賽、群英聯賽；逐幀資料已解好放進 JSON，其他封包不理。");
+        #[cfg(target_os = "windows")]
+        if ui.button("開啟練習賽資料夾").clicked() {
+            open_folder(&practice_race::capture_dir());
+        }
+
+        #[cfg(feature = "datamine")]
+        {
+            use crate::core::api_packet;
+
+            ui.separator();
+            let mut on = api_packet::capture_enabled();
+            if ui.checkbox(&mut on, "把 API 回傳的 JSON 全部存檔").changed() {
+                api_packet::set_capture_enabled(on);
+            }
+            ui.small("檔案很大而且含帳號明文資料，用完記得關。");
+            #[cfg(target_os = "windows")]
+            if ui.button("開啟擷取資料夾").clicked() {
+                open_folder(&api_packet::capture_dir());
+            }
+        }
+    }
+
+    fn page_about(ui: &mut egui::Ui) {
+        ui.horizontal(|ui| {
+            ui.add(Gui::icon_2x());
+            ui.vertical(|ui| {
+                ui.heading(t!("hachimi"));
+                ui.label(concat!("v", env!("CARGO_PKG_VERSION")));
+            });
+        });
+        ui.label(t!("about.copyright"));
+        ui.horizontal(|ui| {
+            if ui.button(t!("about.view_license")).clicked() {
+                thread::spawn(|| {
+                    Gui::instance().unwrap()
+                    .lock().unwrap()
+                    .show_window(Box::new(LicenseWindow::new()));
+                });
+            }
+            #[cfg(target_os = "windows")]
+            if ui.button(t!("about.check_for_updates")).clicked() {
+                Hachimi::instance().updater.clone().check_for_updates(true);
+            }
+        });
     }
 
     fn option_slider<Num: egui::emath::Numeric>(ui: &mut egui::Ui, label: &str, value: &mut Option<Num>, range: RangeInclusive<Num>) {
@@ -1100,375 +1390,30 @@ impl ConfigEditor {
         });
     }
 
-    fn run_options_grid(config: &mut hachimi::Config, ui: &mut egui::Ui, tab: ConfigEditorTab) {
-        match tab {
-            ConfigEditorTab::General => {
-                ui.label(t!("config_editor.language"));
-                let lang_changed = Gui::run_combo(ui, "language", &mut config.language, Language::CHOICES);
-                if lang_changed {
-                    config.language.set_locale();
-                }
-                ui.end_row();
-
-                ui.label(t!("config_editor.disable_overlay"));
-                if ui.checkbox(&mut config.disable_gui, "").clicked() {
-                    if config.disable_gui {
-                        thread::spawn(|| {
-                            Gui::instance().unwrap()
-                            .lock().unwrap()
-                            .show_window(Box::new(SimpleOkDialog::new(
-                                &t!("warning"),
-                                &t!("config_editor.disable_overlay_warning"),
-                                || {}
-                            )));
-                        });
-                    }
-                }
-                ui.end_row();
-
-                ui.label("介面縮放（Hachimi 選單）");
-                ui.add(egui::Slider::new(&mut config.gui_scale, 0.5..=3.0).step_by(0.05));
-                ui.end_row();
-
-                ui.label("自動更新")
-                    .on_hover_text("開：發現新版自動背景下載，完成後通知重開遊戲。\n關：只在右下角通知有新版，不下載。");
-                ui.checkbox(&mut config.auto_update, "");
-                ui.end_row();
-
-                #[cfg(target_os = "windows")]
-                {
-                    use crate::windows::wnd_hook;
-
-                    ui.label("開啟選單的按鍵");
-                    // 按下按鈕後由 wndproc 攔下一個按鍵，這裡每幀輪詢結果
-                    if let Some(key) = wnd_hook::take_captured_key() {
-                        config.windows.menu_open_key = key;
-                    }
-                    let capturing = wnd_hook::is_capturing_key();
-                    let label = if capturing {
-                        "請按下新按鍵…".to_owned()
-                    }
-                    else {
-                        wnd_hook::key_display_name(config.windows.menu_open_key)
-                    };
-                    if ui.button(label).clicked() {
-                        if capturing { wnd_hook::cancel_key_capture(); }
-                        else { wnd_hook::begin_key_capture(); }
-                    }
-                    ui.end_row();
-
-                    ui.label("視窗標題");
-                    let mut title = config.windows.custom_title_name.clone().unwrap_or_default();
-                    if ui.add(egui::TextEdit::singleline(&mut title).desired_width(150.0)).changed() {
-                        config.windows.custom_title_name =
-                            (!title.trim().is_empty()).then(|| title.trim().to_owned());
-                    }
-                    ui.end_row();
-
-                    ui.label("Discord 顯示遊戲活動");
-                    if ui.checkbox(&mut config.windows.enable_discord_rpc, "").changed() {
-                        // 存檔前就先套用，讓使用者馬上在 Discord 上看到結果
-                        if config.windows.enable_discord_rpc {
-                            crate::windows::discord::start();
-                        }
-                        else {
-                            crate::windows::discord::stop();
-                        }
-                    }
-                    ui.end_row();
-                }
-
-                ui.label(t!("config_editor.debug_mode"));
-                ui.checkbox(&mut config.debug_mode, "");
-                ui.end_row();
-            },
-
-            ConfigEditorTab::Graphics => {
-                Self::option_slider(ui, &t!("config_editor.target_fps"), &mut config.target_fps, 30..=240);
-
-                ui.label(t!("config_editor.virtual_resolution_multiplier"));
-                ui.add(egui::Slider::new(&mut config.virtual_res_mult, 1.0..=4.0).step_by(0.1));
-                ui.end_row();
-
-                ui.label(t!("config_editor.ui_scale"));
-                ui.add(egui::Slider::new(&mut config.ui_scale, 0.1..=10.0).step_by(0.05));
-                ui.end_row();
-
-                ui.label(t!("config_editor.ui_animation_scale"));
-                ui.add(egui::Slider::new(&mut config.ui_animation_scale, 0.1..=10.0).step_by(0.1));
-                ui.end_row();
-
-                ui.label(t!("config_editor.graphics_quality"));
-                Gui::run_combo(ui, "graphics_quality", &mut config.graphics_quality, &[
-                    (GraphicsQuality::Default, &t!("default")),
-                    (GraphicsQuality::Toon1280, "Toon1280"),
-                    (GraphicsQuality::Toon1280x2, "Toon1280x2"),
-                    (GraphicsQuality::Toon1280x4, "Toon1280x4"),
-                    (GraphicsQuality::ToonFull, "ToonFull"),
-                    (GraphicsQuality::Max, "Max")
-                ]);
-                ui.end_row();
-
-                #[cfg(target_os = "windows")]
-                {
-                    use crate::windows::hachimi_impl::{FullScreenMode, ResolutionScaling};
-
-                    ui.label(t!("config_editor.vsync"));
-                    Gui::run_vsync_combo(ui, &mut config.windows.vsync_count);
-                    ui.end_row();
-
-                    ui.label(t!("config_editor.auto_full_screen"));
-                    ui.checkbox(&mut config.windows.auto_full_screen, "");
-                    ui.end_row();
-
-                    ui.label(t!("config_editor.full_screen_mode"));
-                    Gui::run_combo(ui, "full_screen_mode", &mut config.windows.full_screen_mode, &[
-                        (FullScreenMode::ExclusiveFullScreen, &t!("config_editor.full_screen_mode_exclusive")),
-                        (FullScreenMode::FullScreenWindow, &t!("config_editor.full_screen_mode_borderless"))
-                    ]);
-                    ui.end_row();
-
-                    ui.label(t!("config_editor.block_minimize_in_full_screen"));
-                    ui.checkbox(&mut config.windows.block_minimize_in_full_screen, "");
-                    ui.end_row();
-
-                    ui.label(t!("config_editor.resolution_scaling"));
-                    Gui::run_combo(ui, "resolution_scaling", &mut config.windows.resolution_scaling, &[
-                        (ResolutionScaling::Default, &t!("config_editor.resolution_scaling_default")),
-                        (ResolutionScaling::ScaleToScreenSize, &t!("config_editor.resolution_scaling_ssize")),
-                        (ResolutionScaling::ScaleToWindowSize, &t!("config_editor.resolution_scaling_wsize"))
-                    ]);
-                    ui.end_row();
-
-                    ui.label(t!("config_editor.window_always_on_top"));
-                    ui.checkbox(&mut config.windows.window_always_on_top, "");
-                    ui.end_row();
-
-                    ui.label("隱藏遊戲游標");
-                    ui.checkbox(&mut config.windows.disable_game_cursor, "");
-                    ui.end_row();
-                }
-            },
-
-            ConfigEditorTab::Gameplay => {
-                ui.label(t!("config_editor.physics_update_mode"));
-                Gui::run_combo(ui, "physics_update_mode", &mut config.physics_update_mode, &[
-                    (None, &t!("default")),
-                    (SpringUpdateMode::ModeNormal.into(), "ModeNormal"),
-                    (SpringUpdateMode::Mode60FPS.into(), "Mode60FPS"),
-                    (SpringUpdateMode::SkipFrame.into(), "SkipFrame"),
-                    (SpringUpdateMode::SkipFramePostAlways.into(), "SkipFramePostAlways")
-                ]);
-                ui.end_row();
-
-                ui.label(t!("config_editor.story_choice_auto_select_delay"));
-                ui.add(egui::Slider::new(&mut config.story_choice_auto_select_delay, 0.1..=10.0).step_by(0.05));
-                ui.end_row();
-
-                ui.label(t!("config_editor.story_text_speed_multiplier"));
-                ui.add(egui::Slider::new(&mut config.story_tcps_multiplier, 0.1..=10.0).step_by(0.1));
-                ui.end_row();
-
-                ui.label(t!("config_editor.force_allow_dynamic_camera"));
-                ui.checkbox(&mut config.force_allow_dynamic_camera, "");
-                ui.end_row();
-
-                ui.label(t!("config_editor.skill_data_desc"))
-                    .on_hover_text(t!("config_editor.skill_data_desc_hint"));
-                ui.checkbox(&mut config.skill_data_desc, "");
-                ui.end_row();
-
-                #[cfg(target_os = "windows")]
-                {
-                    ui.label("一鍵學習設定檔")
-                        .on_hover_text("育成技能學習頁「決定」左邊的「一鍵學習」按鈕，按下去選主要或次要，\n\
-                            依那份清單由上往下點技能，點數不夠的跳過，最後跳出遊戲的確認視窗。\n\
-                            用的是這裡選中的設定檔。");
-                    Self::run_auto_skill_profiles(ui, config);
-                    ui.end_row();
-
-                    let active = config.auto_skill_active_profile;
-                    if let Some(profile) = config.auto_skill_profiles.get_mut(active) {
-                        ui.label("主要清單")
-                            .on_hover_text("「從技能頁匯入」會把最後開過的技能頁上還沒學的技能加進來（已在清單的不重複）。");
-                        Self::run_auto_skill_list(ui, "primary", &mut profile.primary);
-                        ui.end_row();
-
-                        ui.label("次要清單");
-                        Self::run_auto_skill_list(ui, "secondary", &mut profile.secondary);
-                        ui.end_row();
-                    }
-                }
-
-                ui.label(t!("config_editor.live_theater_allow_same_chara"));
-                ui.checkbox(&mut config.live_theater_allow_same_chara, "");
-                ui.end_row();
-
-                ui.label("演唱會播放速度");
-                ui.add(egui::Slider::new(&mut config.live_playback_speed, 0.1..=4.0).step_by(0.05));
-                ui.end_row();
-
-                // 只在真的在播的時候顯示進度，其他畫面掛一條不動的條沒有意義
-                {
-                    use crate::il2cpp::hook::umamusume::Director;
-                    if Director::is_live_active() {
-                        let (current, total) = Director::live_progress();
-                        ui.label("播放進度");
-                        ui.label(format!("{:.0}:{:02.0} / {:.0}:{:02.0}",
-                            current / 60.0, current % 60.0, total / 60.0, total % 60.0));
-                        ui.end_row();
-                    }
-                }
-            }
-        }
-
-        // Column widths workaround
-        ui.horizontal(|ui| ui.add_space(100.0));
-        ui.horizontal(|ui| ui.add_space(150.0));
-        ui.end_row();
-    }
 }
 
 impl Window for ConfigEditor {
     fn run(&mut self, ctx: &egui::Context) -> bool {
         let mut open = true;
-        let mut open2 = true;
-        let mut config = self.config.clone();
+        let screen = ctx.content_rect();
+        let size = egui::vec2(
+            560.0f32.min(screen.width() - 24.0),
+            480.0f32.min(screen.height() - 80.0)
+        );
 
-        new_window(ctx, t!("config_editor.title"))
+        egui::Window::new(t!("config_editor.title"))
         .id(self.id)
+        .pivot(egui::Align2::CENTER_CENTER)
+        .fixed_pos(screen.center())
+        .fixed_size(size)
+        .collapsible(false)
+        .resizable(false)
         .open(&mut open)
-        .show(ctx, |ui| {
-            simple_window_layout(ui, self.id,
-                |ui| {
-                    egui::ScrollArea::horizontal()
-                    .id_salt("tabs_scroll")
-                    .show(ui, |ui| {
-                        ui.horizontal(|ui| {
-                            let style = ui.style_mut();
-                            style.spacing.button_padding = egui::vec2(8.0, 5.0);
-                            style.spacing.item_spacing = egui::Vec2::ZERO;
-                            let widgets = &mut style.visuals.widgets;
-                            widgets.inactive.corner_radius = egui::CornerRadius::ZERO;
-                            widgets.hovered.corner_radius = egui::CornerRadius::ZERO;
-                            widgets.active.corner_radius = egui::CornerRadius::ZERO;
+        .show(ctx, |ui| self.show(ui));
 
-                            for (tab, label) in ConfigEditorTab::display_list() {
-                                if ui.selectable_label(self.current_tab == tab, label.as_ref()).clicked() {
-                                    self.current_tab = tab;
-                                }
-                            }
-                        });
-                    });
-
-                    ui.add_space(4.0);
-
-                    // 雙向捲動：內容比視窗寬時在裡面橫捲，而不是把視窗撐出畫面
-                    egui::ScrollArea::both()
-                    .id_salt("body_scroll")
-                    .show(ui, |ui| {
-                        egui::Frame::NONE
-                        .inner_margin(egui::Margin::symmetric(8, 0))
-                        .show(ui, |ui| {
-                            egui::Grid::new(self.id.with("options_grid"))
-                            .striped(true)
-                            .num_columns(2)
-                            .spacing([40.0, 4.0])
-                            .show(ui, |ui| {
-                                Self::run_options_grid(&mut config, ui, self.current_tab);
-                            });
-                        });
-                    });
-                },
-                |ui| {
-                    if ui.button(t!("cancel")).clicked() {
-                        open2 = false;
-                    }
-                    if ui.button(t!("save")).clicked() {
-                        save_and_reload_config(self.config.clone());
-                        open2 = false;
-                    }
-                }
-            );
-        });
-
-        self.config = config;
-
-        open &= open2;
         if !open {
-            let config_locale = Hachimi::instance().config.load().language.locale_str();
-            if config_locale != &*rust_i18n::locale() {
-                rust_i18n::set_locale(config_locale);
-            }
+            super::settings::flush();
         }
-
-        open
-    }
-}
-
-fn save_and_reload_config(config: hachimi::Config) {
-    let notif = match Hachimi::instance().save_and_reload_config(config) {
-        Ok(_) => t!("notification.config_saved").into_owned(),
-        Err(e) => e.to_string()
-    };
-
-    // 標題要在設定生效後才套用，才讀得到新值
-    #[cfg(target_os = "windows")]
-    crate::windows::wnd_hook::apply_custom_title();
-
-    // workaround since we can't get a mutable ref to the Gui and
-    // locking the mutex on the current thread would cause a deadlock
-    thread::spawn(move || {
-        Gui::instance().unwrap()
-        .lock().unwrap()
-        .show_notification(&notif);
-    });
-}
-
-
-struct AboutWindow {
-    id: egui::Id
-}
-
-impl AboutWindow {
-    fn new() -> AboutWindow {
-        AboutWindow {
-            id: random_id()
-        }
-    }
-}
-
-impl Window for AboutWindow {
-    fn run(&mut self, ctx: &egui::Context) -> bool {
-        let mut open = true;
-
-        new_window(ctx, t!("about.title"))
-        .id(self.id)
-        .open(&mut open)
-        .show(ctx, |ui| {
-            ui.horizontal(|ui| {
-                ui.add(Gui::icon_2x());
-                ui.vertical(|ui| {
-                    ui.heading(t!("hachimi"));
-                    ui.label(concat!("v", env!("CARGO_PKG_VERSION")));
-                });
-            });
-            ui.label(t!("about.copyright"));
-            ui.horizontal(|ui| {
-                if ui.button(t!("about.view_license")).clicked() {
-                    thread::spawn(|| {
-                        Gui::instance().unwrap()
-                        .lock().unwrap()
-                        .show_window(Box::new(LicenseWindow::new()));
-                    });
-                }
-                #[cfg(target_os = "windows")]
-                if ui.button(t!("about.check_for_updates")).clicked() {
-                    Hachimi::instance().updater.clone().check_for_updates(true);
-                }
-            });
-        });
-
         open
     }
 }
@@ -1499,43 +1444,5 @@ impl Window for LicenseWindow {
         });
 
         open
-    }
-}
-
-pub struct PersistentMessageWindow {
-    id: egui::Id,
-    title: String,
-    content: String,
-    show: Arc<AtomicBool>
-}
-
-impl PersistentMessageWindow {
-    pub fn new(title: &str, content: &str, show: Arc<AtomicBool>) -> PersistentMessageWindow {
-        PersistentMessageWindow {
-            id: random_id(),
-            title: title.to_owned(),
-            content: content.to_owned(),
-            show
-        }
-    }
-}
-
-impl Window for PersistentMessageWindow {
-    fn run(&mut self, ctx: &egui::Context) -> bool {
-        new_window(ctx, &self.title)
-        .id(self.id)
-        .show(ctx, |ui| {
-            simple_window_layout(ui, self.id,
-                |ui| {
-                    ui.centered_and_justified(|ui| {
-                        ui.label(&self.content);
-                    });
-                },
-                |_| {
-                }
-            );
-        });
-
-        self.show.load(atomic::Ordering::Relaxed)
     }
 }

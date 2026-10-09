@@ -100,7 +100,10 @@ pub struct Config {
     pub enable_discord_rpc: bool,
     /// 覆寫遊戲視窗標題；`None` 或空字串＝維持原樣
     #[serde(default)]
-    pub custom_title_name: Option<String>
+    pub custom_title_name: Option<String>,
+    /// 選單的「設定」開在遊戲畫面裡，而不是獨立視窗（獨佔全螢幕時切視窗遊戲會縮小）
+    #[serde(default)]
+    pub settings_in_game: bool
 }
 
 impl Config {

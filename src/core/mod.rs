@@ -14,6 +14,8 @@ pub use gui::Gui;
 pub use interceptor::Interceptor;
 
 pub mod utils;
+pub mod settings;
+pub mod main_thread;
 pub mod http;
 pub mod api_packet;
 #[cfg(target_os = "windows")]

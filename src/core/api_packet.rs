@@ -19,7 +19,9 @@ use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 #[cfg(feature = "datamine")]
 use once_cell::sync::Lazy;
 
-use super::{Error, Hachimi};
+use super::Error;
+#[cfg(feature = "datamine")]
+use super::Hachimi;
 
 const LZ4_FRAME_MAGIC: [u8; 4] = [0x04, 0x22, 0x4d, 0x18];
 
@@ -146,13 +148,9 @@ fn next_index() -> usize {
 }
 
 /// 改一項設定並寫回 config.json
+/// 改一項設定。走 settings：記憶體裡的 config 也要更新，否則之後別處整份存檔會把這裡的值蓋回去。
 fn update_config(f: impl FnOnce(&mut super::hachimi::Config)) {
-    let hachimi = Hachimi::instance();
-    let mut config = (**hachimi.config.load()).clone();
-    f(&mut config);
-    if let Err(e) = hachimi.save_config(&config) {
-        warn!("[api_capture] 設定寫入失敗：{e}");
-    }
+    super::settings::update(f);
 }
 
 /// 從 top-level `data` 物件的 key 組出檔名標籤（辨識是哪個 endpoint）。
