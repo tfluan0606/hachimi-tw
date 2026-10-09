@@ -27,7 +27,10 @@ use crate::{core::{Error, Gui, Hachimi, Interceptor}, windows::wnd_hook};
 use super::d3d11_painter::D3D11Painter;
 
 fn check_hwnd(this: *mut c_void) -> HWND {
-    let swap_chain = unsafe { IDXGISwapChain::from_raw(this) };
+    // 只是借用 hook 拿到的指標：from_raw 會接管所有權，離開時 Release 一次，把別人的引用計數
+    // 減掉。這兩個 hook 會經過程序裡「所有」swap chain，獨立設定視窗的 swap chain 只有一個引用，
+    // 第一次 ResizeBuffers 就被銷毀（實測：卡住後在 GetBuffer 閃退）。
+    let swap_chain = std::mem::ManuallyDrop::new(unsafe { IDXGISwapChain::from_raw(this) });
     let Ok(desc) = (unsafe { swap_chain.GetDesc() }) else {
         return HWND::default();
     };
