@@ -1,6 +1,6 @@
 # 接手須知（放下一陣子之後回來先看這頁）
 
-> 最後更新：2026-08-29。上一次實際寫 code 是 2026-08-15，之後專案暫停。
+> 最後更新：2026-10-10。2026-08-29 暫停後，10-04 恢復開發，10-10 發了 **v1.1.0**。
 
 ## 三十秒版本
 
@@ -9,7 +9,8 @@
   上游沒有任何我們沒跟到的東西。
 - 活躍後繼者 `kairusds/Hachimi-Edge`（remote `edge`）**只當零件庫**，逐項移植並實機驗證，
   不整棵樹接。原因見 `tw-compat-notes.md` 的〈為什麼不整個接 Edge〉——那是實測結論，別重新辯論。
-- 改動全部在 `main` 上，已推 origin。
+- 改動全部在 `main` 上，已推 origin。發版走 `tools/release.ps1` → GitHub Actions 自動開 release，
+  玩家端由自動更新器接手（流程見 `tw-compat-notes.md`〈發版流程〉與 `release-notes/`）。
 
 ## 分支長怎樣（2026-10-10 整理過）
 
@@ -34,25 +35,9 @@ archive/ui-speed-button-diag  （只在本機，沒推）診斷「UI 加速下�
 
 ## 「我遊戲裡跑的是哪一版」
 
-repo 的 code 和你實際裝的 DLL **不是同一個東西**，這點最容易搞混。已經打上 tag：
-
-| tag | commit | 對應成品 |
-|---|---|---|
-| `dist-20260722` | `bfe8996` | `dist/ASKR-因子卡片-Hachimi-TW-20260722.zip` |
-| `dist-20260729` | `76140b8` | `dist/ASKR-Hachimi-TW-完整版-20260729.zip`、`dist/pkg/version.dll` |
-
-**注意：`dist/` 裡最新的那包不等於遊戲裡裝的那個。** 兩者是分開的——`dist/` 是打包給人用的
-成品，遊戲裡的則常常是隨手 build 上去的本機版本。判斷實際裝了哪一版，最快的方法是看
-`<遊戲目錄>\hachimi\config.json` 有哪些鍵：config 會依當時的 `Config` struct 補齊欄位，
-所以有 `enable_discord_rpc` 就代表至少含 `13c46c4`，有 `gui_scale` 就代表含 `3b8c21a`，依此類推。
-
-2026-09-01 起遊戲裡裝的是 `f7362ce`（＝當時的 `main`），舊的那顆備份在同目錄的
-`version.dll.bak-20260901`（8/12 build，只到 Discord RPC 那批）。
-
-2026-09-07 起遊戲裡裝的是 `fd6f81c`（分支 `feat/practice-race-capture`，＝練習賽擷取
-＋datamine gate＋log 固定一份那批的預設完整版 build），覆蓋前那顆備份在
-`version.dll.bak-20260907`。log 檔名這版起改成每個 exe 固定一份
-`hachimi_tw_<exe>.log`、每次啟動 truncate 覆寫，不再累積帶 pid 的舊檔。
+- **發給別人的**：GitHub release（v1.1.0 起），tag = DLL 內建版號。7 月的 `dist-*` tag／`dist/` 打包已不再使用。
+- **遊戲裡實際裝的**：常常是隨手本機編譯上去的版本，不等於任何 release。看 log 第一行
+  `Hachimi TW vX.Y.Z-<commit>[-dirty]` 就知道是哪個 commit、有沒有未 commit 的改動。
 
 ## 進度
 
@@ -66,8 +51,14 @@ repo 的 code 和你實際裝的 DLL **不是同一個東西**，這點最容易
 | Free Camera 階段 1–2：播放速度、進度滑桿 | ✅ `960657e` |
 | 因子卡片（遊戲內 + 網站端 `render-card`） | ✅ |
 | API 擷取開關（config `api_capture` + 選單「API 擷取」） | ✅ `f7362ce` |
-| **Free Camera 階段 3：鍵盤自由視角** | 🔶 **停在這**。`8719f80` 只加了 Transform/Camera 綁定，還沒有 `free_camera.rs` |
+| 一鍵學習（技能頁原生按鈕、主要／次要清單、設定檔、搜尋加入） | ✅ `51052f4` `fd2d7b6` |
+| egui 0.27→0.35、egui-directx11 0.13、windows 0.62；GUI 開著遊戲吃不到輸入 | ✅ `7079393` |
+| UI 重整：選單精簡、設定即時生效＋自動存檔、獨立設定視窗 | ✅ `1942e86`（設計與踩雷見記憶／commit 訊息） |
+| 更新流程：選單上檢查更新、詢問視窗附更新內容、下載 timeout | ✅ `05e9cdd` |
+| C 執行階段靜態連結（不需 VC++ 套件） | ✅ `e63d937` |
+| Free Camera 階段 3：鍵盤自由視角 | 🔶 8 月停在這。`8719f80` 只加了 Transform/Camera 綁定，還沒有 `free_camera.rs` |
 | 階段 4 返回鍵、階段 5 手把 | ❌ 未動 |
+| UI 加速下育成結束評價框偶爾沒「下一步」 | ❌ 未解，使用者有解法構想；診斷 log 在本機 tag `archive/ui-speed-button-diag` |
 
 ## 回來的第一步
 
