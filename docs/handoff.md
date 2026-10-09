@@ -16,7 +16,6 @@
 ```
 main                        唯一主線。所有已完成的功能都在這，已推 origin。
 local/datamine              只在本機、不要推：datamine 版的 request 側擷取（不公開的原始碼）。
-wip/ui-speed-button-diag    只在本機：診斷「UI 加速下育成結束對話框偶爾沒出下一步按鈕」的 log。
 ```
 
 已刪掉的分支留了封存 tag（`git tag --list "archive/*"`），要撈回來從 tag 開分支即可：
@@ -27,6 +26,8 @@ archive/edge-full-rebase      2026-08-07 的「整棵樹接 Edge」試驗。結�
 archive/tier2-training-helper 2026-07-14 擱置的育成輔助。讀技能頁的部分已被一鍵學習取代、
                               發動條件已由 skill_data_desc 做掉；還有參考價值的是活體讀牌組
                               （SingleModeDeck.rs）和 il2cpp 全類別 dump 工具（src/il2cpp/dump.rs）。
+archive/ui-speed-button-diag  （只在本機，沒推）診斷「UI 加速下育成結束評價對話框偶爾沒出『下一步』
+                              按鈕」的 log。問題還沒解，使用者有解法構想，下次遇到再處理。
 ```
 
 `discord-rpc`、`factor-card`、`feat/practice-race-capture` 也都刪了——內容早就全在 `main` 裡。
