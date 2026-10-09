@@ -300,6 +300,8 @@ impl Gui {
                         self.menu_anim_time = None;
                     }
                 });
+                #[cfg(target_os = "windows")]
+                run_update_row(ui);
                 ui.separator();
 
                 egui::ScrollArea::vertical().show(ui, |ui| {
@@ -676,6 +678,105 @@ fn rarity_badge(ui: &mut egui::Ui, rarity: Option<i32>) {
     });
 }
 
+/// 遊戲內選單上的「檢查更新」那一列：依更新狀態顯示按鈕、進度或「重開生效」
+#[cfg(target_os = "windows")]
+fn run_update_row(ui: &mut egui::Ui) {
+    use crate::windows::updater::UpdateStatus;
+
+    let updater = Hachimi::instance().updater.clone();
+    match updater.status() {
+        UpdateStatus::Idle => {
+            if ui.button("\u{f021} 檢查更新").clicked() {
+                updater.check_for_updates(true);
+            }
+        }
+        UpdateStatus::Checking => {
+            ui.add_enabled(false, egui::Button::new("\u{f021} 檢查更新中…"));
+        }
+        UpdateStatus::Available { version } => {
+            // 再查一次：會抓更新說明、跳詢問視窗
+            if ui.button(format!("\u{f062} 有新版 {version}，更新")).clicked() {
+                updater.check_for_updates(true);
+            }
+        }
+        UpdateStatus::Downloading => match updater.progress() {
+            Some(p) => {
+                ui.add(egui::ProgressBar::new(p).text(format!("下載更新中 {:.0}%", p * 100.0)));
+            }
+            None => {
+                ui.label("下載更新中…");
+            }
+        },
+        UpdateStatus::Installed => {
+            ui.label("\u{f00c} 已更新，重開遊戲後生效");
+        }
+    }
+}
+
+/// 手動檢查查到新版時的詢問視窗：列出更新內容，問要不要下載安裝。
+#[cfg(target_os = "windows")]
+pub(crate) struct UpdateDialog {
+    id: egui::Id,
+    version: String,
+    notes: Option<String>
+}
+
+#[cfg(target_os = "windows")]
+impl UpdateDialog {
+    pub(crate) fn new(version: &str, notes: Option<String>) -> UpdateDialog {
+        // GitHub 的說明是 Markdown，這裡只顯示純文字：去掉標題的 # 和粗體的 **
+        let notes = notes.map(|n| {
+            n.lines()
+                .map(|l| l.trim_start_matches('#').trim_start().replace("**", ""))
+                .collect::<Vec<_>>()
+                .join("\n")
+        });
+        UpdateDialog { id: random_id(), version: version.to_owned(), notes }
+    }
+}
+
+#[cfg(target_os = "windows")]
+impl Window for UpdateDialog {
+    fn run(&mut self, ctx: &egui::Context) -> bool {
+        let mut answer: Option<bool> = None;
+        let dismissed = egui::Modal::new(self.id).show(ctx, |ui| {
+            ui.set_width(340.0f32.min(ctx.content_rect().width() - 48.0));
+            ui.heading(format!("發現新版本 {}", self.version));
+            ui.label(egui::RichText::new(concat!("目前版本 v", env!("CARGO_PKG_VERSION"))).weak());
+            ui.add_space(8.0);
+            match &self.notes {
+                Some(notes) => {
+                    ui.label(egui::RichText::new("更新內容").strong());
+                    egui::ScrollArea::vertical().max_height(240.0).show(ui, |ui| {
+                        ui.label(notes);
+                    });
+                }
+                None => {
+                    ui.label(egui::RichText::new("（沒有更新說明）").weak());
+                }
+            }
+            ui.add_space(12.0);
+            ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                if ui.button("下載並安裝").clicked() {
+                    answer = Some(true);
+                }
+                if ui.button("稍後").clicked() {
+                    answer = Some(false);
+                }
+            });
+        }).should_close();
+
+        match answer.or(dismissed.then_some(false)) {
+            Some(true) => {
+                Hachimi::instance().updater.clone().run();
+                false
+            }
+            Some(false) => false,
+            None => true
+        }
+    }
+}
+
 /// 選單上的小標題
 fn menu_heading(ui: &mut egui::Ui, text: &str) {
     ui.add_space(6.0);
@@ -971,8 +1072,8 @@ impl ConfigEditor {
             ui.end_row();
         }
 
-        ui.label("自動更新")
-            .on_hover_text("開：發現新版自動背景下載，完成後通知重開遊戲。\n關：只在右下角通知有新版，不下載。");
+        ui.label("有新版時自動下載")
+            .on_hover_text("開：啟動時發現新版就在背景下載安裝，完成後重開遊戲生效。\n關：只通知有新版，打開選單按「更新」再裝。");
         ui.checkbox(&mut config.auto_update, "");
         ui.end_row();
 
@@ -1254,19 +1355,14 @@ impl ConfigEditor {
             });
         });
         ui.label(t!("about.copyright"));
-        ui.horizontal(|ui| {
-            if ui.button(t!("about.view_license")).clicked() {
-                thread::spawn(|| {
-                    Gui::instance().unwrap()
-                    .lock().unwrap()
-                    .show_window(Box::new(LicenseWindow::new()));
-                });
-            }
-            #[cfg(target_os = "windows")]
-            if ui.button(t!("about.check_for_updates")).clicked() {
-                Hachimi::instance().updater.clone().check_for_updates(true);
-            }
-        });
+        // 檢查更新在遊戲內選單上（打開選單就看得到）
+        if ui.button(t!("about.view_license")).clicked() {
+            thread::spawn(|| {
+                Gui::instance().unwrap()
+                .lock().unwrap()
+                .show_window(Box::new(LicenseWindow::new()));
+            });
+        }
     }
 
     fn option_slider<Num: egui::emath::Numeric>(ui: &mut egui::Ui, label: &str, value: &mut Option<Num>, range: RangeInclusive<Num>) {

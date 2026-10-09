@@ -1,8 +1,7 @@
-use std::{fs, path::{Path, PathBuf}, sync::{atomic::{self, AtomicBool}, Arc, Mutex}};
+use std::{fs, path::{Path, PathBuf}, sync::{atomic::{self, AtomicBool, AtomicU64}, Arc, Mutex}, time::Duration};
 
 use arc_swap::ArcSwap;
 use fnv::FnvHashMap;
-use rust_i18n::t;
 use serde::Deserialize;
 use windows::Win32::{Foundation::MAX_PATH, System::LibraryLoader::GetModuleFileNameW};
 
@@ -23,10 +22,25 @@ struct DllUpdate {
     hash_url: String
 }
 
-#[derive(Default)]
+/// 更新目前的狀態，遊戲內選單的「檢查更新」那一列照這個顯示。
+#[derive(Clone, PartialEq)]
+pub enum UpdateStatus {
+    Idle,
+    Checking,
+    /// 查到新版但還沒下載（自動下載關閉，或使用者在詢問視窗按了「稍後」）
+    Available { version: String },
+    Downloading,
+    /// 已換好新 DLL，重開遊戲後生效
+    Installed,
+}
+
 pub struct Updater {
     update_check_mutex: Mutex<()>,
     new_update: ArcSwap<Option<DllUpdate>>,
+    status: Mutex<UpdateStatus>,
+    /// 下載進度（位元組）；總長未知時 total 為 0
+    downloaded: AtomicU64,
+    total: AtomicU64,
     // 正在背景下載時為 true，擋掉同時觸發的第二次下載（會搶同一個 .new 檔）。
     downloading: AtomicBool,
     // 本次執行已經換好新 DLL、只等重開。此時再查到「有新版」其實就是剛裝的那個，
@@ -34,18 +48,57 @@ pub struct Updater {
     installed: AtomicBool
 }
 
+impl Default for Updater {
+    fn default() -> Self {
+        Updater {
+            update_check_mutex: Mutex::new(()),
+            new_update: ArcSwap::new(Arc::new(None)),
+            status: Mutex::new(UpdateStatus::Idle),
+            downloaded: AtomicU64::new(0),
+            total: AtomicU64::new(0),
+            downloading: AtomicBool::new(false),
+            installed: AtomicBool::new(false)
+        }
+    }
+}
+
+fn notify(msg: &str) {
+    if let Some(mutex) = Gui::instance() {
+        mutex.lock().unwrap().show_notification(msg);
+    }
+}
+
 impl Updater {
-    /// `manual`：是否為使用者在選單按「檢查更新」觸發（會顯示「檢查更新中／無更新」等回饋）。
-    /// 背景（啟動）檢查傳 false，安靜進行，只有真的查到新版才出聲。
+    pub fn status(&self) -> UpdateStatus {
+        self.status.lock().unwrap().clone()
+    }
+
+    fn set_status(&self, status: UpdateStatus) {
+        *self.status.lock().unwrap() = status;
+    }
+
+    /// 下載進度 0～1；總長未知時回 None
+    pub fn progress(&self) -> Option<f32> {
+        let total = self.total.load(atomic::Ordering::Relaxed);
+        (total > 0).then(|| self.downloaded.load(atomic::Ordering::Relaxed) as f32 / total as f32)
+    }
+
+    /// `manual`：使用者在選單按「檢查更新」。查到新版就跳詢問視窗（附更新說明）讓使用者決定要不要下載；
+    /// 沒新版、失敗也會跳通知。
+    /// 背景（啟動）檢查傳 false：安靜進行。查到新版時，開了自動下載就直接下載，否則只通知、
+    /// 選單上那一列會變成「有新版」。
     pub fn check_for_updates(self: Arc<Self>, manual: bool) {
         std::thread::spawn(move || {
+            let before = self.status();
             if let Err(e) = self.check_for_updates_internal(manual) {
                 error!("{}", e);
+                // 查失敗就回到原本的狀態（例如本來已知有新版，就還是有新版）
+                if self.status() == UpdateStatus::Checking {
+                    self.set_status(before);
+                }
                 // 只有手動檢查才把錯誤跳給使用者；背景檢查（例如還沒發 release 會 404）不打擾。
                 if manual {
-                    if let Some(mutex) = Gui::instance() {
-                        mutex.lock().unwrap().show_notification(&t!("notification.update_failed", reason = e.to_string()));
-                    }
+                    notify(&format!("檢查更新失敗：{e}"));
                 }
             }
         });
@@ -57,96 +110,81 @@ impl Updater {
             return Ok(());
         };
 
-        if self.installed.load(atomic::Ordering::Acquire) {
+        if self.installed.load(atomic::Ordering::Acquire) || self.downloading.load(atomic::Ordering::Acquire) {
+            return Ok(());
+        }
+        self.set_status(UpdateStatus::Checking);
+
+        let latest = fetch_latest_release()?;
+        if !latest.is_newer_version() {
+            self.set_status(UpdateStatus::Idle);
             if manual {
-                if let Some(mutex) = Gui::instance() {
-                    mutex.lock().unwrap().show_notification(&t!("notification.update_ready_restart"));
-                }
+                notify("已經是最新版本。");
             }
             return Ok(());
         }
 
+        let find = |name: &str| latest.assets.iter().find(|a| a.name == name).map(|a| a.browser_download_url.clone());
+        let (Some(dll_url), Some(hash_url)) = (find(DLL_ASSET_NAME), find(HASH_ASSET_NAME)) else {
+            // 有新版但 release 少了 DLL 或 blake3.json，沒法安全更新，只記 log。
+            warn!("Release '{}' is missing '{}' or '{}' asset; skipping update", latest.tag_name, DLL_ASSET_NAME, HASH_ASSET_NAME);
+            self.set_status(UpdateStatus::Idle);
+            if manual {
+                notify("已經是最新版本。");
+            }
+            return Ok(());
+        };
+        self.new_update.store(Arc::new(Some(DllUpdate { dll_url, hash_url })));
+        self.set_status(UpdateStatus::Available { version: latest.tag_name.clone() });
+
         if manual {
+            // 更新說明只有手動檢查才抓：查版號的回傳裡有就用，沒有再多問一次 GitHub API（抓不到就不顯示）
+            let notes = latest.body.clone()
+                .map(|b| b.replace("\r\n", "\n"))
+                .filter(|b| !b.trim().is_empty())
+                .or_else(|| fetch_release_notes(&latest.tag_name));
             if let Some(mutex) = Gui::instance() {
-                mutex.lock().unwrap().show_notification(&t!("notification.checking_for_updates"));
+                mutex.lock().unwrap().show_window(Box::new(
+                    crate::core::gui::UpdateDialog::new(&latest.tag_name, notes)
+                ));
             }
         }
-
-        let latest = fetch_latest_release()?;
-        if latest.is_newer_version() {
-            let mut dll_url = None;
-            let mut hash_url = None;
-            for asset in latest.assets {
-                if asset.name == DLL_ASSET_NAME {
-                    dll_url = Some(asset.browser_download_url);
-                }
-                else if asset.name == HASH_ASSET_NAME {
-                    hash_url = Some(asset.browser_download_url);
-                }
-            }
-
-            if let (Some(dll_url), Some(hash_url)) = (dll_url, hash_url) {
-                self.new_update.store(Arc::new(Some(DllUpdate { dll_url, hash_url })));
-
-                if Hachimi::instance().config.load().auto_update {
-                    // 自動更新開啟：直接背景下載（run() 會自己跳通知），不鎖畫面、不問。
-                    Hachimi::instance().updater.clone().run();
-                }
-                else if let Some(mutex) = Gui::instance() {
-                    // 關閉：只在右下角通知有新版，不下載。
-                    mutex.lock().unwrap().show_notification(&t!("notification.update_available", version = latest.tag_name));
-                }
-            }
-            else {
-                // 有新版但 release 少了 DLL 或 blake3.json，沒法安全更新，只記 log。
-                warn!("Release '{}' is missing '{}' or '{}' asset; skipping update", latest.tag_name, DLL_ASSET_NAME, HASH_ASSET_NAME);
-                if manual {
-                    if let Some(mutex) = Gui::instance() {
-                        mutex.lock().unwrap().show_notification(&t!("notification.no_updates"));
-                    }
-                }
-            }
+        else if Hachimi::instance().config.load().auto_update {
+            Hachimi::instance().updater.clone().run();
         }
-        else if manual {
-            if let Some(mutex) = Gui::instance() {
-                mutex.lock().unwrap().show_notification(&t!("notification.no_updates"));
-            }
+        else {
+            notify(&format!("發現新版本 {}，打開選單按「更新」安裝", latest.tag_name));
         }
-
         Ok(())
     }
 
+    /// 背景下載並換上新版（查到新版後才有東西可下載）。
     pub fn run(self: Arc<Self>) {
         // 已在背景下載中就不再開一個（會搶同一個 version.dll.new）。
         if self.downloading.swap(true, atomic::Ordering::AcqRel) {
             return;
         }
+        let before = self.status();
+        self.downloaded.store(0, atomic::Ordering::Relaxed);
+        self.total.store(0, atomic::Ordering::Relaxed);
+        self.set_status(UpdateStatus::Downloading);
+
         std::thread::spawn(move || {
-            // 只跳一則右下角通知，不用會鎖住輸入的「更新中」視窗，下載期間照樣能玩。
-            if let Some(mutex) = Gui::instance() {
-                mutex.lock().unwrap().show_notification(&t!("notification.update_downloading"));
-            }
-
             let res = self.clone().run_internal();
-            if let Ok(true) = res {
-                self.installed.store(true, atomic::Ordering::Release);
-            }
-            self.downloading.store(false, atomic::Ordering::Release);
-
-            if let Some(mutex) = Gui::instance() {
-                let mut gui = mutex.lock().unwrap();
-                match res {
-                    Ok(true) => gui.show_notification(&t!("notification.update_ready_restart")),
-                    Ok(false) => {}
-                    Err(e) => {
-                        error!("{}", e);
-                        gui.show_notification(&t!("notification.update_failed", reason = e.to_string()));
-                    }
+            match &res {
+                Ok(true) => {
+                    self.installed.store(true, atomic::Ordering::Release);
+                    self.set_status(UpdateStatus::Installed);
+                    notify("更新完成，重新啟動遊戲後生效。");
+                }
+                Ok(false) => self.set_status(before),
+                Err(e) => {
+                    error!("{}", e);
+                    self.set_status(before);
+                    notify(&format!("更新失敗：{e}"));
                 }
             }
-            else if let Err(e) = res {
-                error!("{}", e);
-            }
+            self.downloading.store(false, atomic::Ordering::Release);
         });
     }
 
@@ -155,7 +193,6 @@ impl Updater {
         let Some(update) = (**self.new_update.load()).clone() else {
             return Ok(false);
         };
-        self.new_update.store(Arc::new(None));
 
         // 現役 version.dll 的完整路徑（可能被改名成別的檔名，用實際載入路徑最準）。
         let dll_path = current_dll_path()?;
@@ -173,12 +210,21 @@ impl Updater {
             fs::remove_file(&new_path)?;
         }
         {
+            // 網路斷掉時不要永遠卡住（以前沒設 timeout）
+            let agent = ureq::AgentBuilder::new()
+                .timeout_connect(Duration::from_secs(15))
+                .timeout_read(Duration::from_secs(30))
+                .build();
+            let res = agent.get(&update.dll_url).call()?;
+            if let Some(len) = res.header("content-length").and_then(|v| v.parse::<u64>().ok()) {
+                self.total.store(len, atomic::Ordering::Relaxed);
+            }
             let mut file = fs::File::create(&new_path)?;
-            let res = ureq::get(&update.dll_url).call()?;
             let mut hasher = blake3::Hasher::new();
             let mut buffer = [0u8; CHUNK_SIZE];
             http::download_file_buffered(res, &mut file, &mut buffer, |bytes| {
                 hasher.update(bytes);
+                self.downloaded.fetch_add(bytes.len() as u64, atomic::Ordering::Relaxed);
             })?;
             file.sync_data()?;
 
@@ -188,6 +234,7 @@ impl Updater {
                 return Err(Error::FileHashMismatch(new_path.to_string_lossy().into_owned()));
             }
         }
+        self.new_update.store(Arc::new(None));
 
         // 清掉上次殘留的 .old（可能上次啟動來不及清）。
         if old_path.exists() {
@@ -209,6 +256,22 @@ impl Updater {
 
         info!("Updated DLL in place; old version kept at '{}' until next launch", old_path.display());
         Ok(true)
+    }
+}
+
+/// 這個 release 的說明文字（GitHub 上寫的更新內容）。抓不到就回 None，不影響更新本身。
+fn fetch_release_notes(tag: &str) -> Option<String> {
+    #[derive(Deserialize)]
+    struct ReleaseBody {
+        body: Option<String>
+    }
+    let url = format!("https://api.github.com/repos/{}/releases/tags/{}", REPO_PATH, tag);
+    match http::get_github_json::<ReleaseBody>(&url) {
+        Ok(r) => r.body.map(|b| b.replace("\r\n", "\n")).filter(|b| !b.trim().is_empty()),
+        Err(e) => {
+            warn!("Failed to fetch release notes for {}: {}", tag, e);
+            None
+        }
     }
 }
 
@@ -242,7 +305,7 @@ fn latest_release_via_web(repo: &str) -> Result<Release, Error> {
         name: name.to_owned(),
         browser_download_url: format!("https://github.com/{}/releases/download/{}/{}", repo, tag, name)
     };
-    Ok(Release { tag_name: tag.to_owned(), assets: vec![asset(DLL_ASSET_NAME), asset(HASH_ASSET_NAME)] })
+    Ok(Release { tag_name: tag.to_owned(), assets: vec![asset(DLL_ASSET_NAME), asset(HASH_ASSET_NAME)], body: None })
 }
 
 /// 開機時清掉上次更新留下的 `version.dll.old`（此時它已不再被載入，可以安全刪除）。
@@ -279,7 +342,10 @@ fn with_suffix(path: &Path, suffix: &str) -> PathBuf {
 pub struct Release {
     // STUB
     tag_name: String,
-    assets: Vec<ReleaseAsset>
+    assets: Vec<ReleaseAsset>,
+    /// 更新說明。GitHub API（和測試用的 update_check_url）回傳裡就有；走網頁轉址查版號時沒有
+    #[serde(default)]
+    body: Option<String>
 }
 
 impl Release {

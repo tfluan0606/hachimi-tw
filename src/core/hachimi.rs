@@ -226,13 +226,12 @@ impl Hachimi {
     }
 
     pub fn run_auto_update_check(&self) {
-        let config = self.config.load();
-        // auto_update 開啟時一律檢查；否則沿用 disable_auto_update_check（預設會查，好顯示「有新版」通知）。
-        if config.auto_update || !config.disable_auto_update_check {
-            // 只剩本體（DLL）自動更新；翻譯更新已移除。這是背景（非手動）檢查。
-            #[cfg(target_os = "windows")]
-            self.updater.clone().check_for_updates(false);
-        }
+        // 每次啟動都在背景查一次（走 GitHub 網頁轉址，不吃 API 次數）。有新版時：auto_update 開就
+        // 下載，關就只通知、選單按鈕變「有新版」。不再看 disable_auto_update_check——那是上游時代
+        // 用來擋原版 Hachimi 查上游更新的，打包給朋友的 config 都是 true，結果關掉自動下載的人
+        // 啟動時完全收不到新版通知。
+        #[cfg(target_os = "windows")]
+        self.updater.clone().check_for_updates(false);
     }
 }
 
@@ -256,14 +255,15 @@ pub struct Config {
     pub open_browser_url: String,
     #[serde(default = "Config::default_virtual_res_mult")]
     pub virtual_res_mult: f32,
+    /// 已不使用（見 `run_auto_update_check`）；留著只為了讀得進舊 config
     #[serde(default)]
     pub disable_auto_update_check: bool,
     /// 測試用：把「最新 release」查詢網址換掉（例 `http://127.0.0.1:8765/latest.json`），
     /// 回傳格式同 GitHub `releases/latest`。未設定＝查 GitHub。設定編輯器不顯示。
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub update_check_url: Option<String>,
-    /// 自動更新：開＝查到新版就背景下載、完成後通知重開；關＝只在右下角通知有新版，不下載。
-    /// 開啟時也保證每次啟動都會檢查（不受 `disable_auto_update_check` 影響）。
+    /// 有新版時自動下載：開＝啟動時查到新版就背景下載、完成後通知重開；關＝只通知有新版，
+    /// 由使用者在選單按「更新」再裝。不管開關，啟動時都會檢查。
     #[serde(default)]
     pub auto_update: bool,
     /// 因子卡片用亮色主題（預設暗色）
