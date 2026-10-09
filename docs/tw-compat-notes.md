@@ -370,7 +370,8 @@ overlay 能出來完全是靠 `76140b8` 的 fallback —— render_hook 首次 P
   工作量在**翻譯條件式**（`distance_type==2&running_style==1&phase_random==2`
   → 「中距離・逃・中盤」），需要一張對照表，模式同 `crates/factor-card/assets/*.json`。
   另可考慮做成自己的 overlay 視窗，就不必碰 `UpdateItem` hook。
-  ※ `tier2-training-helper` 分支的 WIP 有 `SkillLearningList.rs`，動工前先回頭看。
+  ※ 已由 `skill_data_desc` 做掉（讀 master.mdb 的 `skill_data`，格式化成中文條件）。原本 tier2 分支的
+  `SkillLearningList.rs` 已封存在 tag `archive/tier2-training-helper`。
 - 賽事分析事件列表 — 等台服上五週年內容。
 
 ---

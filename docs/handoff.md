@@ -11,18 +11,25 @@
   不整棵樹接。原因見 `tw-compat-notes.md` 的〈為什麼不整個接 Edge〉——那是實測結論，別重新辯論。
 - 改動全部在 `main` 上，已推 origin。
 
-## 分支長怎樣（2026-08-29 整理過）
+## 分支長怎樣（2026-10-10 整理過）
 
 ```
 main                        唯一主線。所有已完成的功能都在這，已推 origin。
-wip/tier2-training-helper   2026-07-14 停在半路的育成輔助。裡面的 SkillLearningList.rs
-                            是「顯示技能實際發動條件」那個延後項目的起點，動工前先回頭看。
-experiment/edge-full-rebase 2026-08-07 的「整棵樹接 Edge」試驗。結論是不接（14 個 NULL
-                            hook、設定編輯器硬崩）。留著當證據，不要往上開發，不要合併。
+local/datamine              只在本機、不要推：datamine 版的 request 側擷取（不公開的原始碼）。
+wip/ui-speed-button-diag    只在本機：診斷「UI 加速下育成結束對話框偶爾沒出下一步按鈕」的 log。
 ```
 
-原本的 `discord-rpc` 和 `factor-card` 兩條分支已經刪掉——內容早就全在 `main` 裡了，
-留著只會讓人以為還有沒併回來的東西。
+已刪掉的分支留了封存 tag（`git tag --list "archive/*"`），要撈回來從 tag 開分支即可：
+
+```
+archive/edge-full-rebase      2026-08-07 的「整棵樹接 Edge」試驗。結論是不接（14 個 NULL hook、
+                              設定編輯器硬崩）。之後 egui 等套件是自己逐項升級的（7079393）。
+archive/tier2-training-helper 2026-07-14 擱置的育成輔助。讀技能頁的部分已被一鍵學習取代、
+                              發動條件已由 skill_data_desc 做掉；還有參考價值的是活體讀牌組
+                              （SingleModeDeck.rs）和 il2cpp 全類別 dump 工具（src/il2cpp/dump.rs）。
+```
+
+`discord-rpc`、`factor-card`、`feat/practice-race-capture` 也都刪了——內容早就全在 `main` 裡。
 
 ## 「我遊戲裡跑的是哪一版」
 
