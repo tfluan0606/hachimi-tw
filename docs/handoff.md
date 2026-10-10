@@ -16,7 +16,7 @@
 
 ```
 main                        唯一主線。所有已完成的功能都在這，已推 origin。
-local/datamine              只在本機、不要推：datamine 版的 request 側擷取（不公開的原始碼）。
+local/datamine              只在本機、不要推：全量 API 擷取＋request 側擷取（2026-10-10 起 main 已移除，不公開）。
 ```
 
 已刪掉的分支留了封存 tag（`git tag --list "archive/*"`），要撈回來從 tag 開分支即可：
@@ -50,7 +50,7 @@ archive/ui-speed-button-diag  （只在本機，沒推）診斷「UI 加速下�
 | 解析度縮放 | ✅ 本來就有（走 `get_Width`/`get_Height`，不是 Edge 的 `SetResolution`） |
 | Free Camera 階段 1–2：播放速度、進度滑桿 | ✅ `960657e` |
 | 因子卡片（遊戲內 + 網站端 `render-card`） | ✅ |
-| API 擷取開關（config `api_capture` + 選單「API 擷取」） | ✅ `f7362ce` |
+| API 擷取開關（config `api_capture` + 選單「API 擷取」） | 🗑️ 2026-10-10 從 main 移除，只留本機 `local/datamine` |
 | 一鍵學習（技能頁原生按鈕、主要／次要清單、設定檔、搜尋加入） | ✅ `51052f4` `fd2d7b6` |
 | egui 0.27→0.35、egui-directx11 0.13、windows 0.62；GUI 開著遊戲吃不到輸入 | ✅ `7079393` |
 | UI 重整：選單精簡、設定即時生效＋自動存檔、獨立設定視窗 | ✅ `1942e86`（設計與踩雷見記憶／commit 訊息） |

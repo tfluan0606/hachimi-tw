@@ -368,22 +368,6 @@ impl Gui {
                         }
                     }
 
-                    // 全量 API 擷取（datamine）：分享版不編入，選單看不到。
-                    #[cfg(feature = "datamine")]
-                    {
-                        use crate::core::api_packet;
-
-                        menu_heading(ui, "API 擷取");
-                        let mut on = api_packet::capture_enabled();
-                        if ui.checkbox(&mut on, "把 API 回傳的 JSON 全部存檔").changed() {
-                            api_packet::set_capture_enabled(on);
-                            show_notification = Some(if on { "API 擷取已開啟".into() } else { "API 擷取已關閉".into() });
-                        }
-                        if on {
-                            ui.small(format!("已抓 {} 筆。檔案很大而且含帳號明文資料，用完記得關", api_packet::capture_count()));
-                        }
-                    }
-
                     ui.add_space(6.0);
                     egui::CollapsingHeader::new("更多").default_open(false).show(ui, |ui| {
                         if ui.button(t!("menu.toggle_game_ui")).clicked() {
@@ -1327,22 +1311,6 @@ impl ConfigEditor {
         #[cfg(target_os = "windows")]
         if ui.button("開啟練習賽資料夾").clicked() {
             open_folder(&practice_race::capture_dir());
-        }
-
-        #[cfg(feature = "datamine")]
-        {
-            use crate::core::api_packet;
-
-            ui.separator();
-            let mut on = api_packet::capture_enabled();
-            if ui.checkbox(&mut on, "把 API 回傳的 JSON 全部存檔").changed() {
-                api_packet::set_capture_enabled(on);
-            }
-            ui.small("檔案很大而且含帳號明文資料，用完記得關。");
-            #[cfg(target_os = "windows")]
-            if ui.button("開啟擷取資料夾").clicked() {
-                open_folder(&api_packet::capture_dir());
-            }
         }
     }
 

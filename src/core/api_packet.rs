@@ -11,17 +11,7 @@
 //! 離線 wire pipeline（b64→AES→LZ4→msgpack）與其常數僅供測試用（`out/pc_cap` 封包端到端驗證），
 //! 以 `#[cfg(test)]` 隔開，不進執行期。
 
-// 這些只被 datamine（api_capture 全量擷取）用；practice_race 模組有自己的 imports。
-#[cfg(feature = "datamine")]
-use std::path::PathBuf;
-#[cfg(feature = "datamine")]
-use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
-#[cfg(feature = "datamine")]
-use once_cell::sync::Lazy;
-
 use super::Error;
-#[cfg(feature = "datamine")]
-use super::Hachimi;
 
 const LZ4_FRAME_MAGIC: [u8; 4] = [0x04, 0x22, 0x4d, 0x18];
 
@@ -85,95 +75,12 @@ pub fn decode_plaintext(plaintext: &[u8]) -> Result<serde_json::Value, Error> {
     Ok(rmpv_to_json(value))
 }
 
-// —— 以下 api_capture（全量原始封包 datamine）整套只在 `datamine` feature 下編入。分享版不帶。——
-#[cfg(feature = "datamine")]
-static CAPTURE_COUNTER: AtomicUsize = AtomicUsize::new(0);
-
-/// 全量落檔開關。初值取自 config 的 `api_capture`，選單切換立即生效並寫回 config。
-///
-/// 早期版本是拿「使用者有沒有自己建 api_capture 資料夾」當開關，會讓人以為外掛在自己抓封包。
-/// 現在資料夾由我們建，開關只有這一個。
-#[cfg(feature = "datamine")]
-static CAPTURE_ENABLED: Lazy<AtomicBool> = Lazy::new(|| {
-    let on = Hachimi::instance().config.load().api_capture;
-    if on {
-        // 上次開著就啟動的情況，一樣要接續編號，不然開一次遊戲就蓋掉一次。
-        CAPTURE_COUNTER.store(next_index(), Ordering::Relaxed);
-    }
-    AtomicBool::new(on)
-});
-
-/// 落檔位置：`<data>/api_capture/`
-#[cfg(feature = "datamine")]
-pub fn capture_dir() -> PathBuf {
-    Hachimi::instance().get_data_path("api_capture")
-}
-
-#[cfg(feature = "datamine")]
-pub fn capture_enabled() -> bool {
-    CAPTURE_ENABLED.load(Ordering::Relaxed)
-}
-
-/// 下一個檔案的編號，也就是資料夾裡累計抓了幾筆（顯示在選單上，讓人知道它真的在動）。
-#[cfg(feature = "datamine")]
-pub fn capture_count() -> usize {
-    CAPTURE_COUNTER.load(Ordering::Relaxed)
-}
-
-#[cfg(feature = "datamine")]
-pub fn set_capture_enabled(on: bool) {
-    if on {
-        // 從資料夾裡既有的編號接下去。不這樣做的話，關掉再開會從 0000 開始把先前抓的蓋掉。
-        CAPTURE_COUNTER.store(next_index(), Ordering::Relaxed);
-    }
-    CAPTURE_ENABLED.store(on, Ordering::Relaxed);
-    update_config(|c| c.api_capture = on);
-}
-
-/// 掃資料夾裡的 `NNNN_*.json`，回傳最大編號 +1；沒有就從 0 開始。
-#[cfg(feature = "datamine")]
-fn next_index() -> usize {
-    let Ok(entries) = std::fs::read_dir(capture_dir()) else {
-        return 0;
-    };
-    entries
-        .flatten()
-        .filter_map(|e| {
-            let name = e.file_name().into_string().ok()?;
-            let (num, _) = name.split_once('_')?;
-            num.parse::<usize>().ok()
-        })
-        .max()
-        .map_or(0, |n| n + 1)
-}
-
-/// 改一項設定並寫回 config.json
 /// 改一項設定。走 settings：記憶體裡的 config 也要更新，否則之後別處整份存檔會把這裡的值蓋回去。
 fn update_config(f: impl FnOnce(&mut super::hachimi::Config)) {
     super::settings::update(f);
 }
 
-/// 從 top-level `data` 物件的 key 組出檔名標籤（辨識是哪個 endpoint）。
-/// response 有 `data`；request 沒有，就退回用根物件的 key。
-#[cfg(feature = "datamine")]
-fn label_from_json(json: &serde_json::Value) -> String {
-    let obj = json
-        .get("data")
-        .and_then(|d| d.as_object())
-        .or_else(|| json.as_object());
-    let keys: Vec<&str> = obj
-        .map(|o| o.keys().map(|s| s.as_str()).collect())
-        .unwrap_or_default();
-    if keys.is_empty() {
-        "unknown".to_string()
-    } else {
-        let joined = keys.join("_");
-        joined.chars().filter(|c| c.is_alphanumeric() || *c == '_').take(60).collect()
-    }
-}
-
-/// 攔到一個 response 的 msgpack 明文。因子卡片需要的資料一律會收，全量落檔則要開關打開
-/// （選單「API 擷取」或 config 的 `api_capture`）。解不出來的（非遊戲 API msgpack）安靜跳過。
+/// 攔到一個 response 的 msgpack 明文，交給因子卡片與比賽擷取。解不出來的（非遊戲 API msgpack）安靜跳過。
 pub fn capture_response(bytes: &[u8]) {
     let json = match decode_plaintext(bytes) {
         Ok(j) => j,
@@ -201,35 +108,11 @@ pub fn capture_response(bytes: &[u8]) {
         if practice_race::capture_enabled() {
             practice_race::capture(&json);
         }
-
-        // 全量 API 擷取（datamine）：分享版不編入。
-        #[cfg(feature = "datamine")]
-        if capture_enabled() {
-            let dir = capture_dir();
-            if let Err(e) = std::fs::create_dir_all(&dir) {
-                warn!("[api_capture] 建立資料夾失敗：{e}");
-                return;
-            }
-
-            let n = CAPTURE_COUNTER.fetch_add(1, Ordering::Relaxed);
-            let label = label_from_json(&json);
-            info!("[api_capture] #{n:04} data=[{label}] ({} bytes msgpack)", bytes.len());
-
-            let path = dir.join(format!("{n:04}_{label}.json"));
-            match serde_json::to_string_pretty(&json) {
-                Ok(s) => {
-                    if let Err(e) = std::fs::write(&path, s) {
-                        warn!("[api_capture] write failed: {e}");
-                    }
-                }
-                Err(e) => warn!("[api_capture] serialize failed: {e}"),
-            }
-        }
     } // end #[cfg(not(feature = "capture-only"))]
 }
 
 /// 練習賽擷取：命中「練習賽結果」的 response 就落一份好命名的檔到 `<data>/race_capture/`。
-/// 由選單「練習賽擷取」或 config 的 `practice_race_capture` 開關，跟全量 API 擷取互相獨立。
+/// 由選單「比賽擷取」或 config 的 `practice_race_capture` 開關。
 pub mod practice_race {
     use super::update_config;
     use crate::core::Hachimi;
@@ -272,7 +155,7 @@ pub mod practice_race {
         update_config(|c| c.practice_race_capture = on);
     }
 
-    /// 落檔位置：`<data>/race_capture/`（跟 api_capture 同一層）。
+    /// 落檔位置：`<data>/race_capture/`。
     pub fn capture_dir() -> PathBuf {
         Hachimi::instance().get_data_path("race_capture")
     }
