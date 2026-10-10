@@ -24,7 +24,14 @@ pub fn init(umamusume: *const Il2CppImage) {
 
     new_hook!(ChangeLive_addr, ChangeLive);
 
+    // 編譯器產生的 lambda 名稱各版本不同：台服是 b__48_1，日服（上游）是 b__41_1
+    let onSuccess_addr = [c"<ChangeLive>b__48_1", c"<ChangeLive>b__41_1"]
+        .into_iter()
+        .map(|name| get_method_addr(LiveTheaterViewController, name, 1))
+        .find(|&addr| addr != 0)
+        .unwrap_or(0);
+
     unsafe {
-        CHANGELIVE_ONSUCCESS_ADDR = get_method_addr(LiveTheaterViewController, c"<ChangeLive>b__41_1", 1);
+        CHANGELIVE_ONSUCCESS_ADDR = onSuccess_addr;
     }
 }
