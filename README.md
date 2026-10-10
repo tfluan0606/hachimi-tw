@@ -7,7 +7,7 @@
 UM:PD **繁中服（Komoe 代理，PC 端）**專用的遊戲增強 mod。
 
 > 本專案是 [Hachimi](https://github.com/Hachimi-Hachimi/Hachimi) 的分支（fork），核心架構與大部分底層程式碼來自上游 Hachimi；
-> 部分功能移植自其後繼專案 [Hachimi-Edge](https://github.com/kairusds/Hachimi-Edge)。授權沿用 **GNU GPLv3**。
+> 技能詳細數據移植自其後繼專案 [Hachimi-Edge](https://github.com/kairusds/Hachimi-Edge)，之後獨立發展、不再與上游同步。授權沿用 **GNU GPLv3**。
 
 ---
 
@@ -90,7 +90,7 @@ cargo build --release
 ## English
 
 **Hachimi TW** is a game enhancement mod for the **UM:PD Traditional Chinese client (Komoe, PC)**.
-It is a fork of [Hachimi](https://github.com/Hachimi-Hachimi/Hachimi), with some features ported from [Hachimi-Edge](https://github.com/kairusds/Hachimi-Edge). Licensed under **GNU GPLv3**, same as upstream.
+It is a fork of [Hachimi](https://github.com/Hachimi-Hachimi/Hachimi), with the skill data descriptions ported from [Hachimi-Edge](https://github.com/kairusds/Hachimi-Edge); it is now developed independently and does not track either upstream. Licensed under **GNU GPLv3**, same as upstream.
 
 Highlights: TW client compatibility (version.dll proxy injection, standard il2cpp export resolution), in-game skill data descriptions,
 factor cards, race packet capture, Discord Rich Presence, graphics/playback options and a self-hosted auto-updater.
