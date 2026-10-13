@@ -103,6 +103,8 @@ pub fn capture_response(bytes: &[u8]) {
         // 因子卡片要用的練成角色資料
         #[cfg(target_os = "windows")]
         super::factor_card::store_response(&json);
+        #[cfg(target_os = "windows")]
+        super::chara_filter::store_response(&json);
 
         // 練習賽擷取（獨立開關）：命中練習賽結果就落一份好命名的檔到 race_capture/。
         if practice_race::capture_enabled() {

@@ -52,6 +52,10 @@ extern "C" fn eglSwapBuffers(display: EGLDisplay, surface: EGLSurface) -> EGLBoo
         }
     };
     // Skip if its empty, or it's still too early
+    // 同 Windows：排隊的主執行緒工作與自動存檔不能等選單打開才處理
+    crate::core::settings::autosave_tick();
+    crate::core::main_thread::drain();
+
     if gui.is_empty() || gui.start_time.elapsed().as_secs_f32() < 1.0 {
         return orig_fn(display, surface);
     }

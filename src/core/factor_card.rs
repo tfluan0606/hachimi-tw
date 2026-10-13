@@ -7,7 +7,7 @@
 
 use std::collections::HashMap;
 use std::path::PathBuf;
-use std::sync::atomic::{AtomicBool, AtomicI64, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicI64, AtomicU64, Ordering};
 use std::sync::Mutex;
 
 use factor_card::{data::CardData, Extras, render::Portrait, Fonts, Maps, Theme};
@@ -18,6 +18,8 @@ use super::{Error, Hachimi};
 
 /// 已攔到的練成角色，key = trained_chara_id
 static TRAINED: Lazy<Mutex<HashMap<i64, Value>>> = Lazy::new(|| Mutex::new(HashMap::new()));
+/// `TRAINED` 每變動一次就 +1（馬娘篩選看這個決定要不要重建索引）
+static TRAINED_GENERATION: AtomicU64 = AtomicU64::new(0);
 
 static MAPS: Lazy<Maps> = Lazy::new(Maps::bundled);
 /// 卡片正中央的 ASKR 浮水印
@@ -71,8 +73,11 @@ pub fn store_response(json: &Value) {
         FOLLOWER_NUM.store(n, Ordering::Relaxed);
     }
     let mut found: Vec<&Value> = Vec::new();
-    if let Some(arr) = data.get("trained_chara_array").and_then(|v| v.as_array()) {
-        found.extend(arr.iter());
+    // add_trained_chara_array：育成剛結束、新進包包的那隻
+    for key in ["trained_chara_array", "add_trained_chara_array"] {
+        if let Some(arr) = data.get(key).and_then(|v| v.as_array()) {
+            found.extend(arr.iter());
+        }
     }
     if let Some(one) = data.get("trained_chara").filter(|v| v.is_object()) {
         found.push(one);
@@ -92,9 +97,25 @@ pub fn store_response(json: &Value) {
             store.insert(id, e.clone());
         }
     }
+    TRAINED_GENERATION.fetch_add(1, Ordering::Relaxed);
     if store.len() != before {
         info!("[factor_card] 已收集 {} 隻練成角色", store.len());
     }
+}
+
+/// 收集到的練成角色變動次數（馬娘篩選用來判斷要不要重建索引）
+pub fn trained_generation() -> u64 {
+    TRAINED_GENERATION.load(Ordering::Relaxed)
+}
+
+/// 對收集到的全部練成角色跑 `f`（會鎖住收集表，`f` 裡別做太久的事）
+pub fn with_trained<R>(f: impl FnOnce(&HashMap<i64, Value>) -> R) -> R {
+    f(&TRAINED.lock().unwrap())
+}
+
+/// 因子、卡片名稱等靜態對照表
+pub fn maps() -> &'static Maps {
+    &MAPS
 }
 
 /// 目前收集到的練成角色數量（給選單顯示用）

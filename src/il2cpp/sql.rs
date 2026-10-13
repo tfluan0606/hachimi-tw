@@ -229,6 +229,32 @@ pub fn load_skill_catalog() -> Vec<(String, i32)> {
     out
 }
 
+/// 全部技能的 id → 名稱（馬娘篩選：用名稱找有這個技能的馬）。
+/// 呼叫遊戲的 SQLite（il2cpp），**只能在遊戲主執行緒呼叫**。
+pub fn load_skill_names() -> FnvHashMap<i32, String> {
+    let mut out = FnvHashMap::default();
+    let conn = Connection::new();
+    if !Connection::Open(conn, get_masterdb_path().to_il2cpp_string(), ptr::null_mut(), ptr::null_mut(), 0) {
+        warn!("[skill_names] master.mdb 開不了（{}）", get_masterdb_path());
+        return out;
+    }
+    let sql = "SELECT s.id, t.text FROM skill_data s         JOIN text_data t ON t.\"index\" = s.id AND t.category = 47";
+    let query = Connection::Query_orig(conn, sql.to_il2cpp_string());
+    if !query.is_null() {
+        while Query::Step(query) {
+            let id = Query::GetInt(query, 0);
+            let name = SkillDataDesc::get_data_text(query, 1).trim().to_owned();
+            if !name.is_empty() {
+                out.insert(id, name);
+            }
+        }
+        Query::Dispose_orig(query);
+    }
+    Connection::CloseDB(conn);
+    info!("[skill_names] {} 個技能", out.len());
+    out
+}
+
 impl SkillDataDesc {
     pub fn load_from_db() -> Self {
         let mut descs = FnvHashMap::default();

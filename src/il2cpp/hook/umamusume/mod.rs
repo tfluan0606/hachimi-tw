@@ -39,6 +39,8 @@ mod PaymentUtility;
 
 #[cfg(target_os = "windows")]
 pub mod DialogTrainedCharacterDetail;
+#[cfg(target_os = "windows")]
+pub mod WorkDataManager;
 
 // 育成技能學習頁的「自動學習」按鈕
 #[cfg(target_os = "windows")]
@@ -60,6 +62,8 @@ pub fn init() {
     {
     #[cfg(target_os = "windows")]
     DialogTrainedCharacterDetail::init(image);
+    #[cfg(target_os = "windows")]
+    WorkDataManager::init(image);
 
     // 字體／顯示
     TextFrame::init(image);

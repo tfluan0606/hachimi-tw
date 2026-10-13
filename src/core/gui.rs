@@ -196,8 +196,6 @@ impl Gui {
 
         self.run_windows();
         self.run_notifications();
-        super::settings::autosave_tick();
-        super::main_thread::drain();
 
         if self.splash_visible { self.run_splash(); }
 
@@ -289,6 +287,9 @@ impl Gui {
                         }
                         else {
                             crate::windows::settings_window::open();
+                            // 設定改在獨立視窗操作，遊戲內選單收起來，不用再切回遊戲關它
+                            self.show_menu = false;
+                            self.menu_anim_time = None;
                         }
                         #[cfg(not(target_os = "windows"))]
                         {
@@ -495,6 +496,16 @@ impl Gui {
 
     pub fn is_consuming_input(&self) -> bool {
         self.menu_visible || !self.windows.is_empty()
+    }
+
+    /// 這一幀不跑 [`Gui::run`]（沒東西要畫）時也要更新輸入狀態：選單不在了遊戲就該吃得到輸入，
+    /// 否則會停在最後一次 run 的值。例如從選單開了獨立設定視窗、選單收起來後，
+    /// 遊戲會一直收不到滑鼠鍵盤。
+    #[cfg(target_os = "windows")]
+    pub fn sync_input_state_idle(&self) {
+        let consuming = self.is_consuming_input() || crate::windows::settings_window::is_foreground();
+        IS_CONSUMING_INPUT.store(consuming, atomic::Ordering::Relaxed);
+        crate::windows::wnd_hook::set_ime_wanted(false);
     }
 
     pub fn is_consuming_input_atomic() -> bool {
@@ -928,6 +939,8 @@ pub(crate) enum SettingsPage {
     AutoSkill,
     #[cfg(target_os = "windows")]
     FactorCard,
+    #[cfg(target_os = "windows")]
+    CharaFilter,
     Capture,
     About
 }
@@ -942,6 +955,8 @@ impl SettingsPage {
             (SettingsPage::AutoSkill, "一鍵學習"),
             #[cfg(target_os = "windows")]
             (SettingsPage::FactorCard, "因子卡片"),
+            #[cfg(target_os = "windows")]
+            (SettingsPage::CharaFilter, "馬娘篩選"),
             (SettingsPage::Capture, "擷取"),
             (SettingsPage::About, "關於"),
         ]
@@ -978,7 +993,7 @@ impl ConfigEditor {
                 }
             });
             ui.separator();
-            self.run_page_scroll(ui, &mut config);
+            self.run_page_body(ui, &mut config);
         }
         else {
             ui.horizontal_top(|ui| {
@@ -992,7 +1007,7 @@ impl ConfigEditor {
                 });
                 ui.separator();
                 // 外層是水平排列（導覽｜內容），內容要自己開一個垂直排列，否則整頁會排成一長條橫列
-                ui.vertical(|ui| self.run_page_scroll(ui, &mut config));
+                ui.vertical(|ui| self.run_page_body(ui, &mut config));
             });
         }
 
@@ -1000,6 +1015,16 @@ impl ConfigEditor {
         if serde_json::to_string(&*before).ok() != serde_json::to_string(&config).ok() {
             super::settings::commit(config);
         }
+    }
+
+    /// 內容區。馬娘篩選的結果清單自己會捲（只畫看得到的那幾列），不包外層捲動
+    fn run_page_body(&mut self, ui: &mut egui::Ui, config: &mut hachimi::Config) {
+        #[cfg(target_os = "windows")]
+        if self.page == SettingsPage::CharaFilter {
+            super::chara_filter::ui(ui);
+            return;
+        }
+        self.run_page_scroll(ui, config);
     }
 
     /// 內容區：只上下捲動、填滿剩下的空間，文字依寬度自動換行
@@ -1023,6 +1048,8 @@ impl ConfigEditor {
             SettingsPage::AutoSkill => Self::page_auto_skill(ui, config),
             #[cfg(target_os = "windows")]
             SettingsPage::FactorCard => Self::page_factor_card(ui),
+            #[cfg(target_os = "windows")]
+            SettingsPage::CharaFilter => super::chara_filter::ui(ui),
             SettingsPage::Capture => Self::page_capture(ui),
             SettingsPage::About => Self::page_about(ui),
         }

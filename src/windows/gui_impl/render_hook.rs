@@ -81,8 +81,14 @@ extern "C" fn IDXGISwapChain_Present(this: *mut c_void, sync_interval: c_uint, f
             return res;
         }
     };
+    // 設定視窗排的工作（例如馬娘篩選的「開啟」）與自動存檔，遊戲內選單關著也要每幀處理，
+    // 不能放在 gui.run() 裡——選單沒東西要畫時下面會整個跳過
+    crate::core::settings::autosave_tick();
+    crate::core::main_thread::drain();
+
     // Skip if the GUI is empty or the window is minimized
     if gui.is_empty() || unsafe { IsIconic(hwnd).into() } {
+        gui.sync_input_state_idle();
         return orig_fn(this, sync_interval, flags);
     }
     // Check if this is the right swap chain

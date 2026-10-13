@@ -21,6 +21,8 @@ pub mod http;
 pub mod api_packet;
 #[cfg(target_os = "windows")]
 pub mod factor_card;
+#[cfg(target_os = "windows")]
+pub mod chara_filter;
 pub mod log;
 
 pub mod plugin_api;
