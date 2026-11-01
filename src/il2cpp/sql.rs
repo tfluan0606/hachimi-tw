@@ -229,6 +229,30 @@ pub fn load_skill_catalog() -> Vec<(String, i32)> {
     out
 }
 
+/// 最高評價點法用：技能 id → (grade_value, tag_id)。tag_id 是 "101/203/401" 這種字串。
+/// 呼叫遊戲的 SQLite（il2cpp），**只能在遊戲主執行緒呼叫**。
+pub fn load_skill_grades() -> FnvHashMap<i32, (i32, String)> {
+    let mut out = FnvHashMap::default();
+    let conn = Connection::new();
+    if !Connection::Open(conn, get_masterdb_path().to_il2cpp_string(), ptr::null_mut(), ptr::null_mut(), 0) {
+        warn!("[skill_grades] master.mdb 開不了（{}）", get_masterdb_path());
+        return out;
+    }
+    let query = Connection::Query_orig(conn, "SELECT id, grade_value, tag_id FROM skill_data".to_il2cpp_string());
+    if !query.is_null() {
+        while Query::Step(query) {
+            let id = Query::GetInt(query, 0);
+            let grade = Query::GetInt(query, 1);
+            let tags = SkillDataDesc::get_data_text(query, 2);
+            out.insert(id, (grade, tags));
+        }
+        Query::Dispose_orig(query);
+    }
+    Connection::CloseDB(conn);
+    info!("[skill_grades] {} 個技能", out.len());
+    out
+}
+
 /// 全部技能的 id → 名稱（馬娘篩選：用名稱找有這個技能的馬）。
 /// 呼叫遊戲的 SQLite（il2cpp），**只能在遊戲主執行緒呼叫**。
 pub fn load_skill_names() -> FnvHashMap<i32, String> {

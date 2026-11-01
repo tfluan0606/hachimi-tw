@@ -6,6 +6,9 @@
 //! 呼叫「決定」鈕本來的處理函式 `OnClickDecideButton`，跳出遊戲自己的確認視窗。要不要送 request
 //! 仍由使用者在確認視窗決定，我們不碰任何封包。
 //!
+//! 對話框第三顆鈕「最高評價」：逐列試選量出遊戲算的實際花費，再用背包 DP（`core::skill_score`）
+//! 找點數內技能評價分最高的組合，選好後一樣交給遊戲的確認視窗。
+//!
 //! 簽章對過繁中服 dump：
 //!
 //! ```text
@@ -19,6 +22,11 @@
 //! Gallop.SingleModeSkillLearningSkillInfo::get_SkillList() -> List<PartsSingleModeSkillLearningListItem.Info>
 //! Gallop.DialogCommon.Data::SetSimpleTwoButtonMessage(String header, String message, Action<DialogCommon> onRight,
 //!     TextId leftTextId, TextId rightTextId, Action<DialogCommon> onLeft, DialogCommonBase.FormType) -> Data
+//! Gallop.DialogCommon.Data::SetSimpleThreeButtonMessage(String header, String message, Action<DialogCommon> onRight,
+//!     TextId rightTextId, Action<DialogCommon> onCenter, TextId centerTextId, Action<DialogCommon> onLeft,
+//!     TextId leftTextId, DialogCommonBase.FormType) -> Data
+//!     （參數順序是反組譯欄位寫入推出來的：跟兩鈕版寫同一組欄位，onCenter／centerText 另寫 +0x80／+0x50；
+//!      執行時還會核對參數型別，對不上就退回兩鈕）
 //! Gallop.DialogCommon.Data::AddOpenCallback(Action<DialogCommon>) -> Void
 //! Gallop.DialogManager::PushDialog(DialogCommon.Data) -> DialogCommon [static]
 //! Gallop.DialogCommon::GetButtonObj(DialogCommon.ButtonIndex) -> ButtonCommon
@@ -32,7 +40,10 @@ use std::{ffi::c_void, ptr::null_mut, sync::Mutex};
 use widestring::Utf16Str;
 
 use crate::{
-    core::{Gui, Hachimi},
+    core::{
+        skill_score::{self, RowOption},
+        Gui, Hachimi,
+    },
     il2cpp::{
         api::*,
         ext::{Il2CppObjectExt, Il2CppStringExt, StringExt},
@@ -41,6 +52,7 @@ use crate::{
             create_delegate, find_nested_class, get_assembly_image, get_class, get_method, get_method_addr,
             get_method_overload_addr, GCHandle, IList,
         },
+        sql,
         types::*,
     },
 };
@@ -65,6 +77,8 @@ static mut INSTANTIATE_ADDR: usize = 0;
 static mut GET_TRANSFORM_ADDR: usize = 0;
 static mut SET_TWO_BUTTON_ADDR: usize = 0;
 static mut PUSH_DIALOG_ADDR: usize = 0;
+/// 三鈕版；0＝找不到或參數型別對不上（退回兩鈕）
+static mut SET_THREE_BUTTON_ADDR: usize = 0;
 
 /// 對話框用到的 enum 值（runtime 從 enum 欄位讀，不寫死數字）
 #[derive(Clone, Copy, Default)]
@@ -73,12 +87,16 @@ struct DialogEnums {
     form_type: i32,
     button_left: i32,
     button_right: i32,
+    /// 三鈕版用；找不到時 `None`，退回兩鈕
+    form_type_three: Option<i32>,
+    button_center: Option<i32>,
 }
 static DIALOG_ENUMS: Mutex<Option<DialogEnums>> = Mutex::new(None);
 
 const BUTTON_LABEL: &str = "一鍵學習";
 const PRIMARY_LABEL: &str = "主要";
 const SECONDARY_LABEL: &str = "次要";
+const MAX_SCORE_LABEL: &str = "最高評價";
 
 // ---- 小工具 ----
 
@@ -220,6 +238,11 @@ fn collect_groups(model: *mut Il2CppObject) -> Vec<Vec<Entry>> {
 
 /// 試著選進 `entry`；失敗（不能學、點數不夠）就退回原狀。
 fn try_select(model: *mut Il2CppObject, entry: &Entry) -> bool {
+    try_select_impl(model, entry, false)
+}
+
+/// `quiet`＝試算用，不寫 info log
+fn try_select_impl(model: *mut Il2CppObject, entry: &Entry, quiet: bool) -> bool {
     let info = entry.info;
     let mut available = call0::<bool>(info, c"get_IsAvailable").unwrap_or(false);
     if !available {
@@ -241,8 +264,121 @@ fn try_select(model: *mut Il2CppObject, entry: &Entry) -> bool {
         debug!("[AutoSkill] rollback {} ({}) remain_after={}", entry.name, entry.skill_id, remain_after);
         return false;
     }
-    info!("[AutoSkill] select {} ({}) need={} remain {} -> {}", entry.name, entry.skill_id, need, remain, remain_after);
+    if !quiet {
+        info!("[AutoSkill] select {} ({}) need={} remain {} -> {}", entry.name, entry.skill_id, need, remain, remain_after);
+    }
     true
+}
+
+/// 目前技能頁的 (controller, model)
+fn current_model() -> Option<(*mut Il2CppObject, *mut Il2CppObject)> {
+    let controller = match CONTROLLER.lock().unwrap().as_ref() {
+        Some(h) => h.target(),
+        None => null_mut(),
+    };
+    let model_class = CLASSES.lock().unwrap().as_ref().map(|c| c.model)?;
+    let model = find_field_object_by_type(controller, model_class);
+    (!model.is_null()).then_some((controller, model))
+}
+
+static SKILL_GRADES: once_cell::sync::OnceCell<fnv::FnvHashMap<i32, (i32, String)>> = once_cell::sync::OnceCell::new();
+
+fn apply_max_score() {
+    let Some((controller, model)) = current_model() else {
+        error!("[AutoSkill] max score: model not found");
+        notify("最高評價失敗：找不到技能資料".into());
+        return;
+    };
+    let Some(propers) = super::WorkDataManager::single_mode_propers() else {
+        notify("最高評價失敗：讀不到這匹馬的適性".into());
+        return;
+    };
+    // 跑在遊戲主執行緒（按鈕回呼），可以直接查 mdb
+    let grades = SKILL_GRADES.get_or_init(sql::load_skill_grades);
+    let score_of = |id: i32| grades.get(&id).map_or(0.0, |(g, tags)| skill_score::skill_score(*g, tags, &propers));
+
+    call0::<()>(model, c"ResetSelected");
+    let budget = call0::<i32>(model, c"get_RemainingPoint").unwrap_or(0);
+    let groups = collect_groups(model);
+    info!("[AutoSkill] max score: budget={} rows={} propers={:?}", budget, groups.len(), propers);
+
+    // 逐列試選，量遊戲實際扣的點數（同列下位有選時上位會折扣，自己加總不準）
+    let mut measured: Vec<(usize, Vec<RowOption>)> = Vec::new();
+    for (gi, group) in groups.iter().enumerate() {
+        let acquired = group.iter().rposition(|e| call0::<bool>(e.info, c"get_IsAcquired").unwrap_or(false));
+        let start = acquired.map_or(0, |a| a + 1);
+        if start >= group.len() {
+            continue;
+        }
+        let base = acquired.map_or(0.0, |a| score_of(group[a].skill_id));
+
+        let mut options = Vec::new();
+        for (k, e) in group.iter().enumerate().skip(start) {
+            if !try_select_impl(model, e, true) {
+                break;
+            }
+            let remain = call0::<i32>(model, c"get_RemainingPoint").unwrap_or(budget);
+            options.push(RowOption { tier: k, cost: budget - remain, gain: score_of(e.skill_id) - base });
+        }
+        call0::<()>(model, c"ResetSelected");
+        if !options.is_empty() {
+            measured.push((gi, options));
+        }
+    }
+
+    // 共用技能的列（白自己一列＋「白→金」一列）併成一組，每組只挑一個選項
+    let ids: Vec<Vec<i32>> = measured.iter().map(|(gi, _)| groups[*gi].iter().map(|e| e.skill_id).collect()).collect();
+    let mut rows: Vec<Vec<RowOption>> = Vec::new();
+    let mut option_groups: Vec<Vec<usize>> = Vec::new();
+    for family in skill_score::families(&ids) {
+        let mut options = Vec::new();
+        let mut owners = Vec::new();
+        for r in family {
+            for opt in &measured[r].1 {
+                options.push(opt.clone());
+                owners.push(measured[r].0);
+            }
+        }
+        rows.push(options);
+        option_groups.push(owners);
+    }
+
+    let plan = skill_score::optimize(&rows, budget);
+    let mut expect_cost = 0;
+    let mut expect_gain = 0.0;
+    let mut ok = true;
+    for ((options, owners), pick) in rows.iter().zip(&option_groups).zip(&plan) {
+        let Some(i) = *pick else { continue };
+        let opt = &options[i];
+        let gi = owners[i];
+        expect_cost += opt.cost;
+        expect_gain += opt.gain;
+        let group = &groups[gi];
+        for e in &group[..=opt.tier] {
+            if call0::<bool>(e.info, c"get_IsAcquired").unwrap_or(false)
+                || call1::<_, bool>(model, c"IsSelect", e.info).unwrap_or(false)
+            {
+                continue;
+            }
+            if !try_select(model, e) {
+                ok = false;
+            }
+        }
+        debug!("[AutoSkill] max score pick {} (+{:.1}, {}pt)", group[opt.tier].name, opt.gain, opt.cost);
+    }
+    let used = budget - call0::<i32>(model, c"get_RemainingPoint").unwrap_or(0);
+    if used != expect_cost || !ok {
+        warn!("[AutoSkill] max score: expected cost {} but used {} (ok={})", expect_cost, used, ok);
+    }
+    info!("[AutoSkill] max score: +{:.1} using {}/{} pt", expect_gain, used, budget);
+
+    call0::<()>(controller, c"OnSelectUpdate");
+    if !call0::<bool>(model, c"get_HasSelectedSkill").unwrap_or(false) {
+        notify("最高評價：目前點數內沒有能加評價的技能".into());
+        return;
+    }
+    notify(format!("最高評價：技能評價分預計 +{:.0}（用 {}／{} pt）", expect_gain, used, budget));
+    call0::<()>(controller, c"OnClickDecideButton");
 }
 
 fn apply_primary() {
@@ -343,7 +479,11 @@ fn make_action(callback: fn()) -> *mut Il2CppObject {
 extern "C" fn on_dialog_open(_target: *mut Il2CppObject, dialog: *mut Il2CppObject) {
     let Some(enums) = *DIALOG_ENUMS.lock().unwrap() else { return };
     let text_common = CLASSES.lock().unwrap().as_ref().map(|c| c.text_common).unwrap_or(null_mut());
-    for (index, label) in [(enums.button_left, SECONDARY_LABEL), (enums.button_right, PRIMARY_LABEL)] {
+    let mut buttons = vec![(enums.button_left, SECONDARY_LABEL), (enums.button_right, PRIMARY_LABEL)];
+    if let Some(center) = enums.button_center.filter(|_| use_three_buttons()) {
+        buttons.push((center, MAX_SCORE_LABEL));
+    }
+    for (index, label) in buttons {
         let button = call1::<i32, *mut Il2CppObject>(dialog, c"GetButtonObj", index).unwrap_or(null_mut());
         if button.is_null() {
             warn!("[AutoSkill] dialog button {} not found", index);
@@ -357,18 +497,27 @@ extern "C" fn on_dialog_open(_target: *mut Il2CppObject, dialog: *mut Il2CppObje
     }
 }
 
+/// 這次對話框要不要用三鈕（開了最高評價、而且三鈕版可用）
+fn use_three_buttons() -> bool {
+    Hachimi::instance().config.load().auto_skill_max_score
+        && unsafe { SET_THREE_BUTTON_ADDR != 0 }
+        && DIALOG_ENUMS.lock().unwrap().is_some_and(|e| e.form_type_three.is_some() && e.button_center.is_some())
+}
+
 fn on_click_auto() {
     let config = Hachimi::instance().config.load();
-    let Some(profile) = config.active_auto_skill_profile() else {
+    let three = use_three_buttons();
+    let profile = config.active_auto_skill_profile();
+    if profile.is_none() && !three {
         notify("還沒有一鍵學習的設定檔，請到設定編輯器的「遊戲」分頁建立".into());
         return;
+    }
+    let count = |list: &Vec<String>| list.iter().filter(|s| !s.trim().is_empty()).count();
+    let mut message = match profile {
+        Some(p) => format!("設定檔：{}\n主要 {} 項／次要 {} 項", p.name, count(&p.primary), count(&p.secondary)),
+        None => "還沒有一鍵學習的設定檔".to_owned(),
     };
-    let message = format!(
-        "設定檔：{}\n主要 {} 項／次要 {} 項\n\n要套用哪一份清單？",
-        profile.name,
-        profile.primary.iter().filter(|s| !s.trim().is_empty()).count(),
-        profile.secondary.iter().filter(|s| !s.trim().is_empty()).count(),
-    );
+    message.push_str(if three { "\n「最高評價」＝點數內技能評價分最高的點法\n\n要用哪一種？" } else { "\n\n要套用哪一份清單？" });
 
     let (Some(enums), Some(data_class)) = (
         *DIALOG_ENUMS.lock().unwrap(),
@@ -381,6 +530,7 @@ fn on_click_auto() {
 
     let on_right = make_action(apply_primary);
     let on_left = make_action(apply_secondary);
+    let on_center = if three { make_action(apply_max_score) } else { null_mut() };
     // 開啟回呼要拿到 DialogCommon 參數，簽章跟 fn() 不同；delegate 呼叫時會傳 (target, dialog, method)
     let on_open = make_action(unsafe {
         std::mem::transmute::<extern "C" fn(*mut Il2CppObject, *mut Il2CppObject), fn()>(on_dialog_open)
@@ -393,21 +543,42 @@ fn on_click_auto() {
 
     let data = il2cpp_object_new(data_class);
     call0::<()>(data, c".ctor");
-    let set_two_button: extern "C" fn(
-        *mut Il2CppObject, *mut Il2CppString, *mut Il2CppString, *mut Il2CppObject, i32, i32, *mut Il2CppObject, i32,
-        *const c_void,
-    ) -> *mut Il2CppObject = unsafe { std::mem::transmute(SET_TWO_BUTTON_ADDR) };
-    set_two_button(
-        data,
-        BUTTON_LABEL.to_il2cpp_string(),
-        message.to_il2cpp_string(),
-        on_right,
-        enums.text_id,
-        enums.text_id,
-        on_left,
-        enums.form_type,
-        null_mut(),
-    );
+    if three && !on_center.is_null() {
+        let set_three_button: extern "C" fn(
+            *mut Il2CppObject, *mut Il2CppString, *mut Il2CppString, *mut Il2CppObject, i32, *mut Il2CppObject, i32,
+            *mut Il2CppObject, i32, i32, *const c_void,
+        ) -> *mut Il2CppObject = unsafe { std::mem::transmute(SET_THREE_BUTTON_ADDR) };
+        set_three_button(
+            data,
+            BUTTON_LABEL.to_il2cpp_string(),
+            message.to_il2cpp_string(),
+            on_right,
+            enums.text_id,
+            on_center,
+            enums.text_id,
+            on_left,
+            enums.text_id,
+            enums.form_type_three.unwrap_or(enums.form_type),
+            null_mut(),
+        );
+    }
+    else {
+        let set_two_button: extern "C" fn(
+            *mut Il2CppObject, *mut Il2CppString, *mut Il2CppString, *mut Il2CppObject, i32, i32, *mut Il2CppObject, i32,
+            *const c_void,
+        ) -> *mut Il2CppObject = unsafe { std::mem::transmute(SET_TWO_BUTTON_ADDR) };
+        set_two_button(
+            data,
+            BUTTON_LABEL.to_il2cpp_string(),
+            message.to_il2cpp_string(),
+            on_right,
+            enums.text_id,
+            enums.text_id,
+            on_left,
+            enums.form_type,
+            null_mut(),
+        );
+    }
     if !on_open.is_null() {
         call1::<_, ()>(data, c"AddOpenCallback", on_open);
     }
@@ -513,7 +684,9 @@ extern "C" fn BeginView(this: *mut Il2CppObject) {
 
     info!("[AutoSkill] BeginView controller={:p}", this);
     *CONTROLLER.lock().unwrap() = Some(GCHandle::new(this, false));
-    add_button(this);
+    if Hachimi::instance().config.load().auto_skill_enabled {
+        add_button(this);
+    }
 }
 
 // ---- 匯入目前技能頁的技能（給設定編輯器用） ----
@@ -592,10 +765,25 @@ pub fn init(umamusume: *const Il2CppImage) {
             form_type: enum_value(form_type, &["SMALL_TWO_BUTTON", "MIDDLE_TWO_BUTTON"]).or_else(|| enum_value(form_type, &[])).unwrap_or(0),
             button_left: enum_value(button_index, &["Left", "LEFT"]).unwrap_or(0),
             button_right: enum_value(button_index, &["Right", "RIGHT"]).unwrap_or(2),
+            form_type_three: enum_value(form_type, &["SMALL_THREE_BUTTON", "MIDDLE_THREE_BUTTON"]),
+            button_center: enum_value(button_index, &["Center", "CENTER"]),
         };
+
+        // 三鈕版：核對參數型別（2/4/6＝Action<DialogCommon>、3/5/7＝TextId），對不上就不用
+        if let Ok(three) = get_method(data, c"SetSimpleThreeButtonMessage", 9) {
+            let class_of = |i: u32| il2cpp_class_from_type(il2cpp_method_get_param(three, i));
+            let ok = [2, 4, 6].iter().all(|&i| class_of(i) == action) && [3, 5, 7].iter().all(|&i| class_of(i) == text_id);
+            if ok {
+                unsafe { SET_THREE_BUTTON_ADDR = (*three).methodPointer };
+            }
+            else {
+                warn!("[AutoSkill] SetSimpleThreeButtonMessage params mismatch, max-score button disabled");
+            }
+        }
         info!(
-            "[AutoSkill] dialog enums: text_id={} form_type={} left={} right={}",
-            enums.text_id, enums.form_type, enums.button_left, enums.button_right
+            "[AutoSkill] dialog enums: text_id={} form_type={} left={} right={} three={:?} center={:?} three_ok={}",
+            enums.text_id, enums.form_type, enums.button_left, enums.button_right, enums.form_type_three,
+            enums.button_center, unsafe { SET_THREE_BUTTON_ADDR != 0 }
         );
         Ok((data, action, enums))
     };

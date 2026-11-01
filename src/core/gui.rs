@@ -1263,6 +1263,21 @@ impl ConfigEditor {
     fn page_auto_skill(ui: &mut egui::Ui, config: &mut hachimi::Config) {
         ui.label("在育成技能頁按「一鍵學習」→ 選主要或次要，依清單由上往下點技能，點數不夠的跳過，最後跳出遊戲的確認視窗。");
         ui.add_space(6.0);
+        egui::Grid::new("auto_skill_toggles").num_columns(2).show(ui, |ui| {
+            ui.label("技能頁顯示「一鍵學習」按鈕")
+                .on_hover_text("關掉後技能頁不會出現按鈕（下次開技能頁生效）。");
+            ui.checkbox(&mut config.auto_skill_enabled, "");
+            ui.end_row();
+
+            ui.add_enabled_ui(config.auto_skill_enabled, |ui| {
+                ui.label("對話框加「最高評價」")
+                    .on_hover_text("在目前技能點數內，挑出讓育成評價分最高的技能組合（依這匹馬的跑法／距離適性計算）。\n\
+                        遊戲自己扣的點數（含提示折扣）是逐列試選量出來的，選好後一樣跳遊戲的確認視窗。");
+            });
+            ui.add_enabled(config.auto_skill_enabled, egui::Checkbox::without_text(&mut config.auto_skill_max_score));
+            ui.end_row();
+        });
+        ui.add_space(6.0);
         ui.label(egui::RichText::new("設定檔").strong());
         Self::run_auto_skill_profiles(ui, config);
 

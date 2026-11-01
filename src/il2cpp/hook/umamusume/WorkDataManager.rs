@@ -1,4 +1,5 @@
-//! 遊戲端的玩家資料（`Gallop.WorkDataManager`）。馬娘篩選用它取包包裡現有的練成角色。
+//! 遊戲端的玩家資料（`Gallop.WorkDataManager`）。馬娘篩選用它取包包裡現有的練成角色，
+//! 最高評價點法用它讀育成中的適性。
 //!
 //! 進包包時資料就整份下載到這裡了，之後點開詳細視窗、換頁都不會再連線，
 //! 所以只要拿到 `TrainedCharaData` 物件就能直接開原生的詳細視窗。
@@ -87,6 +88,40 @@ pub fn trained_chara_ids() -> Option<Vec<i64>> {
         ids.push(f(chara, std::ptr::null()) as i64);
     }
     Some(ids)
+}
+
+/// 育成中這匹馬的適性（1＝G … 8＝S），順序：逃、先行、差、追、短、英里、中、長。
+/// `WorkDataManager.Instance.SingleMode.Character.Proper*`；不在育成中回 `None`。
+pub fn single_mode_propers() -> Option<[i32; 8]> {
+    let this = instance();
+    let get0 = |obj: *mut Il2CppObject, name: &CStr| -> Option<*mut Il2CppObject> {
+        let addr = method_of(obj, name, 0);
+        if addr == 0 {
+            return None;
+        }
+        let f: extern "C" fn(*mut Il2CppObject, *const c_void) -> *mut Il2CppObject = unsafe { std::mem::transmute(addr) };
+        let r = f(obj, std::ptr::null());
+        (!r.is_null()).then_some(r)
+    };
+    let single_mode = get0(this, c"get_SingleMode")?;
+    let chara = get0(single_mode, c"get_Character")?;
+
+    let names: [&CStr; 8] = [
+        c"get_ProperRunningStyleNige", c"get_ProperRunningStyleSenko", c"get_ProperRunningStyleSashi",
+        c"get_ProperRunningStyleOikomi", c"get_ProperDistanceShort", c"get_ProperDistanceMile",
+        c"get_ProperDistanceMiddle", c"get_ProperDistanceLong",
+    ];
+    let mut out = [0; 8];
+    for (slot, name) in out.iter_mut().zip(names) {
+        // getter 內部把 ObscuredInt 解開，回傳一般 int
+        let addr = method_of(chara, name, 0);
+        if addr == 0 {
+            return None;
+        }
+        let f: extern "C" fn(*mut Il2CppObject, *const c_void) -> i32 = unsafe { std::mem::transmute(addr) };
+        *slot = f(chara, std::ptr::null());
+    }
+    Some(out)
 }
 
 pub fn init(umamusume: *const Il2CppImage) {

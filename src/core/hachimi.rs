@@ -306,6 +306,12 @@ pub struct Config {
     /// 目前使用的設定檔（`auto_skill_profiles` 的索引）
     #[serde(default)]
     pub auto_skill_active_profile: usize,
+    /// 技能頁要不要放「一鍵學習」按鈕
+    #[serde(default = "Config::default_true")]
+    pub auto_skill_enabled: bool,
+    /// 一鍵學習對話框要不要有「最高評價」（點數內技能評價分最高的點法）
+    #[serde(default = "Config::default_true")]
+    pub auto_skill_max_score: bool,
     #[serde(default)]
     pub live_theater_allow_same_chara: bool,
     #[serde(default)]
@@ -334,6 +340,7 @@ impl Config {
     fn default_story_choice_auto_select_delay() -> f32 { 0.75 }
     fn default_story_tcps_multiplier() -> f32 { 1.0 }
     fn default_ui_animation_scale() -> f32 { 1.0 }
+    fn default_true() -> bool { true }
 }
 
 /// 一鍵學習的一組清單（例：「長距離逃」「短英大賽」）
