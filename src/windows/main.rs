@@ -5,7 +5,7 @@ use windows::{core::{BOOL, PCWSTR}, Win32::{Foundation::{HMODULE, TRUE}, System:
 
 use crate::{core::{plugin_api::Plugin, Hachimi}, windows::utils};
 
-use super::{discord, hook, proxy, updater, wnd_hook};
+use super::{crash_guard, discord, game_impl, hook, proxy, updater, wnd_hook};
 
 const DLL_PROCESS_ATTACH: c_ulong = 1;
 const DLL_PROCESS_DETACH: c_ulong = 0;
@@ -41,6 +41,10 @@ pub fn load_libraries() -> Vec<Plugin> {
     plugins
 }
 
+fn is_game_process() -> bool {
+    game_impl::get_region(&game_impl::get_package_name()) != crate::core::game::Region::Unknown
+}
+
 pub static mut DLL_HMODULE: HMODULE = HMODULE(0 as _);
 
 #[no_mangle]
@@ -50,6 +54,11 @@ pub extern "C" fn DllMain(hmodule: HMODULE, call_reason: c_ulong, _reserved: *mu
         unsafe { DLL_HMODULE = hmodule; }
         // 先無條件裝好 version.dll 轉發（即使 Hachimi::init 失敗也要，否則遊戲解不到 version 函式會崩）。
         proxy::version::init();
+        // version.dll 也會被同目錄的其他程式載入（UnityCrashHandler64.exe 每次開遊戲都會起）。
+        // 不是遊戲本體就只當轉發用，不初始化、不 hook、不寫 log。
+        if !is_game_process() {
+            return TRUE;
+        }
         if !Hachimi::init() {
             return TRUE;
         }
@@ -60,6 +69,7 @@ pub extern "C" fn DllMain(hmodule: HMODULE, call_reason: c_ulong, _reserved: *mu
         let hachimi = Hachimi::instance();
         *hachimi.plugins.lock().unwrap() = load_libraries();
 
+        crash_guard::init();
         hook::init();
         info!("Attach completed");
     }

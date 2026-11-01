@@ -1,5 +1,6 @@
 mod main;
 mod hook;
+mod crash_guard;
 pub mod proxy;
 pub mod utils;
 pub mod symbols_impl;

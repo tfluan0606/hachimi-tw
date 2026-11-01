@@ -80,6 +80,9 @@ pub mod Unity_TextMeshPro;
 pub mod umamusume;
 mod DOTween;
 
+// 關掉遊戲內建的 Sentry 錯誤回報（早期 hook 由 Hachimi::on_dlopen 裝）
+pub mod Sentry_Unity;
+
 // 技能資料說明（skill_data_desc）要攔遊戲的 text_data 查詢
 pub mod LibNative_Runtime;
 
@@ -88,6 +91,8 @@ mod Cute_Core_Assembly;
 
 pub fn init() {
     info!("Initializing il2cpp hooks");
+
+    Sentry_Unity::init();
 
     // capture-only 建置只需要 umamusume 的 HttpHelper（在 umamusume::init 內），
     // 其餘 assembly 的 hook 全部不裝。

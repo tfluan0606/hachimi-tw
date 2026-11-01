@@ -179,6 +179,8 @@ impl Hachimi {
         if hachimi_impl::is_il2cpp_lib(filename) {
             info!("Got il2cpp handle");
             il2cpp::symbols::set_handle(handle);
+            // Sentry 要在 il2cpp_init 一返回就擋，等一般 hook 時機就太晚了
+            il2cpp::hook::Sentry_Unity::hook_il2cpp_init();
             false
         }
         else if hachimi_impl::is_criware_lib(filename) {
