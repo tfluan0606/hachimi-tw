@@ -281,7 +281,7 @@ fn current_model() -> Option<(*mut Il2CppObject, *mut Il2CppObject)> {
     (!model.is_null()).then_some((controller, model))
 }
 
-static SKILL_GRADES: once_cell::sync::OnceCell<fnv::FnvHashMap<i32, (i32, String)>> = once_cell::sync::OnceCell::new();
+static SKILL_GRADES: once_cell::sync::OnceCell<fnv::FnvHashMap<i32, (i32, String, i32)>> = once_cell::sync::OnceCell::new();
 
 fn apply_max_score() {
     let Some((controller, model)) = current_model() else {
@@ -295,7 +295,9 @@ fn apply_max_score() {
     };
     // 跑在遊戲主執行緒（按鈕回呼），可以直接查 mdb
     let grades = SKILL_GRADES.get_or_init(sql::load_skill_grades);
-    let score_of = |id: i32| grades.get(&id).map_or(0.0, |(g, tags)| skill_score::skill_score(*g, tags, &propers));
+    let score_of = |id: i32| grades.get(&id).map_or(0.0, |(g, tags, _)| skill_score::skill_score(*g, tags, &propers));
+    // 升級鏈（○／◎／金）共用 group_id；查不到就當自己一組
+    let chain_of = |id: i32| grades.get(&id).map_or(id, |(_, _, group)| if *group > 0 { *group } else { id });
 
     call0::<()>(model, c"ResetSelected");
     let budget = call0::<i32>(model, c"get_RemainingPoint").unwrap_or(0);
@@ -303,14 +305,15 @@ fn apply_max_score() {
     info!("[AutoSkill] max score: budget={} rows={} propers={:?}", budget, groups.len(), propers);
 
     // 逐列試選，量遊戲實際扣的點數（同列下位有選時上位會折扣，自己加總不準）
-    let mut measured: Vec<(usize, Vec<RowOption>)> = Vec::new();
+    // gain 先記絕對分，併組後再扣整組已學的分數
+    let mut measured: Vec<(usize, Option<f64>, Vec<RowOption>)> = Vec::new();
     for (gi, group) in groups.iter().enumerate() {
         let acquired = group.iter().rposition(|e| call0::<bool>(e.info, c"get_IsAcquired").unwrap_or(false));
         let start = acquired.map_or(0, |a| a + 1);
         if start >= group.len() {
             continue;
         }
-        let base = acquired.map_or(0.0, |a| score_of(group[a].skill_id));
+        let base = acquired.map(|a| score_of(group[a].skill_id));
 
         let mut options = Vec::new();
         for (k, e) in group.iter().enumerate().skip(start) {
@@ -318,24 +321,27 @@ fn apply_max_score() {
                 break;
             }
             let remain = call0::<i32>(model, c"get_RemainingPoint").unwrap_or(budget);
-            options.push(RowOption { tier: k, cost: budget - remain, gain: score_of(e.skill_id) - base });
+            options.push(RowOption { tier: k, cost: budget - remain, gain: score_of(e.skill_id) });
         }
         call0::<()>(model, c"ResetSelected");
         if !options.is_empty() {
-            measured.push((gi, options));
+            measured.push((gi, base, options));
         }
     }
 
-    // 共用技能的列（白自己一列＋「白→金」一列）併成一組，每組只挑一個選項
-    let ids: Vec<Vec<i32>> = measured.iter().map(|(gi, _)| groups[*gi].iter().map(|e| e.skill_id).collect()).collect();
+    // 同一條升級鏈的列併成一組，每組只挑一個選項。金技能那列有時是 [白, 金]、有時只有 [金]
+    // （試選時遊戲自動連白一起扣點），只看共用技能 id 會漏併 → 白、金各買一次、白的點數和分數重複算。
+    let ids: Vec<Vec<i32>> =
+        measured.iter().map(|(gi, _, _)| groups[*gi].iter().map(|e| chain_of(e.skill_id)).collect()).collect();
     let mut rows: Vec<Vec<RowOption>> = Vec::new();
     let mut option_groups: Vec<Vec<usize>> = Vec::new();
     for family in skill_score::families(&ids) {
         let mut options = Vec::new();
         let mut owners = Vec::new();
+        let base = family.iter().filter_map(|&r| measured[r].1).reduce(f64::max).unwrap_or(0.0);
         for r in family {
-            for opt in &measured[r].1 {
-                options.push(opt.clone());
+            for opt in &measured[r].2 {
+                options.push(RowOption { gain: opt.gain - base, ..opt.clone() });
                 owners.push(measured[r].0);
             }
         }
@@ -364,7 +370,7 @@ fn apply_max_score() {
                 ok = false;
             }
         }
-        debug!("[AutoSkill] max score pick {} (+{:.1}, {}pt)", group[opt.tier].name, opt.gain, opt.cost);
+        info!("[AutoSkill] max score pick {} (+{:.1}, {}pt)", group[opt.tier].name, opt.gain, opt.cost);
     }
     let used = budget - call0::<i32>(model, c"get_RemainingPoint").unwrap_or(0);
     if used != expect_cost || !ok {

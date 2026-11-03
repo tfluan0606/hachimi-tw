@@ -59,7 +59,9 @@ pub struct RowOption {
 
 /// 把共用技能的列併成同一組。遊戲的技能列表裡，同一個白技能會自己一列、又出現在「白→金」那列；
 /// 不併的話兩列都會被選，白技能的分數和點數就重複算了（上位取代下位，實際只算一次）。
-/// 輸入每列的技能 id，回傳每組包含哪些列（依第一次出現的順序）。
+/// 金技能那列也可能只有 [金]（白沒列進去、試選時遊戲自動連白扣點），所以呼叫端要傳
+/// 升級鏈 id（mdb `skill_data.group_id`）而不是技能 id，白、金才會併在一起。
+/// 輸入每列的 id，回傳每組包含哪些列（依第一次出現的順序）。
 pub fn families(rows: &[Vec<i32>]) -> Vec<Vec<usize>> {
     let mut parent: Vec<usize> = (0..rows.len()).collect();
     fn find(parent: &mut [usize], mut x: usize) -> usize {
@@ -182,6 +184,13 @@ mod tests {
         // 列 0＝[白A]、列 1＝[白B]、列 2＝[白A, 金A]、列 3＝[白C, 金C]、列 4＝[白C]
         let rows = vec![vec![1], vec![2], vec![1, 10], vec![3, 30], vec![3]];
         assert_eq!(families(&rows), vec![vec![0, 2], vec![1], vec![3, 4]]);
+    }
+
+    #[test]
+    fn families_merge_gold_only_row_by_chain() {
+        // 2026-11-03 實機：開拓活路！(203652) 自己一列、開拓者(203651) 那列只有金 → 用 group_id 20365 才併得起來
+        let rows = vec![vec![20131], vec![20365], vec![20201], vec![20365]];
+        assert_eq!(families(&rows), vec![vec![0], vec![1, 3], vec![2]]);
     }
 
     #[test]
