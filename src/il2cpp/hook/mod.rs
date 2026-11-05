@@ -86,6 +86,9 @@ pub mod Sentry_Unity;
 // 技能資料說明（skill_data_desc）要攔遊戲的 text_data 查詢
 pub mod LibNative_Runtime;
 
+// A2U Flash 在育成畫面跟著 ui_animation_scale 加速
+mod Plugins;
+
 #[cfg(any(target_os = "android", target_os = "windows"))]
 mod Cute_Core_Assembly;
 
@@ -118,6 +121,7 @@ pub fn init() {
     {
         DOTween::init();
         LibNative_Runtime::init();
+        Plugins::init();
 
         #[cfg(any(target_os = "android", target_os = "windows"))]
         Cute_Core_Assembly::init();

@@ -25,6 +25,9 @@ pub mod CySpringController;
 
 pub mod Director;
 
+// 育成訓練演出（3D 演出、友情 cut-in）加速
+mod SingleModeTrainingCut;
+
 #[cfg(target_os = "windows")]
 pub mod SceneDefine;
 
@@ -90,6 +93,7 @@ pub fn init() {
     LiveTheaterViewController::init(image);
     CySpringController::init(image);
     Director::init(image);
+    SingleModeTrainingCut::init(image);
     GallopUtil::init(image);
 
     #[cfg(target_os = "windows")]

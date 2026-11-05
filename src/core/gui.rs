@@ -1242,6 +1242,11 @@ impl ConfigEditor {
         ui.checkbox(&mut config.live_theater_allow_same_chara, "");
         ui.end_row();
 
+        ui.label("育成訓練演出速度")
+            .on_hover_text("按下訓練後的 3D 演出與友情訓練 cut-in。3D 演出只有整數倍有效；遊戲本身的演出速度設定會再疊上去");
+        ui.add(egui::Slider::new(&mut config.training_cut_speed, 1.0..=8.0).step_by(1.0));
+        ui.end_row();
+
         ui.label("演唱會播放速度");
         ui.add(egui::Slider::new(&mut config.live_playback_speed, 0.1..=4.0).step_by(0.05));
         ui.end_row();

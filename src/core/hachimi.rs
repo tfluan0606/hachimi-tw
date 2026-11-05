@@ -285,6 +285,9 @@ pub struct Config {
     /// 演唱會播放速度倍率（1.0＝原速）
     #[serde(default = "Config::default_live_playback_speed")]
     pub live_playback_speed: f32,
+    /// 育成訓練演出（按下訓練後的 3D 演出、友情 cut-in）速度倍率（1.0＝原速，只加速不減速）
+    #[serde(default = "Config::default_training_cut_speed")]
+    pub training_cut_speed: f32,
     #[serde(default)]
     pub graphics_quality: crate::il2cpp::hook::umamusume::GraphicSettings::GraphicsQuality,
     #[serde(default = "Config::default_story_choice_auto_select_delay")]
@@ -337,6 +340,7 @@ impl Config {
     fn default_ui_scale() -> f32 { 1.0 }
     fn default_gui_scale() -> f32 { 1.0 }
     fn default_live_playback_speed() -> f32 { 1.0 }
+    fn default_training_cut_speed() -> f32 { 1.0 }
     fn default_story_choice_auto_select_delay() -> f32 { 0.75 }
     fn default_story_tcps_multiplier() -> f32 { 1.0 }
     fn default_ui_animation_scale() -> f32 { 1.0 }

@@ -1,4 +1,4 @@
-use std::sync::atomic::{self, AtomicBool};
+use std::sync::atomic::{self, AtomicBool, AtomicI32};
 
 use crate::{il2cpp::{symbols::get_method_addr, types::*}, windows::wnd_hook};
 
@@ -7,6 +7,12 @@ use super::SceneDefine::view_id;
 static SPLASH_SHOWN: AtomicBool = AtomicBool::new(false);
 pub fn is_splash_shown() -> bool {
     SPLASH_SHOWN.load(atomic::Ordering::Acquire)
+}
+
+/// 最近一次切換到的 view id（給只在某些畫面生效的 hook 判斷用，不必從別的執行緒碰 il2cpp）
+static CURRENT_VIEW_ID: AtomicI32 = AtomicI32::new(0);
+pub fn current_view_id() -> i32 {
+    CURRENT_VIEW_ID.load(atomic::Ordering::Relaxed)
 }
 
 // 繁中(Komoe) client 的 ChangeView 是 **6** 個參數（多了尾端的 isFastDestroy），
@@ -29,6 +35,7 @@ extern "C" fn ChangeView(
         this, next_view_id, view_info, callback_on_change_view_cancel, callback_on_change_view_accept,
         force_change, is_fast_destroy
     );
+    CURRENT_VIEW_ID.store(next_view_id, atomic::Ordering::Relaxed);
     if next_view_id == view_id::SPLASH {
         SPLASH_SHOWN.store(true, atomic::Ordering::Release);
         wnd_hook::drain_wm_size_buffer();
