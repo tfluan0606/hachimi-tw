@@ -2,7 +2,7 @@ use std::ffi::{c_char, c_void, CStr};
 
 use crate::{core::{Hachimi, Interceptor}, il2cpp::{self, types::{il2cpp_array_size_t, FieldInfo, Il2CppArray, Il2CppClass, Il2CppImage, Il2CppObject, Il2CppThread, Il2CppTypeEnum, MethodInfo}}};
 
-const VERSION: i32 = 1;
+pub const VERSION: i32 = 1;
 
 pub type HachimiInitFn = extern "C" fn(vtable: *const Vtable, version: i32) -> InitResult;
 

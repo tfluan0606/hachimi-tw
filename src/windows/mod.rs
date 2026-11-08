@@ -10,6 +10,7 @@ pub mod hachimi_impl;
 pub mod interceptor_impl;
 pub mod gui_impl;
 pub mod updater;
+pub mod plugins;
 pub mod wnd_hook;
 pub mod discord;
 pub mod settings_window;

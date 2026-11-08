@@ -941,6 +941,8 @@ pub(crate) enum SettingsPage {
     FactorCard,
     #[cfg(target_os = "windows")]
     CharaFilter,
+    #[cfg(target_os = "windows")]
+    Plugins,
     Capture,
     About
 }
@@ -960,6 +962,21 @@ impl SettingsPage {
             (SettingsPage::Capture, "擷取"),
             (SettingsPage::About, "關於"),
         ]
+        .into_iter()
+        // 「外掛」頁只有裝過外掛（設定裡有啟用或停用的外掛）才出現
+        .chain(Self::plugins_page())
+        .collect()
+    }
+
+    #[cfg(target_os = "windows")]
+    fn plugins_page() -> Option<(SettingsPage, &'static str)> {
+        let c = Hachimi::instance().config.load();
+        (!c.windows.load_libraries.is_empty() || !c.windows.disabled_libraries.is_empty()).then_some((SettingsPage::Plugins, "外掛"))
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    fn plugins_page() -> Option<(SettingsPage, &'static str)> {
+        None
     }
 }
 
@@ -1050,8 +1067,63 @@ impl ConfigEditor {
             SettingsPage::FactorCard => Self::page_factor_card(ui),
             #[cfg(target_os = "windows")]
             SettingsPage::CharaFilter => super::chara_filter::ui(ui),
+            #[cfg(target_os = "windows")]
+            SettingsPage::Plugins => settings_grid(ui, grid_id, |ui| Self::page_plugins(ui, config)),
             SettingsPage::Capture => Self::page_capture(ui),
             SettingsPage::About => Self::page_about(ui),
+        }
+    }
+
+    /// 外掛：啟用／停用（改 load_libraries，重開遊戲後生效）、外掛更新
+    #[cfg(target_os = "windows")]
+    fn page_plugins(ui: &mut egui::Ui, config: &mut hachimi::Config) {
+        use crate::windows::plugins::{known_plugins, PluginStatus, PluginUpdater};
+
+        for p in known_plugins(&config.windows) {
+            ui.label(&p.name);
+            let mut on = p.enabled;
+            if ui.checkbox(&mut on, "啟用").changed() {
+                let w = &mut config.windows;
+                w.load_libraries.retain(|n| !n.eq_ignore_ascii_case(&p.name));
+                w.disabled_libraries.retain(|n| !n.eq_ignore_ascii_case(&p.name));
+                if on {
+                    w.load_libraries.push(p.name.clone());
+                } else {
+                    w.disabled_libraries.push(p.name.clone());
+                }
+            }
+            ui.end_row();
+        }
+        ui.label("");
+        ui.label(egui::RichText::new("啟用／停用在重新啟動遊戲後生效").weak());
+        ui.end_row();
+
+        if PluginUpdater::enabled() {
+            let up = Hachimi::instance().plugin_updater.clone();
+            ui.label("外掛更新");
+            match up.status() {
+                PluginStatus::Idle => {
+                    if ui.button("\u{f021} 檢查外掛更新").clicked() {
+                        up.check(true);
+                    }
+                }
+                PluginStatus::Checking => {
+                    ui.add_enabled(false, egui::Button::new("\u{f021} 檢查中…"));
+                }
+                PluginStatus::Available(list) => {
+                    let names = list.iter().map(|(n, v)| format!("{n} {v}")).collect::<Vec<_>>().join("、");
+                    if ui.button(format!("\u{f062} 更新 {names}")).clicked() {
+                        up.run();
+                    }
+                }
+                PluginStatus::Downloading => {
+                    ui.label("下載外掛更新中…");
+                }
+                PluginStatus::Installed => {
+                    ui.label("\u{f00c} 已更新，重開遊戲後生效");
+                }
+            }
+            ui.end_row();
         }
     }
 

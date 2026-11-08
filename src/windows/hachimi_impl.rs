@@ -78,6 +78,12 @@ pub struct Config {
     pub vsync_count: i32,
     #[serde(default)]
     pub load_libraries: Vec<String>,
+    /// 停用的外掛（設定頁關掉的，記著才能再打開；不會載入）
+    #[serde(default)]
+    pub disabled_libraries: Vec<String>,
+    /// 外掛更新清單（index.json）的網址；沒設就不檢查外掛更新
+    #[serde(default)]
+    pub plugin_index_url: Option<String>,
     #[serde(default = "Config::default_menu_open_key")]
     pub menu_open_key: u16,
     #[serde(default)]

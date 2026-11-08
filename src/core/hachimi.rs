@@ -34,7 +34,10 @@ pub struct Hachimi {
     pub disable_game_cursor: AtomicBool,
 
     #[cfg(target_os = "windows")]
-    pub updater: Arc<crate::windows::updater::Updater>
+    pub updater: Arc<crate::windows::updater::Updater>,
+
+    #[cfg(target_os = "windows")]
+    pub plugin_updater: Arc<crate::windows::plugins::PluginUpdater>
 }
 
 static INSTANCE: OnceCell<Arc<Hachimi>> = OnceCell::new();
@@ -114,6 +117,8 @@ impl Hachimi {
 
             #[cfg(target_os = "windows")]
             updater: Arc::default(),
+            #[cfg(target_os = "windows")]
+            plugin_updater: Arc::default(),
 
             config: ArcSwap::new(Arc::new(config))
         })
@@ -233,7 +238,11 @@ impl Hachimi {
         // 用來擋原版 Hachimi 查上游更新的，打包給朋友的 config 都是 true，結果關掉自動下載的人
         // 啟動時完全收不到新版通知。
         #[cfg(target_os = "windows")]
-        self.updater.clone().check_for_updates(false);
+        {
+            self.updater.clone().check_for_updates(false);
+            // 有啟用的外掛（而且設定了更新清單）才檢查外掛更新
+            self.plugin_updater.clone().check(false);
+        }
     }
 }
 

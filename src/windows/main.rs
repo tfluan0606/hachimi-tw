@@ -67,6 +67,8 @@ pub extern "C" fn DllMain(hmodule: HMODULE, call_reason: c_ulong, _reserved: *mu
         updater::cleanup_old_dll();
 
         let hachimi = Hachimi::instance();
+        // 上次下載好的外掛更新（.new）在載入外掛之前換上
+        super::plugins::apply_pending();
         *hachimi.plugins.lock().unwrap() = load_libraries();
 
         crash_guard::init();
