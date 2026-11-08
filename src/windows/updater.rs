@@ -211,7 +211,7 @@ impl Updater {
         }
         {
             // 網路斷掉時不要永遠卡住（以前沒設 timeout）
-            let agent = ureq::AgentBuilder::new()
+            let agent = http::agent_builder()
                 .timeout_connect(Duration::from_secs(15))
                 .timeout_read(Duration::from_secs(30))
                 .build();
@@ -295,7 +295,7 @@ fn fetch_latest_release() -> Result<Release, Error> {
 }
 
 fn latest_release_via_web(repo: &str) -> Result<Release, Error> {
-    let agent = ureq::AgentBuilder::new().redirects(0).build();
+    let agent = http::agent_builder().redirects(0).build();
     let res = agent.get(&format!("https://github.com/{}/releases/latest", repo)).call()?;
     let location = res.header("location").unwrap_or_default();
     let Some(tag) = location.split("/releases/tag/").nth(1).map(|t| t.trim_end_matches('/')).filter(|t| !t.is_empty()) else {

@@ -42,6 +42,10 @@ textwrap = "0.16"
 atomic_float = "0.1"
 blake3 = "1.5"
 ureq = { version = "2.10", features = ["json"] }
+# 連線的 TLS 根憑證：內建 Mozilla 清單（同 ureq）＋ Windows 憑證存放區（見 core/http.rs tls_config）
+rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12", "logging"] }
+webpki-roots = "0.26"
+rustls-native-certs = "0.8"
 size = "0.4"
 threadpool = "1.8"
 unicode-width = "0.1"
