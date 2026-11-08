@@ -219,7 +219,7 @@ fn portrait(dir: &std::path::Path, card_id: i64) -> Result<Portrait, Error> {
     let bytes = match std::fs::read(&path) {
         Ok(b) => b,
         Err(_) => {
-            let resp = ureq::get(&format!("{PORTRAIT_URL}/{card_id}.png"))
+            let resp = crate::core::http::agent().get(&format!("{PORTRAIT_URL}/{card_id}.png"))
                 .call()
                 .map_err(|e| err(format!("下載失敗：{e}")))?;
             let mut buf = Vec::new();
