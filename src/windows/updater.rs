@@ -18,6 +18,7 @@ const CHUNK_SIZE: usize = 8192; // 8KiB
 
 #[derive(Clone)]
 struct DllUpdate {
+    tag: String,
     dll_url: String,
     hash_url: String
 }
@@ -134,7 +135,7 @@ impl Updater {
             }
             return Ok(());
         };
-        self.new_update.store(Arc::new(Some(DllUpdate { dll_url, hash_url })));
+        self.new_update.store(Arc::new(Some(DllUpdate { tag: latest.tag_name.clone(), dll_url, hash_url })));
         self.set_status(UpdateStatus::Available { version: latest.tag_name.clone() });
 
         if manual {
@@ -200,7 +201,7 @@ impl Updater {
         let old_path = with_suffix(&dll_path, ".old");
 
         // 先抓 blake3.json，拿到預期的雜湊。
-        let hashes: FnvHashMap<String, String> = http::get_json(&update.hash_url)?;
+        let hashes: FnvHashMap<String, String> = serde_json::from_str(&get_asset(&http::agent_builder().build(), &update.hash_url, &update.tag, HASH_ASSET_NAME)?.into_string()?)?;
         let Some(expected_hash) = hashes.get(DLL_ASSET_NAME) else {
             return Err(Error::RuntimeError(format!("'{}' has no entry for '{}'", HASH_ASSET_NAME, DLL_ASSET_NAME)));
         };
@@ -215,7 +216,7 @@ impl Updater {
                 .timeout_connect(Duration::from_secs(15))
                 .timeout_read(Duration::from_secs(30))
                 .build();
-            let res = agent.get(&update.dll_url).call()?;
+            let res = get_asset(&agent, &update.dll_url, &update.tag, DLL_ASSET_NAME)?;
             if let Some(len) = res.header("content-length").and_then(|v| v.parse::<u64>().ok()) {
                 self.total.store(len, atomic::Ordering::Relaxed);
             }
@@ -256,6 +257,32 @@ impl Updater {
 
         info!("Updated DLL in place; old version kept at '{}' until next launch", old_path.display());
         Ok(true)
+    }
+}
+
+/// 下載 release 的檔案：先走一般下載網址（github.com/…/releases/download/…）；那條路失敗（例如 11/08 GitHub
+/// 日本節點對所有 releases 網址回 504，API 正常）就改走 API：查這個 tag 的 asset，用
+/// `Accept: application/octet-stream` 下載（會轉到 release-assets.githubusercontent.com）
+fn get_asset(agent: &ureq::Agent, url: &str, tag: &str, name: &str) -> Result<ureq::Response, Error> {
+    match agent.get(url).call() {
+        Ok(r) => Ok(r),
+        Err(e) => {
+            warn!("Release download '{}' failed ({}), retrying via GitHub API", url, e);
+            #[derive(Deserialize)]
+            struct ApiAsset {
+                name: String,
+                url: String
+            }
+            #[derive(Deserialize)]
+            struct ApiRelease {
+                assets: Vec<ApiAsset>
+            }
+            let rel: ApiRelease = http::get_github_json(&format!("https://api.github.com/repos/{}/releases/tags/{}", REPO_PATH, tag))?;
+            let Some(a) = rel.assets.into_iter().find(|a| a.name == name) else {
+                return Err(e.into());
+            };
+            Ok(agent.get(&a.url).set("Accept", "application/octet-stream").call()?)
+        }
     }
 }
 
@@ -378,6 +405,17 @@ mod tests {
 
     /// 實際連 GitHub（網頁網址，不耗 API 額度）確認能讀出最新 tag。需要網路，預設不跑：
     /// `cargo test --lib latest_release_via_web -- --ignored --nocapture`
+    /// 一般下載網址壞掉時改走 API 也拿得到檔案（網址故意給錯，模擬 504）。需要網路，預設不跑：
+    /// `cargo test --lib asset_download_falls_back_to_api -- --ignored`
+    #[test]
+    #[ignore]
+    fn asset_download_falls_back_to_api() {
+        let agent = crate::core::http::agent_builder().build();
+        let r = super::get_asset(&agent, "https://github.com/tfluan0606/hachimi-tw/releases/download/v1.3.1/no-such-file", "v1.3.1", super::HASH_ASSET_NAME).unwrap();
+        let v: serde_json::Value = serde_json::from_str(&r.into_string().unwrap()).unwrap();
+        assert!(v[super::DLL_ASSET_NAME].as_str().map_or(false, |h| h.len() == 64), "{v}");
+    }
+
     #[test]
     #[ignore]
     fn latest_release_via_web() {
