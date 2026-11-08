@@ -189,7 +189,7 @@ impl PluginUpdater {
                     if found.is_empty() {
                         self.set_status(PluginStatus::Idle);
                         if manual {
-                            notify("外掛都是最新版本。");
+                            notify("擴充都是最新版本。");
                         }
                         return;
                     }
@@ -200,14 +200,14 @@ impl PluginUpdater {
                     if Hachimi::instance().config.load().auto_update && !manual {
                         self.clone().run();
                     } else {
-                        notify(&format!("外掛有新版：{names}，到設定的「外掛」頁更新"));
+                        notify(&format!("擴充有新版：{names}，到設定的「擴充」頁更新"));
                     }
                 }
                 Err(e) => {
                     error!("Plugin update check failed: {}", e);
                     self.set_status(before);
                     if manual {
-                        notify(&format!("檢查外掛更新失敗：{e}"));
+                        notify(&format!("檢查擴充更新失敗：{e}"));
                     }
                 }
             }
@@ -234,13 +234,13 @@ impl PluginUpdater {
             match self.run_internal() {
                 Ok(true) => {
                     self.set_status(PluginStatus::Installed);
-                    notify("外掛更新完成，重新啟動遊戲後生效。");
+                    notify("擴充更新完成，重新啟動遊戲後生效。");
                 }
                 Ok(false) => self.set_status(before),
                 Err(e) => {
                     error!("Plugin update failed: {}", e);
                     self.set_status(before);
-                    notify(&format!("外掛更新失敗：{e}"));
+                    notify(&format!("擴充更新失敗：{e}"));
                 }
             }
             self.busy.store(false, atomic::Ordering::Release);

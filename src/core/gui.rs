@@ -971,7 +971,7 @@ impl SettingsPage {
     #[cfg(target_os = "windows")]
     fn plugins_page() -> Option<(SettingsPage, &'static str)> {
         let c = Hachimi::instance().config.load();
-        (!c.windows.load_libraries.is_empty() || !c.windows.disabled_libraries.is_empty()).then_some((SettingsPage::Plugins, "外掛"))
+        (!c.windows.load_libraries.is_empty() || !c.windows.disabled_libraries.is_empty()).then_some((SettingsPage::Plugins, "擴充"))
     }
 
     #[cfg(not(target_os = "windows"))]
@@ -1100,10 +1100,10 @@ impl ConfigEditor {
 
         if PluginUpdater::enabled() {
             let up = Hachimi::instance().plugin_updater.clone();
-            ui.label("外掛更新");
+            ui.label("擴充更新");
             match up.status() {
                 PluginStatus::Idle => {
-                    if ui.button("\u{f021} 檢查外掛更新").clicked() {
+                    if ui.button("\u{f021} 檢查擴充更新").clicked() {
                         up.check(true);
                     }
                 }
@@ -1117,7 +1117,7 @@ impl ConfigEditor {
                     }
                 }
                 PluginStatus::Downloading => {
-                    ui.label("下載外掛更新中…");
+                    ui.label("下載擴充更新中…");
                 }
                 PluginStatus::Installed => {
                     ui.label("\u{f00c} 已更新，重開遊戲後生效");
