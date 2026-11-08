@@ -146,6 +146,14 @@ mod tests {
         let e = old.get(url).call().err().map(|e| e.to_string()).unwrap_or_default();
         assert!(e.contains("UnknownIssuer"), "舊設定應該失敗：{e}");
         let new = agent_builder().proxy(ureq::Proxy::new(&proxy).unwrap()).redirects(0).build();
+        // 經過中間人代理，GitHub API 要拿到完整的成功回應
+        let api = "https://api.github.com/repos/tfluan0606/hachimi-tw/releases/latest";
+        let r = agent_builder().proxy(ureq::Proxy::new(&proxy).unwrap()).build().get(api).call().expect("經過代理呼叫 API");
+        let v: serde_json::Value = serde_json::from_str(&r.into_string().unwrap()).unwrap();
+        assert!(v["tag_name"].as_str().unwrap_or("").starts_with('v'), "{v}");
+        // 不經代理：一般網路下也照常（get_github_json 走共用 agent）
+        let v: serde_json::Value = get_github_json(api).expect("直接呼叫 API");
+        eprintln!("latest = {}", v["tag_name"]);
         // TLS 握手過了就算數：拿到任何 HTTP 回應（含代理自己的 5xx）都代表憑證被信任
         match new.get(url).call() {
             Ok(_) | Err(ureq::Error::Status(..)) => {}
