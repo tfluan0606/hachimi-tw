@@ -253,7 +253,7 @@ impl PluginUpdater {
             return Ok(false);
         }
         let dir = game_dir().ok_or_else(|| Error::RuntimeError("找不到遊戲資料夾".into()))?;
-        let agent = ureq::AgentBuilder::new().timeout_connect(Duration::from_secs(15)).timeout_read(Duration::from_secs(30)).build();
+        let agent = http::agent_builder().timeout_connect(Duration::from_secs(15)).timeout_read(Duration::from_secs(30)).build();
         let mut done: Vec<String> = fs::read_to_string(pending_list_path()).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or_default();
         for (_, m) in &mods {
             for (name, f) in &m.files {
