@@ -208,7 +208,7 @@ fn sanitize(name: &str) -> String {
         .collect()
 }
 
-const PORTRAIT_URL: &str = "https://img.kurue.uk/chara";
+const PORTRAIT_URL: &str = "https://img.dobometools.work/chara";
 
 /// 取立繪：先看快取，沒有才下載。
 fn portrait(dir: &std::path::Path, card_id: i64) -> Result<Portrait, Error> {

@@ -110,7 +110,7 @@ fn fetch_portrait(card_id: i64) -> Result<Portrait, Box<dyn std::error::Error>> 
     let bytes = match std::fs::read(&path) {
         Ok(b) => b,
         Err(_) => {
-            let resp = ureq::get(&format!("https://img.kurue.uk/chara/{card_id}.png")).call()?;
+            let resp = ureq::get(&format!("https://img.dobometools.work/chara/{card_id}.png")).call()?;
             let mut buf = Vec::new();
             resp.into_reader().read_to_end(&mut buf)?;
             std::fs::write(&path, &buf)?;

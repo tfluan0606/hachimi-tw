@@ -41,7 +41,7 @@ const RECONNECT_INTERVAL: Duration = Duration::from_secs(30);
 ///
 /// 檔名是 card id（6 碼），和 `factor-card` 內建的 `card_map.json` 同一套索引，
 /// 所以圖片和名字共用同一個查表結果。
-const CHARA_IMAGE_BASE: &str = "https://img.kurue.uk/chara";
+const CHARA_IMAGE_BASE: &str = "https://img.dobometools.work/chara";
 
 /// 首頁代表馬娘的 card id；0 代表還不知道。
 static HOME_CARD_ID: AtomicU32 = AtomicU32::new(0);
